@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class Demo {
     @Test
     public void test() throws Exception {
-        Req.post("https://www.baidu.com")
+        Req.get("https://www.baidu.com")
                 .cookie("1", "3")
                 .cookie("3", "34")
                 .header("bd", "weqwe")
@@ -25,6 +25,12 @@ public class Demo {
                 .log(ReqLog.console, HttpLoggingInterceptor.Level.BODY)
                 .timeout(Duration.ofMillis(1000))
                 .ok()
-                .str();
+                .then(r -> {
+                    System.out.println(r.code());
+                    System.out.println("ok -> " + r.isOk());
+                })
+                .then(r -> {
+                    System.out.println("redirect -> " +r.isRedirect());
+                });
     }
 }
