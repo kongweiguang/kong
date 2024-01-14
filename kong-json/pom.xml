@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.kongweiguang</groupId>
+        <artifactId>kong</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>kong-json</artifactId>
+
+    <properties>
+        <json.version>2.16.0</json.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.kongweiguang</groupId>
+            <artifactId>kong-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!--json序列化工具-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${json.version}</version>
+        </dependency>
+
+        <!--适配java8中的时间日期模块-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${json.version}</version>
+        </dependency>
+
+    </dependencies>
+</project>
