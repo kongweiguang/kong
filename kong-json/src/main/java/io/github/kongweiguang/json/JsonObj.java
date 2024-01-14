@@ -63,6 +63,6 @@ public class JsonObj {
     }
 
     public String build() {
-        return node.toPrettyString();
+        return node.toString();
     }
 }
