@@ -14,7 +14,9 @@
         <module>kong-http</module>
         <module>kong-json</module>
         <module>kong-bus</module>
+        <module>kong-bus-springboot-starter</module>
         <module>kong-bom</module>
+        <module>kong-spring</module>
     </modules>
 
     <properties>

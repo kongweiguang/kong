@@ -9,19 +9,29 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>kong-bus</artifactId>
+    <artifactId>kong-bus-springboot-starter</artifactId>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.version>2.0.4.RELEASE</spring.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>io.github.kongweiguang</groupId>
-            <artifactId>kong-core</artifactId>
+            <artifactId>kong-bus</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring.version}</version>
         </dependency>
     </dependencies>
 </project>
