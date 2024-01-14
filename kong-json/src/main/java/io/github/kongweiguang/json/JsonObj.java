@@ -1,6 +1,5 @@
 package io.github.kongweiguang.json;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.Collection;
@@ -53,12 +52,7 @@ public class JsonObj {
     }
 
     public JsonObj putAry(String k, Collection<?> coll) {
-        final ArrayNode jsonNodes = node.putArray(k);
-
-        for (Object o : coll) {
-            jsonNodes.add(Json.toNode(Json.toStr(o)));
-        }
-
+        node.put(k, Json.toStr(coll));
         return this;
     }
 

@@ -8,6 +8,7 @@ import static java.util.Optional.ofNullable;
 
 /**
  * json数组
+ *
  * @author kongweiguang
  */
 public class JsonAry {
@@ -28,8 +29,13 @@ public class JsonAry {
         return new JsonAry(node);
     }
 
+    public JsonAry add(String str) {
+        node.add(str);
+        return this;
+    }
+
     public JsonAry add(Object obj) {
-        node.add(Json.toStr(obj));
+        node.add(Json.toNode(Json.toStr(obj)));
         return this;
     }
 

@@ -1,7 +1,5 @@
 package io.github.kongweiguang.core;
 
-import java.util.List;
-
 import static java.util.Objects.isNull;
 
 public class Str {
@@ -22,14 +20,4 @@ public class Str {
         return str;
     }
 
-
-    public static boolean ignoreStartWith(final String str, final List<String> list) {
-        for (String e : list) {
-            if (str.toLowerCase().startsWith(e.toLowerCase())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

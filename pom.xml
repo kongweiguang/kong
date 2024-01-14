@@ -9,6 +9,34 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <name>${project.artifactId}</name>
+    <description>Java 工具包</description>
+
+    <scm>
+        <connection>https://github.com/kongweiguang/kong.git</connection>
+        <url>https://github.com/kongweiguang/kong</url>
+    </scm>
+
+    <url>https://github.com/kongweiguang</url>
+
+    <developers>
+        <developer>
+            <email>240524885@qq.com</email>
+            <name>kongweiguang</name>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
     <modules>
         <module>kong-core</module>
         <module>kong-http</module>
@@ -35,4 +63,98 @@
             <version>${test.junit}</version>
         </dependency>
     </dependencies>
+
+
+    <profiles>
+        <profile>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <encoding>utf-8</encoding>
+                            <source>8</source>
+                            <target>8</target>
+                        </configuration>
+                        <groupId>org.apache.maven.plugins</groupId>
+                    </plugin>
+                    <plugin>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <configuration>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                            <serverId>ossrh</serverId>
+                        </configuration>
+                        <extensions>true</extensions>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <version>1.6.13</version>
+                    </plugin>
+                    <!-- 生成java source.jar -->
+                    <plugin>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                                <id>attach-sources</id>
+                            </execution>
+                        </executions>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <version>2.2.1</version>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                            </execution>
+                        </executions>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <version>1.5</version>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                            <charset>UTF-8</charset>
+                            <docencoding>UTF-8</docencoding>
+                            <encoding>UTF-8</encoding>
+                            <nohelp>true</nohelp>
+                            <show>private</show>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <version>2.9.1</version>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+            </distributionManagement>
+
+
+            <id>ossrh</id>
+        </profile>
+
+    </profiles>
+
 </project>
