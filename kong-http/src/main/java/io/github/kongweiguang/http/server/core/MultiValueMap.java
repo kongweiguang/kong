@@ -1,6 +1,10 @@
 package io.github.kongweiguang.http.server.core;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 多个值的map
@@ -15,13 +19,13 @@ public class MultiValueMap<K, V> {
         return map;
     }
 
-    public void put(K key, V value) {
-        final List<V> list = map.computeIfAbsent(key, k -> new ArrayList<>());
-        list.add(value);
+    public MultiValueMap<K, V> put(K key, V value) {
+        map.computeIfAbsent(key, k -> new ArrayList<>()).add(value);
+        return this;
     }
 
     public List<V> get(K key) {
-        return map.getOrDefault(key, new ArrayList<>());
+        return map.getOrDefault(key, Collections.emptyList());
     }
 
     public List<V> removeKey(K key) {
@@ -35,8 +39,6 @@ public class MultiValueMap<K, V> {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", MultiValueMap.class.getSimpleName() + "[", "]")
-                .add("map=" + map)
-                .toString();
+        return map.toString();
     }
 }

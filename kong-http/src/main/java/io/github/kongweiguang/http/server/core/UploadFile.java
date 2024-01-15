@@ -2,6 +2,11 @@ package io.github.kongweiguang.http.server.core;
 
 import java.io.InputStream;
 
+/**
+ * 上传文件
+ *
+ * @author kongweiguang
+ */
 public class UploadFile {
 
     private String fileName;

@@ -10,6 +10,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import static io.github.kongweiguang.http.server.core.InnerUtil._404;
 import static java.util.Objects.nonNull;
 
+/**
+ * rest处理器
+ *
+ * @author kongweiguang
+ */
 public final class RestHandler implements com.sun.net.httpserver.HttpHandler {
 
     private static final Map<Method, Map<String, HttpHandler>> rest_map = new ConcurrentHashMap<>();

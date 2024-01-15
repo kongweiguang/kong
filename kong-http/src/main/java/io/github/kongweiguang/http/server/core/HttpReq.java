@@ -2,6 +2,7 @@ package io.github.kongweiguang.http.server.core;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
+import io.github.kongweiguang.http.client.core.Header;
 import io.github.kongweiguang.http.client.core.Method;
 
 import java.io.ByteArrayInputStream;
@@ -125,13 +126,13 @@ public final class HttpReq {
     }
 
     public MultiValueMap<String, String> params() {
-        if (isNull(this.paramMap)) {
+        if (isNull(paramMap)) {
             this.paramMap = new MultiValueMap<>();
 
             final String query = query();
 
             if (nonNull(query)) {
-                getParams(query, this.paramMap);
+                getParams(query, paramMap);
             }
 
             if (isMultipart()) {
@@ -145,7 +146,7 @@ public final class HttpReq {
             }
 
         }
-        return this.paramMap;
+        return paramMap;
     }
 
     public byte[] bytes() {

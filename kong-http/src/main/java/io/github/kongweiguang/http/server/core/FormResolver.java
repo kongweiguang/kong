@@ -5,7 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /**
- * 解析form表单数据
+ * 解析form表单数据，简易实现
  *
  * @author kongweiguang
  */

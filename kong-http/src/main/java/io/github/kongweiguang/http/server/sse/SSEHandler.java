@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 import static java.util.Objects.nonNull;
 
 /**
- * sse的action
+ * sse的处理器
  *
  * @author kongweiguang
  * @since 0.1

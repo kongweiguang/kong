@@ -2,6 +2,11 @@ package io.github.kongweiguang.http.server.core;
 
 import java.io.IOException;
 
+/**
+ * http过滤器
+ *
+ * @author kongweiguang
+ */
 @FunctionalInterface
 public interface HttpFilter {
 
