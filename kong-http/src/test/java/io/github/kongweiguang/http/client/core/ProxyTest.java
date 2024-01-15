@@ -22,4 +22,15 @@ public class ProxyTest {
                 .ok();
     }
 
+    @Test
+    void test2() throws Exception {
+
+        final Res res = Req.get("http://localhost:8080/get/one/two")
+                .config(e -> e.proxy("127.0.0.1", 80)
+                        .proxy(Type.SOCKS, "127.0.0.1", 80)
+                        .proxyAuthenticator("k", "pass"))
+                .query("a", "1")
+                .ok();
+    }
+
 }

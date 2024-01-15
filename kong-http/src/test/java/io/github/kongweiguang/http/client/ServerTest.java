@@ -46,11 +46,15 @@ public class ServerTest {
                 })
                 .get("/get/one/two", (req, res) -> {
                     System.out.println("req = " + req.path());
+                    System.out.println("params" + req.params());
                     res.send("ok");
                 })
                 .get("/header", (req, res) -> {
                     final Headers headers = req.headers();
-                    System.out.println("headers = " + headers);
+                    for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+                        System.out.println("entry.getKey() = " + entry.getKey());
+                        System.out.println("entry = " + entry.getValue());
+                    }
                     res.send("ok");
                 })
                 //接受post请求

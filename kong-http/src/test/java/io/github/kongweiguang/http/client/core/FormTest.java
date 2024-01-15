@@ -27,7 +27,7 @@ public class FormTest {
     void test2() throws Exception {
         //multipart/form-data
         final Res ok = Req.multipart("http://localhost:8080/post_mul_form")
-                .file("k", "k.txt", Files.readAllBytes(Paths.get("D:\\k\\k.txt")))
+                .file("k", "k.txt", Files.readAllBytes(Paths.get("/Users/kongweiguang/Desktop/Snipaste_2023-12-25_14-25-51.png")))
                 .form("a", "1")
                 .form(new HashMap<String, String>() {{
                     put("b", "2");
