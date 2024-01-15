@@ -13,6 +13,12 @@ import java.util.List;
  */
 public final class InnerUtil {
 
+    /**
+     * 获取方法的参数泛型
+     *
+     * @param m 方法
+     * @return 参数泛型列表
+     */
     public static List<String> generics(final Method m) {
         List<String> fr = new ArrayList<>(2);
         Type[] genericParameterTypes = m.getGenericParameterTypes();

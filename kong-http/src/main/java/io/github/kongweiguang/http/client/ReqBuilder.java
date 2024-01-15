@@ -1,12 +1,29 @@
 package io.github.kongweiguang.http.client;
 
 
-import io.github.kongweiguang.http.client.core.*;
+import io.github.kongweiguang.http.client.core.Client;
+import io.github.kongweiguang.http.client.core.Conf;
+import io.github.kongweiguang.http.client.core.Const;
+import io.github.kongweiguang.http.client.core.ContentType;
+import io.github.kongweiguang.http.client.core.Header;
+import io.github.kongweiguang.http.client.core.InnerUtil;
+import io.github.kongweiguang.http.client.core.Method;
+import io.github.kongweiguang.http.client.core.ReqLog;
+import io.github.kongweiguang.http.client.core.ReqTypeEnum;
+import io.github.kongweiguang.http.client.core.Timeout;
+import io.github.kongweiguang.http.client.core.UA;
 import io.github.kongweiguang.http.client.sse.SSEListener;
 import io.github.kongweiguang.http.client.ws.WSListener;
 import io.github.kongweiguang.json.Json;
-import okhttp3.*;
+import okhttp3.Credentials;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.Request.Builder;
+import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 import java.io.File;
@@ -25,7 +42,9 @@ import java.util.function.Consumer;
 
 import static io.github.kongweiguang.core.Assert.isTure;
 import static io.github.kongweiguang.core.Assert.notNull;
-import static java.util.Objects.*;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 import static okhttp3.internal.http.HttpMethod.permitsRequestBody;
 
@@ -50,7 +69,7 @@ public final class ReqBuilder {
     private HttpUrl.Builder urlBuilder;
 
     //body
-    private String strBody;
+    private byte[] body;
 
     //form
     private Map<String, String> formMap;
@@ -239,8 +258,8 @@ public final class ReqBuilder {
             //字符串提交
             else {
 
-                if (nonNull(strBody())) {
-                    rb = RequestBody.create(MediaType.parse(contentType()), strBody());
+                if (nonNull(body())) {
+                    rb = RequestBody.create(MediaType.parse(contentType()), body());
                 }
 
             }
@@ -257,8 +276,6 @@ public final class ReqBuilder {
      * @return ReqBuilder {@link ReqBuilder}
      */
     public ReqBuilder timeout(final Duration timeout) {
-        notNull(timeout, "timeout must not be null");
-
         return timeout(timeout, timeout, timeout);
     }
 
@@ -317,6 +334,22 @@ public final class ReqBuilder {
 
         if (nonNull(name) && nonNull(value)) {
             builder().header(name, value);
+        }
+
+        return this;
+    }
+
+    /**
+     * 添加请求头，不会覆盖
+     *
+     * @param name  名称
+     * @param value 值
+     * @return ReqBuilder {@link ReqBuilder}
+     */
+    public ReqBuilder addHeader(final String name, final String value) {
+
+        if (nonNull(name) && nonNull(value)) {
+            builder().addHeader(name, value);
         }
 
         return this;
@@ -812,8 +845,19 @@ public final class ReqBuilder {
      * @return ReqBuilder {@link ReqBuilder}
      */
     public ReqBuilder body(final String body, final ContentType contentType) {
+        return body(body.getBytes(charset()), contentType);
+    }
+
+    /**
+     * 自定义设置json对象
+     *
+     * @param body        内容
+     * @param contentType 类型 {@link ContentType}
+     * @return ReqBuilder {@link ReqBuilder}
+     */
+    public ReqBuilder body(final byte[] body, final ContentType contentType) {
         contentType(contentType);
-        this.strBody = body;
+        this.body = body;
         return this;
     }
 
@@ -980,8 +1024,8 @@ public final class ReqBuilder {
         return urlBuilder;
     }
 
-    public String strBody() {
-        return strBody;
+    public byte[] body() {
+        return body;
     }
 
     public String contentType() {

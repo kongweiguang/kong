@@ -24,7 +24,7 @@ public class ServerTest {
     public static void main(String[] args) {
 
         JavaServer.of()
-                .executor(Executors.newCachedThreadPool())
+                .executor(Executors.newFixedThreadPool(8))
                 //设置静态web地址，默认寻找index.html
                 .web("/Users/kongweiguang/Desktop/hegui/xm/gs")
                 .get("/get", (req, res) -> {
