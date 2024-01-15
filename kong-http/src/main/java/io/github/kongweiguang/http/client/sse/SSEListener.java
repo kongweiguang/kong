@@ -1,12 +1,11 @@
 package io.github.kongweiguang.http.client.sse;
 
 import io.github.kongweiguang.http.client.Req;
+import io.github.kongweiguang.http.client.ReqBuilder;
 import io.github.kongweiguang.http.client.Res;
 import okhttp3.Response;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSourceListener;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import static java.util.Objects.nonNull;
 
@@ -20,32 +19,27 @@ public abstract class SSEListener extends EventSourceListener {
     public EventSource es;
 
     @Override
-    public void onOpen(@NotNull final EventSource eventSource, @NotNull final Response response) {
+    public void onOpen(final EventSource eventSource, final Response response) {
         this.es = eventSource;
-        open(eventSource.request().tag(Req.class), Res.of(response));
+        open(eventSource.request().tag(ReqBuilder.class), Res.of(response));
     }
 
     @Override
-    public void onEvent(@NotNull final EventSource eventSource,
-                        @Nullable final String id,
-                        @Nullable final String type,
-                        @NotNull final String data) {
+    public void onEvent(final EventSource eventSource, final String id, final String type, final String data) {
         this.es = eventSource;
-        event(eventSource.request().tag(Req.class), new SseEvent().id(id).type(type).data(data));
+        event(eventSource.request().tag(ReqBuilder.class), SseEvent.of().id(id).type(type).data(data));
     }
 
     @Override
-    public void onFailure(@NotNull final EventSource eventSource,
-                          @Nullable final Throwable t,
-                          @Nullable final Response response) {
+    public void onFailure(final EventSource eventSource, final Throwable t, final Response response) {
         this.es = eventSource;
-        fail(eventSource.request().tag(Req.class), Res.of(response), t);
+        fail(eventSource.request().tag(ReqBuilder.class), Res.of(response), t);
     }
 
     @Override
-    public void onClosed(@NotNull final EventSource eventSource) {
+    public void onClosed(final EventSource eventSource) {
         this.es = eventSource;
-        closed(eventSource.request().tag(Req.class));
+        closed(eventSource.request().tag(ReqBuilder.class));
     }
 
     /**
@@ -63,7 +57,7 @@ public abstract class SSEListener extends EventSourceListener {
      * @param req 请求信息 {@link Req}
      * @param res 响应信息 {@link Res}
      */
-    public void open(final Req req, final Res res) {
+    public void open(final ReqBuilder req, final Res res) {
     }
 
     /**
@@ -72,7 +66,7 @@ public abstract class SSEListener extends EventSourceListener {
      * @param req 请求信息 {@link Req}
      * @param msg 事件信息 {@link SseEvent}
      */
-    public abstract void event(final Req req, final SseEvent msg);
+    public abstract void event(final ReqBuilder req, final SseEvent msg);
 
     /**
      * 失败时触发事件
@@ -81,7 +75,7 @@ public abstract class SSEListener extends EventSourceListener {
      * @param res 响应信息 {@link Res}
      * @param t   异常信息 {@link Throwable}
      */
-    public void fail(final Req req, final Res res, final Throwable t) {
+    public void fail(final ReqBuilder req, final Res res, final Throwable t) {
     }
 
     /**
@@ -89,7 +83,7 @@ public abstract class SSEListener extends EventSourceListener {
      *
      * @param req 请求信息 {@link Req}
      */
-    public void closed(final Req req) {
+    public void closed(final ReqBuilder req) {
     }
 
 }

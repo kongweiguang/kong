@@ -2,6 +2,7 @@ package io.github.kongweiguang.http.client.ws;
 
 import io.github.kongweiguang.core.Threads;
 import io.github.kongweiguang.http.client.Req;
+import io.github.kongweiguang.http.client.ReqBuilder;
 import io.github.kongweiguang.http.client.Res;
 import org.junit.jupiter.api.Test;
 
@@ -11,33 +12,33 @@ public class WsTest {
     void test() {
         final WSListener listener = new WSListener() {
             @Override
-            public void open(final Req req, final Res res) {
+            public void open(final ReqBuilder req, final Res res) {
                 send("hello");
             }
 
             @Override
-            public void msg(final Req req, final String text) {
+            public void msg(final ReqBuilder req, final String text) {
                 System.out.println(text);
                 send("hello");
             }
 
             @Override
-            public void msg(final Req req, final byte[] bytes) {
+            public void msg(final ReqBuilder req, final byte[] bytes) {
                 super.msg(req, bytes);
             }
 
             @Override
-            public void fail(final Req req, final Res res, final Throwable t) {
+            public void fail(final ReqBuilder req, final Res res, final Throwable t) {
                 super.fail(req, res, t);
             }
 
             @Override
-            public void closing(final Req req, final int code, final String reason) {
+            public void closing(final ReqBuilder req, final int code, final String reason) {
                 super.closing(req, code, reason);
             }
 
             @Override
-            public void closed(final Req req, final int code, final String reason) {
+            public void closed(final ReqBuilder req, final int code, final String reason) {
                 super.closed(req, code, reason);
             }
         };
