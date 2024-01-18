@@ -61,6 +61,8 @@ public abstract class SSEHandler implements HttpHandler {
      * @param res 输出流  {@link HttpRes }
      */
     public void close(final HttpRes res) {
-        res.close();
+        if (nonNull(res)) {
+            res.close();
+        }
     }
 }

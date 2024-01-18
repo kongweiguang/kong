@@ -60,6 +60,9 @@ public final class SseEvent {
         return this;
     }
 
+    public String build() {
+        return append("\n").sb.toString();
+    }
 
     public String id() {
         return id;
@@ -79,6 +82,6 @@ public final class SseEvent {
 
     @Override
     public String toString() {
-        return sb.toString();
+        return build();
     }
 }

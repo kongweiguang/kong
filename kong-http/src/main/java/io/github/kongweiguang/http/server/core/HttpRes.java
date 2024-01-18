@@ -106,7 +106,8 @@ public final class HttpRes {
     }
 
     public HttpRes write(int code, final byte[] bytes) {
-        try (final OutputStream out = out()) {
+        try {
+            final OutputStream out = out();
             httpExchange().sendResponseHeaders(code, bytes.length);
             header(Header.content_type.v(), contentType);
 

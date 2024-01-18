@@ -35,7 +35,7 @@ public class SseTest {
 
                     @Override
                     public void fail(ReqBuilder req, Res res, Throwable t) {
-                        System.out.println("fail"+t);
+                        System.out.println("fail" + t);
                     }
 
                     @Override
@@ -46,7 +46,6 @@ public class SseTest {
                 .ok();
 
         Threads.sleep(Duration.ofSeconds(10).toMillis());
-//        Threads.sync(this);
     }
 
 }

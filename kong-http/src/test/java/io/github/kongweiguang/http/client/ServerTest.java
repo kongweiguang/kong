@@ -98,7 +98,7 @@ public class ServerTest {
                     public void handler(final HttpReq req, final HttpRes res) {
                         for (int i = 0; i < 3; i++) {
                             try {
-                                Thread.sleep(300);
+                                Thread.sleep(500);
                             } catch (InterruptedException e) {
                                 throw new RuntimeException(e);
                             }

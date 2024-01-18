@@ -19,7 +19,6 @@ public class WsTest {
             @Override
             public void msg(final ReqBuilder req, final String text) {
                 System.out.println(text);
-                send("hello");
             }
 
             @Override
@@ -52,8 +51,6 @@ public class WsTest {
             listener.send("123");
         }
 
-        //res == null
-//    Util.sleep(Integer.MAX_VALUE);
         Threads.sync(new Object());
     }
 
