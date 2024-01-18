@@ -1,4 +1,4 @@
-package java.io.github.kongweiguang.bus.test.push_obj_method;
+package io.github.kongweiguang.bus.test.push_obj_method;
 
 import org.junit.jupiter.api.Test;
 

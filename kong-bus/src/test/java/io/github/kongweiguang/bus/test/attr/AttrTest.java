@@ -1,4 +1,4 @@
-package java.io.github.kongweiguang.bus.test.attr;
+package io.github.kongweiguang.bus.test.attr;
 
 import io.github.kongweiguang.bus.Bus;
 import io.github.kongweiguang.bus.core.Operation;

@@ -1,8 +1,8 @@
-package java.io.github.kongweiguang.bus.test.push_entity;
+package io.github.kongweiguang.bus.test.push_entity;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.github.kongweiguang.bus.test.metedata.User;
+import io.github.kongweiguang.bus.test.metedata.User;
 
 import static io.github.kongweiguang.bus.Bus.hub;
 

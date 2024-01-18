@@ -1,4 +1,4 @@
-package java.io.github.kongweiguang.bus.test.push_topic;
+package io.github.kongweiguang.bus.test.push_topic;
 
 import io.github.kongweiguang.bus.core.Operation;
 import org.junit.jupiter.api.Test;

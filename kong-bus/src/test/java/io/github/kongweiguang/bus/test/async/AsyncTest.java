@@ -1,4 +1,4 @@
-package java.io.github.kongweiguang.bus.test.async;
+package io.github.kongweiguang.bus.test.async;
 
 import io.github.kongweiguang.bus.Bus;
 import org.junit.jupiter.api.Test;

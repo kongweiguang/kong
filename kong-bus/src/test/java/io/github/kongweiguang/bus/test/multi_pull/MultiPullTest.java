@@ -1,4 +1,4 @@
-package java.io.github.kongweiguang.bus.test.multi_pull;
+package io.github.kongweiguang.bus.test.multi_pull;
 
 import org.junit.jupiter.api.Test;
 

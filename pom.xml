@@ -38,19 +38,16 @@
     </licenses>
 
     <modules>
+        <!--        <module>kong-bom</module>-->
         <module>kong-core</module>
         <module>kong-http</module>
         <module>kong-json</module>
         <module>kong-bus</module>
         <module>kong-bus-springboot-starter</module>
-        <module>kong-bom</module>
         <module>kong-spring</module>
     </modules>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <test.junit>5.10.0</test.junit>
     </properties>
 
@@ -59,7 +56,8 @@
             <dependency>
                 <groupId>io.github.kongweiguang</groupId>
                 <artifactId>kong-bom</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>${project.version}</version>
+                <type>pom</type>
                 <scope>import</scope>
             </dependency>
         </dependencies>

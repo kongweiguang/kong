@@ -1,10 +1,10 @@
-package java.io.github.kongweiguang.bus.test.push_obj_method;
+package io.github.kongweiguang.bus.test.push_obj_method;
 
 import io.github.kongweiguang.bus.Bus;
 import io.github.kongweiguang.bus.core.Operation;
 import org.junit.jupiter.api.Test;
 
-import java.io.github.kongweiguang.bus.test.metedata.User;
+import io.github.kongweiguang.bus.test.metedata.User;
 
 import static io.github.kongweiguang.bus.Bus.hub;
 

@@ -1,4 +1,4 @@
-package java.io.github.kongweiguang.bus.test.concurrent;
+package io.github.kongweiguang.bus.test.concurrent;
 
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package java.io.github.kongweiguang.bus.test.custom;
+package io.github.kongweiguang.bus.test.custom;
 
 import org.junit.jupiter.api.Test;
 

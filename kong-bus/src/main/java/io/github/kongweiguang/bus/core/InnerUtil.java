@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author kongweiguang
  */
-public final class InnerUtil {
+final class InnerUtil {
 
     /**
      * 获取方法的参数泛型

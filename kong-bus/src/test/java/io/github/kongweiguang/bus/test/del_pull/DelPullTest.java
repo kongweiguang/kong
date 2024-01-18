@@ -1,4 +1,4 @@
-package java.io.github.kongweiguang.bus.test.del_pull;
+package io.github.kongweiguang.bus.test.del_pull;
 
 import io.github.kongweiguang.bus.core.Merge;
 import io.github.kongweiguang.bus.core.Operation;

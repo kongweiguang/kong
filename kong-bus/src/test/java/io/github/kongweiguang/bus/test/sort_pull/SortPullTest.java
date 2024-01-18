@@ -1,4 +1,4 @@
-package java.io.github.kongweiguang.bus.test.sort_pull;
+package io.github.kongweiguang.bus.test.sort_pull;
 
 import org.junit.jupiter.api.Test;
 

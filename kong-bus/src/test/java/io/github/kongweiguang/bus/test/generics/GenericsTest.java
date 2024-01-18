@@ -1,9 +1,9 @@
-package java.io.github.kongweiguang.bus.test.generics;
+package io.github.kongweiguang.bus.test.generics;
 
 import io.github.kongweiguang.bus.Bus;
 import org.junit.jupiter.api.Test;
 
-import java.io.github.kongweiguang.bus.test.metedata.User;
+import io.github.kongweiguang.bus.test.metedata.User;
 import java.util.Collections;
 import java.util.List;
 

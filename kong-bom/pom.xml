@@ -3,13 +3,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>io.github.kongweiguang</groupId>
-        <artifactId>kong</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
 
+    <groupId>io.github.kongweiguang</groupId>
+    <version>1.0-SNAPSHOT</version>
     <artifactId>kong-bom</artifactId>
+    <packaging>pom</packaging>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -23,59 +21,33 @@
             <dependency>
                 <groupId>io.github.kongweiguang</groupId>
                 <artifactId>kong-core</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.github.kongweiguang</groupId>
                 <artifactId>kong-http</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.github.kongweiguang</groupId>
                 <artifactId>kong-json</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.github.kongweiguang</groupId>
                 <artifactId>kong-bus</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.github.kongweiguang</groupId>
                 <artifactId>kong-bus-springboot-starter</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
-    <dependencies>
-        <dependency>
-            <groupId>io.github.kongweiguang</groupId>
-            <artifactId>kong-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.kongweiguang</groupId>
-            <artifactId>kong-http</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.kongweiguang</groupId>
-            <artifactId>kong-json</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.kongweiguang</groupId>
-            <artifactId>kong-bus</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.kongweiguang</groupId>
-            <artifactId>kong-bus-springboot-starter</artifactId>
-        </dependency>
-
-    </dependencies>
 </project>

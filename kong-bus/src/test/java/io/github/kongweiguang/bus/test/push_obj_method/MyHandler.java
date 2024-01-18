@@ -1,10 +1,10 @@
-package java.io.github.kongweiguang.bus.test.push_obj_method;
+package io.github.kongweiguang.bus.test.push_obj_method;
 
 
 import io.github.kongweiguang.bus.core.Operation;
 import io.github.kongweiguang.bus.core.Pull;
 
-import java.io.github.kongweiguang.bus.test.metedata.User;
+import io.github.kongweiguang.bus.test.metedata.User;
 
 public class MyHandler {
     @Pull
