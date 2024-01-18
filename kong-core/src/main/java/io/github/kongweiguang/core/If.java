@@ -30,7 +30,7 @@ public class If {
      * @param <T>  返回类型
      * @return 返回值
      */
-    public static <T> T trueOrSup(final boolean bool, Supplier<T> f1, Supplier<T> f2) {
+    public static <T> T trueRunF1(final boolean bool, Supplier<T> f1, Supplier<T> f2) {
         if (bool) {
             return f1.get();
         }

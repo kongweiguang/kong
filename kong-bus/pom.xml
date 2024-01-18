@@ -21,7 +21,6 @@
         <dependency>
             <groupId>io.github.kongweiguang</groupId>
             <artifactId>kong-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

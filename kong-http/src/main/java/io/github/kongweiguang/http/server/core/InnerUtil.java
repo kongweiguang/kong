@@ -4,7 +4,6 @@ import com.sun.net.httpserver.HttpExchange;
 import io.github.kongweiguang.http.client.core.ContentType;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import static java.util.Objects.isNull;
 
@@ -14,7 +13,14 @@ import static java.util.Objects.isNull;
  * @author kongweiguang
  */
 public final class InnerUtil {
-
+    /**
+     * 判断是否有处理器，没有响应404
+     *
+     * @param he      HttpExchange
+     * @param handler 处理器
+     * @return 是否有处理器
+     * @throws IOException
+     */
     public static boolean _404(final HttpExchange he, final HttpHandler handler) throws IOException {
         if (isNull(handler)) {
             String _404 = "404 not found";
@@ -25,34 +31,13 @@ public final class InnerUtil {
         return false;
     }
 
-
-    public static byte[] toByteArray(final InputStream input, final int size) {
-
-        try {
-            if (size < 0 || size == 0) {
-                return new byte[0];
-            }
-
-            final byte[] data = new byte[size];
-            int offset = 0;
-            int read;
-
-            while (offset < size && (read = input.read(data, offset, size - offset)) != -1) {
-                offset += read;
-            }
-
-            if (offset != size) {
-                return new byte[0];
-
-            }
-
-            return data;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    //参考hutool
+    /**
+     * 参考hutool
+     * 获取文件的类型
+     *
+     * @param fileName 文件名
+     * @return 类型
+     */
     public static String getMimeType(final String fileName) {
 
         // 补充一些常用的mimeType

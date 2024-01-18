@@ -15,7 +15,6 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <rversion>1.0-SNAPSHOT</rversion>
     </properties>
 
 
@@ -24,31 +23,31 @@
             <dependency>
                 <groupId>io.github.kongweiguang</groupId>
                 <artifactId>kong-core</artifactId>
-                <version>${rversion}</version>
+                <version>${project.parent.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.github.kongweiguang</groupId>
                 <artifactId>kong-http</artifactId>
-                <version>${rversion}</version>
+                <version>${project.parent.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.github.kongweiguang</groupId>
                 <artifactId>kong-json</artifactId>
-                <version>${rversion}</version>
+                <version>${project.parent.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.github.kongweiguang</groupId>
                 <artifactId>kong-bus</artifactId>
-                <version>${rversion}</version>
+                <version>${project.parent.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.github.kongweiguang</groupId>
                 <artifactId>kong-bus-springboot-starter</artifactId>
-                <version>${rversion}</version>
+                <version>${project.parent.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

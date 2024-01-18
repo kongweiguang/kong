@@ -13,7 +13,11 @@ public final class FormResolver {
 
     private static final byte[] sep = "\r\n".getBytes(StandardCharsets.UTF_8);
 
-
+    /**
+     * 解析form表单
+     *
+     * @param req http请求
+     */
     public static void parser(HttpReq req) {
         boundaryIndex(req);
     }
@@ -98,11 +102,11 @@ public final class FormResolver {
 
                     System.arraycopy(body, cursor, val, 0, i - cursor - boundaryLen - 1 - 2);
 
-                    req.params().put(part.name(), new String(val));
+                    req.params().computeIfAbsent(part.name(), k -> new ArrayList<>()).add(new String(val));
                 } else {
                     final UploadFile uf = new UploadFile();
-                    uf.setContent(new ByteArrayInputStream(body, cursor, (i - boundaryLen - 1 - 2) - cursor));
-                    uf.setFileName(part.filename());
+                    uf.content(new ByteArrayInputStream(body, cursor, (i - boundaryLen - 1 - 2) - cursor));
+                    uf.fileName(part.filename());
 
                     req.fileMap().computeIfAbsent(part.name(), k -> new ArrayList<>()).add(uf);
                 }

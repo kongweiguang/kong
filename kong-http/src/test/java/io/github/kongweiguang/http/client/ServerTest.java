@@ -6,7 +6,6 @@ import io.github.kongweiguang.http.client.sse.SseEvent;
 import io.github.kongweiguang.http.server.JavaServer;
 import io.github.kongweiguang.http.server.core.HttpReq;
 import io.github.kongweiguang.http.server.core.HttpRes;
-import io.github.kongweiguang.http.server.core.MultiValueMap;
 import io.github.kongweiguang.http.server.core.UploadFile;
 import io.github.kongweiguang.http.server.sse.SSEHandler;
 
@@ -37,7 +36,7 @@ public class ServerTest {
                     res.send("ok");
                 })
                 .post("/post_json", (req, res) -> {
-                    final MultiValueMap<String, String> params = req.params();
+                    final Map<String, List<String>> params = req.params();
                     System.out.println("params = " + params);
 
                     System.out.println("req.str() = " + req.str());
@@ -83,7 +82,7 @@ public class ServerTest {
                 //上传
                 .post("/post_mul_form", (req, res) -> {
 
-                    final MultiValueMap<String, String> params = req.params();
+                    final Map<String, List<String>> params = req.params();
                     System.out.println("params = " + params);
                     final Map<String, List<UploadFile>> files = req.fileMap();
                     System.out.println("files = " + files);

@@ -9,7 +9,7 @@ import static io.github.kongweiguang.bus.Bus.hub;
 import static io.github.kongweiguang.bus.core.InnerUtil.generics;
 import static io.github.kongweiguang.core.Assert.isTure;
 import static io.github.kongweiguang.core.Assert.notNull;
-import static io.github.kongweiguang.core.If.trueOrSup;
+import static io.github.kongweiguang.core.If.trueRunF1;
 import static io.github.kongweiguang.core.Strs.defaultIfEmpty;
 import static io.github.kongweiguang.core.Strs.isEmpty;
 
@@ -61,7 +61,7 @@ public class DefaultHubImpl<C, R> extends AbstractHubImpl<C, R> {
 
             m.setAccessible(true);
 
-            final Hub<?, ?> condition = trueOrSup(isEmpty(pull.hub()), Bus::hub, () -> hub(pull.name()));
+            final Hub<?, ?> condition = trueRunF1(isEmpty(pull.hub()), Bus::hub, () -> hub(pull.name()));
             final String branch = branch(m, pull, params);
 
             switch (type) {

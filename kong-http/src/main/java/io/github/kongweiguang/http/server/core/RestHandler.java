@@ -28,6 +28,13 @@ public final class RestHandler implements com.sun.net.httpserver.HttpHandler {
         rest_map.computeIfAbsent(method, k -> new ConcurrentHashMap<>()).put(path, handler);
     }
 
+    /**
+     * 处理器
+     *
+     * @param he      HttpExchange
+     * @param handler 处理器
+     * @throws IOException 异常
+     */
     private static void handler0(final HttpExchange he, final HttpHandler handler) throws IOException {
         if (_404(he, handler)) {
             return;
@@ -36,6 +43,12 @@ public final class RestHandler implements com.sun.net.httpserver.HttpHandler {
         handler.doHandler(new HttpReq(he), new HttpRes(he));
     }
 
+    /**
+     * rest处理器
+     *
+     * @param he HttpExchange
+     * @throws IOException
+     */
     @Override
     public void handle(final HttpExchange he) throws IOException {
         final Method method = Method.valueOf(he.getRequestMethod());

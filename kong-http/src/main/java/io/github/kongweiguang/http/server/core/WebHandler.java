@@ -19,6 +19,12 @@ public final class WebHandler implements HttpHandler {
     private final String base_path;
     private String index_file = "index.html";
 
+    /**
+     * 构造处理器
+     *
+     * @param path      路径
+     * @param indexName 默认文件名称
+     */
     public WebHandler(final String path, final String indexName) {
         this.base_path = path;
         if (nonNull(indexName)) {
@@ -26,6 +32,13 @@ public final class WebHandler implements HttpHandler {
         }
     }
 
+    /**
+     * http处理器
+     *
+     * @param req http请求
+     * @param res http响应
+     * @throws IOException 异常
+     */
     @Override
     public void doHandler(final HttpReq req, final HttpRes res) throws IOException {
 
