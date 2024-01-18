@@ -19,13 +19,6 @@
 
 <hr />
 
-# 特点
-
-* 非常轻量，代码简单，大小只有17k
-* 链式编程，api友好，用的很爽
-* 支持http，ws，sse调用
-* 支持jdk8
-
 # 使用方式
 
 Maven
@@ -34,21 +27,21 @@ Maven
 
 <dependency>
     <groupId>io.github.kongweiguang</groupId>
-    <artifactId>ok-java</artifactId>
-    <version>0.8</version>
+    <artifactId>kong-java</artifactId>
+    <version>0.1</version>
 </dependency>
 ```
 
 Gradle
 
 ```xml
-implementation 'io.github.kongweiguang:ok-java:0.8'
+implementation 'io.github.kongweiguang:kong-java:0.1'
 ```
 
 Gradle-Kotlin
 
 ```xml
-implementation("io.github.kongweiguang:ok-java:0.8")
+implementation("io.github.kongweiguang:kong-java:0.1")
 ```
 
 # 简单介绍
@@ -104,8 +97,7 @@ public class UrlTest {
 
     @Test
     void test1() throws Exception {
-        final Res res = Req.get("http://localhost:8080/get/one/two")
-                .ok();
+        final Res res = Req.get("http://localhost:8080/get/one/two").ok();
         System.out.println("res = " + res.str());
     }
 
@@ -217,7 +209,7 @@ public class BodyTest {
         final Res res = Req.post("http://localhost:8080/post_body")
                 //        .body(JSON.toJSONString(kkk))
                 //        .body("{}")
-                //自动会将对象转成json对象，使用fastjson2
+                //自动会将对象转成json对象，使用jackson
                 .json(kkk)
                 //        .body("text", ContentType.text_plain)
                 .ok();
@@ -432,6 +424,30 @@ public class DowTest {
 }
 ```
 
+## 添加日志
+
+```java
+
+public class LogTest {
+    @Test
+    public void test() throws Exception {
+        Req.get("http://localhost:8080/get/one/two")
+
+                .log(ReqLog.console, HttpLoggingInterceptor.Level.BODY)
+                .timeout(Duration.ofMillis(1000))
+                .ok()
+                .then(r -> {
+                    System.out.println(r.code());
+                    System.out.println("ok -> " + r.isOk());
+                })
+                .then(r -> {
+                    System.out.println("redirect -> " + r.isRedirect());
+                });
+    }
+}
+
+```
+
 ## ws请求
 
 ws请求返回的res对象为null
@@ -540,27 +556,40 @@ public class ConfigTest {
 
     @Test
     void test1() throws Exception {
+
         //设置代理
-        Config.proxy("127.0.0.1", 80);
-        Config.proxy(Type.SOCKS, "127.0.0.1", 80);
-        Config.proxyAuthenticator("k", "pass");
+        OK.conf()
+                .proxy("127.0.0.1", 80)
+                .proxy(Type.SOCKS, "127.0.0.1", 80)
+                .proxyAuthenticator("k", "pass")
 
-        //设置拦截器
-        Config.addInterceptor(new Interceptor() {
-            @NotNull
-            @Override
-            public Response intercept(@NotNull final Chain chain) throws IOException {
-                System.out.println(1);
-                return chain.proceed(chain.request());
-            }
-        });
-
-        //设置连接池
-        Config.connectionPool(new ConnectionPool(10, 10, TimeUnit.MINUTES));
-
-        //设置异步调用的线程池
-        Config.exec(Executors.newCachedThreadPool());
+                //设置拦截器
+                .addInterceptor(new Interceptor() {
+                    @NotNull
+                    @Override
+                    public Response intercept(@NotNull final Chain chain) throws IOException {
+                        System.out.println(1);
+                        return chain.proceed(chain.request());
+                    }
+                })
+                //设置连接池
+                .connectionPool(new ConnectionPool(10, 10, TimeUnit.MINUTES))
+                //设置异步调用的线程池
+                .exec(Executors.newCachedThreadPool());
     }
 
+}
+```
+
+## 单次请求配置
+
+```java
+public class SingingConfigTest {
+    @Test
+    public void test1() throws Exception {
+        final Res res = Req.get("http://localhost:80/get_string")
+                .config(c -> c.followRedirects(false).ssl(false))
+                .ok();
+    }
 }
 ```
