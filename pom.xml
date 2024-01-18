@@ -38,7 +38,6 @@
     </licenses>
 
     <modules>
-        <!--        <module>kong-bom</module>-->
         <module>kong-core</module>
         <module>kong-http</module>
         <module>kong-json</module>
@@ -48,6 +47,9 @@
     </modules>
 
     <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <test.junit>5.10.0</test.junit>
     </properties>
 
@@ -62,6 +64,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <dependencies>
         <!--test-->
         <dependency>
