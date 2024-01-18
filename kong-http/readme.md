@@ -24,7 +24,6 @@
 Maven
 
 ```xml
-
 <dependency>
     <groupId>io.github.kongweiguang</groupId>
     <artifactId>kong-java</artifactId>
@@ -34,13 +33,13 @@ Maven
 
 Gradle
 
-```xml
+```
 implementation 'io.github.kongweiguang:kong-java:0.1'
 ```
 
 Gradle-Kotlin
 
-```xml
+```
 implementation("io.github.kongweiguang:kong-java:0.1")
 ```
 

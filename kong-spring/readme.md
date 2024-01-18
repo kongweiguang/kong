@@ -1,8 +1,8 @@
 <h1 align="center" style="text-align:center;">
-  kong-bus
+  kong-spring
 </h1>
 <p align="center">
-	<strong>轻量级的eventbus</strong>
+	<strong>对spring的小工具</strong>
 </p>
 
 <p align="center">
@@ -24,9 +24,10 @@
 Maven
 
 ```xml
+
 <dependency>
     <groupId>io.github.kongweiguang</groupId>
-    <artifactId>kong-bus</artifactId>
+    <artifactId>kong-spring</artifactId>
     <version>0.1</version>
 </dependency>
 ```
@@ -34,13 +35,13 @@ Maven
 Gradle
 
 ```
-implementation 'io.github.kongweiguang:kong-bus:0.1'
+implementation 'io.github.kongweiguang:kong-spring:0.1'
 ```
 
 Gradle-Kotlin
 
 ```
-implementation("io.github.kongweiguang:kong-bus:0.1")
+implementation("io.github.kongweiguang:kong-spring:0.1")
 ```
 
 # 简单介绍
