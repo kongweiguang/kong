@@ -15,7 +15,7 @@ import static java.util.Optional.ofNullable;
  *
  * @author kongweiguang
  */
-public class JsonAry {
+public final class JsonAry {
     private ArrayNode node = Json.mapper().createArrayNode();
 
     private JsonAry() {
@@ -97,6 +97,15 @@ public class JsonAry {
      */
     public String toJson() {
         return node.toString();
+    }
+
+    /**
+     * 构建成json数组字符串，格式化
+     *
+     * @return json数组
+     */
+    public String toPrettyJson() {
+        return node.toPrettyString();
     }
 
     /**

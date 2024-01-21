@@ -43,14 +43,19 @@ public class JsonBuilderTest {
 
     @Test
     void test1() throws Exception {
-        final JsonObj jsonObj = Json.obj().putObj("1", "true");
+        final JsonObj jsonObj = Json.obj().put("1", "true");
         System.out.println(jsonObj.toMap());
         System.out.println(jsonObj.toJson());
     }
 
     @Test
     void test2() throws Exception {
-        final String json = Json.ary().add(1).add(new BigDecimal(2)).addAry(e -> e.add(66).add(888)).toJson();
+        final String json = Json.ary().add(1).add(new BigDecimal(2)).addAry(e -> e.add(66).add(888)).addObj(u).toJson();
         System.out.println(json);
+    }
+
+    @Test
+    void test3() throws Exception {
+        System.out.println(Json.obj().put("1", null).toPrettyJson());
     }
 }

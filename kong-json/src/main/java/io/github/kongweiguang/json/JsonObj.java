@@ -7,13 +7,14 @@ import java.util.function.Consumer;
 
 import static io.github.kongweiguang.json.Json.toNode;
 import static io.github.kongweiguang.json.Json.toStr;
+import static java.util.Optional.ofNullable;
 
 /**
  * json对象
  *
  * @author kongweiguang
  */
-public class JsonObj {
+public final class JsonObj {
     private ObjectNode node = Json.mapper().createObjectNode();
 
     private JsonObj() {
@@ -99,6 +100,18 @@ public class JsonObj {
         return this;
     }
 
+    /**
+     * 将map添加到json对象中
+     *
+     * @param map 数据
+     * @return {@link  JsonObj}
+     */
+    public JsonObj putMap(final Map<String, Object> map) {
+
+        ofNullable(map).ifPresent(m -> m.forEach(this::putObj));
+
+        return this;
+    }
 
     /**
      * 构建成json对象
@@ -107,6 +120,15 @@ public class JsonObj {
      */
     public String toJson() {
         return node.toString();
+    }
+
+    /**
+     * 构建成json对象，格式化
+     *
+     * @return json对象
+     */
+    public String toPrettyJson() {
+        return node.toPrettyString();
     }
 
     /**

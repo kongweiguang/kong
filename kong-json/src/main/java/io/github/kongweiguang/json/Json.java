@@ -94,7 +94,7 @@ public final class Json {
     public static <T> String toStr(final T obj, final boolean format) {
         try {
             if (isNull(obj)) {
-                return "";
+                return null;
             }
 
             if (obj instanceof Number) {
