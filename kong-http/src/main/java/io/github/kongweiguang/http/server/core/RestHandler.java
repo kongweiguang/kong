@@ -53,8 +53,7 @@ public final class RestHandler implements com.sun.net.httpserver.HttpHandler {
     public void handle(final HttpExchange he) throws IOException {
         final Method method = Method.valueOf(he.getRequestMethod());
 
-        final Map<String, HttpHandler> map = rest_map.getOrDefault(method, defalut_map);
-        HttpHandler handler = map.get(he.getRequestURI().getPath());
+        final HttpHandler handler = rest_map.getOrDefault(method, defalut_map).get(he.getRequestURI().getPath());
 
         if (nonNull(handler)) {
             handler0(he, handler);

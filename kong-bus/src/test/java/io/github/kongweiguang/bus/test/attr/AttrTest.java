@@ -1,7 +1,7 @@
 package io.github.kongweiguang.bus.test.attr;
 
 import io.github.kongweiguang.bus.Bus;
-import io.github.kongweiguang.bus.core.Operation;
+import io.github.kongweiguang.bus.core.Oper;
 import org.junit.jupiter.api.Test;
 
 public class AttrTest {
@@ -13,6 +13,6 @@ public class AttrTest {
         Bus.<String, String>hub().pull(branch, System.out::println);
 
         //推送消息
-        Bus.<String, Void>hub().push(Operation.<String, Void>of(branch, "content").tag("k", "v"));
+        Bus.<String, Void>hub().push(Oper.<String, Void>of(branch, "content").tag("k", "v"));
     }
 }

@@ -6,7 +6,7 @@ package io.github.kongweiguang.bus.core;
  * @author kongweiguang
  */
 @FunctionalInterface
-public interface Merge<Action> {
+public interface Merge<Oper> {
     /**
      * 名称
      *
@@ -22,5 +22,5 @@ public interface Merge<Action> {
      * @param action 操作
      * @throws Exception 异常
      */
-    void mr(Action action) throws Exception;
+    void mr(Oper action) throws Exception;
 }

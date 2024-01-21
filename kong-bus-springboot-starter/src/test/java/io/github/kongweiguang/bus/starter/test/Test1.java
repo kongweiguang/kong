@@ -2,7 +2,7 @@ package io.github.kongweiguang.bus.starter.test;
 
 
 import io.github.kongweiguang.bus.Bus;
-import io.github.kongweiguang.bus.core.Operation;
+import io.github.kongweiguang.bus.core.Oper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -16,14 +16,14 @@ import static io.github.kongweiguang.bus.Bus.hub;
 @ContextConfiguration
 @RunWith(SpringRunner.class)
 @EnableAutoConfiguration
-@ComponentScan("test")
+@ComponentScan("io.github.kongweiguang.bus.starter.test")
 public class Test1 {
 
     @Test
     public void test() throws Exception {
 
         //推送branch为bala的消息
-        hub().push(Operation.of("bala", new User(1, "k", new String[]{"h"})), object -> System.out.println("object = " + object));
+        hub().push(Oper.of("bala", new User(1, "k", new String[]{"h"})), object -> System.out.println("object = " + object));
 
         //推送branch为bala1的消息
         hub().push("bala1", new User(1, "k", new String[]{"h"}), object -> System.out.println("object = " + object));

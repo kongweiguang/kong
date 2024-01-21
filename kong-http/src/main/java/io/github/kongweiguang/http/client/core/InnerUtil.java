@@ -22,51 +22,56 @@ public final class InnerUtil {
     }
 
     //移除第一个斜杠
-    public static String removeFirstSlash(String path) {
-        if (isNull(path)) {
+    public static String removeFirstSlash(final String path) {
+        String p = path;
+
+        if (isNull(p)) {
             return "";
         }
 
-        if (path.startsWith("/")) {
-            path = path.replaceFirst("/", "");
+        if (p.startsWith("/")) {
+            p = p.replaceFirst("/", "");
         }
-        return path;
+
+        return p;
     }
 
     //url校验
-    public static String fixUrl(String url, boolean isWs) {
-        if (isNull(url) || Objects.equals("", url)) {
-            url = "/";
+    public static String fixUrl(final String url, final boolean isWs) {
+        String u = url;
+
+        if (isNull(u) || Objects.equals("", u)) {
+            u = "/";
         }
 
         if (isWs) {
-            if (!isWs(url) && !isWss(url)) {
-                if (url.startsWith("/")) {
-                    url = Const._http + Const.localhost + url;
+            if (!isWs(u) && !isWss(u)) {
+                if (u.startsWith("/")) {
+                    u = Const._http + Const.localhost + u;
                 } else {
-                    url = Const._http + url;
+                    u = Const._http + u;
                 }
             }
-            if (isWs(url)) {
-                url = url.replaceFirst(Const._ws, Const._http);
+            if (isWs(u)) {
+                u = u.replaceFirst(Const._ws, Const._http);
             }
 
-            if (isWss(url)) {
-                url = url.replaceFirst(Const._wss, Const._https);
+            if (isWss(u)) {
+                u = u.replaceFirst(Const._wss, Const._https);
 
             }
-            return url;
+            return u;
         }
 
-        if (!isHttp(url) && !isHttps(url)) {
-            if (url.startsWith("/")) {
-                url = Const._http + Const.localhost + url;
+        if (!isHttp(u) && !isHttps(u)) {
+            if (u.startsWith("/")) {
+                u = Const._http + Const.localhost + u;
             } else {
-                url = Const._http + url;
+                u = Const._http + u;
             }
         }
 
-        return url;
+        return u;
     }
 
     public static boolean isHttp(final String url) {
@@ -111,7 +116,7 @@ public final class InnerUtil {
         return sb.toString();
     }
 
-    public static HttpLoggingInterceptor httpLoggingInterceptor(ReqLog logger, HttpLoggingInterceptor.Level level) {
+    public static HttpLoggingInterceptor httpLoggingInterceptor(final ReqLog logger, final HttpLoggingInterceptor.Level level) {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(logger);
         loggingInterceptor.setLevel(level);
         return loggingInterceptor;

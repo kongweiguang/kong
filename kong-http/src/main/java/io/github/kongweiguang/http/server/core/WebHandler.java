@@ -15,7 +15,6 @@ import static java.util.Objects.nonNull;
 public final class WebHandler implements HttpHandler {
 
     public static final String PATH = "_static_";
-
     private final String base_path;
     private String index_file = "index.html";
 
@@ -42,12 +41,12 @@ public final class WebHandler implements HttpHandler {
     @Override
     public void doHandler(final HttpReq req, final HttpRes res) throws IOException {
 
-        File file = new File(this.base_path, req.path());
+        File file = new File(base_path, req.path());
 
         if (file.exists()) {
 
             if (file.isDirectory()) {
-                file = new File(file, this.index_file);
+                file = new File(file, index_file);
                 if (!file.exists()) {
                     _404(req.httpExchange(), null);
                     return;

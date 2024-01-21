@@ -1,7 +1,7 @@
 package io.github.kongweiguang.bus.test.push_obj_method;
 
 
-import io.github.kongweiguang.bus.core.Operation;
+import io.github.kongweiguang.bus.core.Oper;
 import io.github.kongweiguang.bus.core.Pull;
 
 import io.github.kongweiguang.bus.test.metedata.User;
@@ -26,8 +26,8 @@ public class MyHandler {
     }
 
     @Pull
-    public String fn3(Operation<User, String> operation) {
-        System.out.println(operation);
+    public String fn3(Oper<User, String> oper) {
+        System.out.println(oper);
         return "hello2";
     }
 

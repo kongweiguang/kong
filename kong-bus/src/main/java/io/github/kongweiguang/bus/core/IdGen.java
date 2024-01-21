@@ -33,7 +33,7 @@ public final class IdGen {
     }
 
     private void updateBaseAndResetAdd() {
-        this.add.set(System.currentTimeMillis() << 25);
+        add.set(System.currentTimeMillis() << 25);
     }
 
     private static Thread newThread(final Runnable r) {

@@ -22,18 +22,18 @@ public abstract class AbstractHubImpl<C, R> implements Hub<C, R> {
     private final Map<String, List<MergeWarp<C, R>>> repo = new ConcurrentHashMap<>();
 
     @Override
-    public Hub<C, R> push(final Operation<C, R> operation, final Consumer<R> call) {
-        notNull(operation, "action must not be null");
+    public Hub<C, R> push(final Oper<C, R> oper, final Consumer<R> call) {
+        notNull(oper, "action must not be null");
 
-        operation.callback(call);
+        oper.callback(call);
 
-        ofNullable(repo.get(operation.branch())).ifPresent(ms -> ms.forEach(m -> m.merge(operation)));
+        ofNullable(repo.get(oper.branch())).ifPresent(ms -> ms.forEach(m -> m.merge(oper)));
 
         return this;
     }
 
     @Override
-    public Hub<C, R> pull(final String branch, final int index, final Merge<Operation<C, R>> merge) {
+    public Hub<C, R> pull(final String branch, final int index, final Merge<Oper<C, R>> merge) {
         notNull(branch, "branch must not be null");
         notNull(merge, "merge must not be null");
 

@@ -73,7 +73,7 @@ public final class Conf {
     //cookieJar
     private CookieJar cookieJar;
 
-    private Conf(Conf conf) {
+    private Conf(final Conf conf) {
         this.interceptors = conf.interceptors();
         this.dispatcher = conf.dispatcher();
         this.exec = conf.exec();
@@ -296,7 +296,7 @@ public final class Conf {
      * @param proxySelector 代理选择器 {@link ProxySelector}
      * @return 自身实例 {@link Conf}
      */
-    public Conf proxySelector(ProxySelector proxySelector) {
+    public Conf proxySelector(final ProxySelector proxySelector) {
         this.proxySelector = proxySelector;
         return this;
     }
@@ -307,7 +307,7 @@ public final class Conf {
      * @param timeout 超时时间 {@link Timeout}
      * @return 自身实例 {@link Conf}
      */
-    public Conf timeout(Timeout timeout) {
+    public Conf timeout(final Timeout timeout) {
         this.timeout = timeout;
         return this;
     }
@@ -328,7 +328,7 @@ public final class Conf {
      * @param level  日志级别
      * @return 自身实例 {@link Conf}
      */
-    public Conf log(ReqLog logger, HttpLoggingInterceptor.Level level) {
+    public Conf log(final ReqLog logger, final HttpLoggingInterceptor.Level level) {
         this.httpLoggingInterceptor = InnerUtil.httpLoggingInterceptor(logger, level);
         return this;
     }
@@ -357,7 +357,7 @@ public final class Conf {
      * @param eventListener 事件监听器 {@link EventListener}
      * @return 自身实例 {@link Conf}
      */
-    public Conf eventListener(EventListener eventListener) {
+    public Conf eventListener(final EventListener eventListener) {
         this.eventListener = eventListener;
         return this;
     }
@@ -377,7 +377,7 @@ public final class Conf {
      * @param followRedirects 是否重定向
      * @return 自身实例 {@link Conf}
      */
-    public Conf followRedirects(boolean followRedirects) {
+    public Conf followRedirects(final boolean followRedirects) {
         this.followRedirects = followRedirects;
         return this;
     }
@@ -397,7 +397,7 @@ public final class Conf {
      * @param followSslRedirects 是否重定向
      * @return 自身实例 {@link Conf}
      */
-    public Conf followSslRedirects(boolean followSslRedirects) {
+    public Conf followSslRedirects(final boolean followSslRedirects) {
         this.followSslRedirects = followSslRedirects;
         return this;
     }
@@ -416,7 +416,7 @@ public final class Conf {
      *
      * @return 自身实例 {@link Conf}
      */
-    public Conf cookieJar(CookieJar cookieJar) {
+    public Conf cookieJar(final CookieJar cookieJar) {
         this.cookieJar = cookieJar;
         return this;
     }

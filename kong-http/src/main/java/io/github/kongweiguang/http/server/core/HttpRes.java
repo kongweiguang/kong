@@ -5,11 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import io.github.kongweiguang.http.client.core.ContentType;
 import io.github.kongweiguang.http.client.core.Header;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -30,6 +26,11 @@ public final class HttpRes {
     private Charset charset = StandardCharsets.UTF_8;
     private String contentType = ContentType.text_plain.v();
 
+    /**
+     * 构造器
+     *
+     * @param httpExchange {@link  HttpExchange}
+     */
     public HttpRes(final HttpExchange httpExchange) {
         this.he = httpExchange;
     }
@@ -99,7 +100,7 @@ public final class HttpRes {
      * @return 编码集 {@link Charset}
      */
     public Charset charset() {
-        return this.charset;
+        return charset;
     }
 
     /**

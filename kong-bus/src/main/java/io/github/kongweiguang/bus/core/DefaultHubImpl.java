@@ -23,12 +23,12 @@ import static io.github.kongweiguang.core.Strs.isEmpty;
 public class DefaultHubImpl<C, R> extends AbstractHubImpl<C, R> {
 
     @Override
-    public Hub<C, R> pullClass(Object obj) {
+    public Hub<C, R> pullClass(final Object obj) {
         return exc(Type.pull, obj);
     }
 
     @Override
-    public Hub<C, R> removeClass(Object obj) {
+    public Hub<C, R> removeClass(final Object obj) {
         return exc(Type.remove, obj);
     }
 
@@ -40,16 +40,14 @@ public class DefaultHubImpl<C, R> extends AbstractHubImpl<C, R> {
     private Hub<C, R> exc(final Type type, final Object obj) {
         notNull(obj, "class must not be null");
 
-        final Class<?> clazz = obj.getClass();
-
-        for (Method m : clazz.getDeclaredMethods()) {
-            bind(type, clazz, m);
+        for (Method m : obj.getClass().getDeclaredMethods()) {
+            bind(type, obj, m);
         }
 
         return this;
     }
 
-    private static void bind(Type type, Object obj, Method m) {
+    private static void bind(final Type type, final Object obj, final Method m) {
         Pull pull = m.getAnnotation(Pull.class);
 
         if (pull != null) {
@@ -83,7 +81,7 @@ public class DefaultHubImpl<C, R> extends AbstractHubImpl<C, R> {
 
         if (pull.value().isEmpty()) {
 
-            if (Operation.class.isAssignableFrom(params[0])) {
+            if (Oper.class.isAssignableFrom(params[0])) {
 
                 final List<String> generics = generics(m);
 
@@ -102,31 +100,31 @@ public class DefaultHubImpl<C, R> extends AbstractHubImpl<C, R> {
     }
 
     @SuppressWarnings("unchecked")
-    private static <C, R> Merge<Operation<C, R>> mr(final Object obj, final Method m, final Class<?>[] params, final String name) {
-        return new Merge<Operation<C, R>>() {
+    private static <C, R> Merge<Oper<C, R>> mr(final Object obj, final Method m, final Class<?>[] params, final String name) {
+        return new Merge<Oper<C, R>>() {
             @Override
             public String name() {
                 return defaultIfEmpty(name, Merge.super.name());
             }
 
             @Override
-            public void mr(final Operation<C, R> operation) throws Exception {
+            public void mr(final Oper<C, R> oper) throws Exception {
                 final Object[] args = new Object[params.length];
 
                 if (params.length == 1) {
 
-                    if (Operation.class.isAssignableFrom(params[0])) {
-                        args[0] = operation;
+                    if (Oper.class.isAssignableFrom(params[0])) {
+                        args[0] = oper;
                     } else {
-                        args[0] = operation.content();
+                        args[0] = oper.content();
                     }
 
                 }
 
                 final Object fr = m.invoke(obj, args);
 
-                if (operation.hasCallBack()) {
-                    operation.res((R) fr);
+                if (oper.hasCallBack()) {
+                    oper.res((R) fr);
                 }
             }
         };

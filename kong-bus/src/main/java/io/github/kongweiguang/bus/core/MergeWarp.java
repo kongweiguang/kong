@@ -8,9 +8,9 @@ package io.github.kongweiguang.bus.core;
  */
 final class MergeWarp<C, R> {
     private final int index;
-    private final Merge<Operation<C, R>> merge;
+    private final Merge<Oper<C, R>> merge;
 
-    public MergeWarp(final int index, final Merge<Operation<C, R>> merge) {
+    public MergeWarp(final int index, final Merge<Oper<C, R>> merge) {
         this.index = index;
         this.merge = merge;
     }
@@ -36,11 +36,11 @@ final class MergeWarp<C, R> {
     /**
      * 合并操作
      *
-     * @param operation 操作
+     * @param oper 操作
      */
-    void merge(Operation<C, R> operation) {
+    void merge(final Oper<C, R> oper) {
         try {
-            merge.mr(operation);
+            merge.mr(oper);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

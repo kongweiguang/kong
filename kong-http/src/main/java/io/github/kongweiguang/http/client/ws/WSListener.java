@@ -8,7 +8,7 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
-import static java.util.Objects.nonNull;
+import static java.util.Optional.ofNullable;
 
 /**
  * ws监听器
@@ -62,9 +62,8 @@ public abstract class WSListener extends WebSocketListener {
      * @return {@link WSListener}
      */
     public WSListener send(final String text) {
-        if (nonNull(ws)) {
-            ws.send(text);
-        }
+
+        ofNullable(ws).ifPresent(ws -> ws.send(text));
 
         return this;
     }
@@ -76,9 +75,8 @@ public abstract class WSListener extends WebSocketListener {
      * @return {@link WSListener}
      */
     public WSListener send(final byte[] bytes) {
-        if (nonNull(ws)) {
-            ws.send(ByteString.of(bytes));
-        }
+
+        ofNullable(ws).ifPresent(ws -> ws.send(ByteString.of(bytes)));
 
         return this;
     }
@@ -87,7 +85,7 @@ public abstract class WSListener extends WebSocketListener {
      * 关闭连接
      */
     public void close() {
-        ws.cancel();
+        ofNullable(ws).ifPresent(WebSocket::cancel);
     }
 
 

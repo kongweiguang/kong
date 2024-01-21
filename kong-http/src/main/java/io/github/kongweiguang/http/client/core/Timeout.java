@@ -13,7 +13,7 @@ public final class Timeout {
     private final Duration write;
     private final Duration read;
 
-    public Timeout(Duration connect, Duration write, Duration read) {
+    public Timeout(final Duration connect, final Duration write,final Duration read) {
         this.connect = connect;
         this.write = write;
         this.read = read;

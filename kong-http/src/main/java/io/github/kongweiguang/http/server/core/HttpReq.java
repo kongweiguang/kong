@@ -2,6 +2,7 @@ package io.github.kongweiguang.http.server.core;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
+import io.github.kongweiguang.core.Objs;
 import io.github.kongweiguang.core.util.IOUtil;
 import io.github.kongweiguang.http.client.core.Header;
 import io.github.kongweiguang.http.client.core.Method;
@@ -10,14 +11,11 @@ import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.Optional.ofNullable;
 
 /**
  * 请求参数
@@ -27,7 +25,6 @@ import static java.util.Objects.nonNull;
 public final class HttpReq {
 
     private final HttpExchange he;
-    private Charset charset;
     private Map<String, List<String>> paramMap;
     private Map<String, List<UploadFile>> fileMap;
 
@@ -40,22 +37,6 @@ public final class HttpReq {
         this.he = httpExchange;
     }
 
-    private static Charset charset0(final String contentType) {
-        try {
-            String[] parts = contentType.split(";");
-            if (parts.length > 1) {
-                final String part = parts[1];
-                if (part.startsWith("charset=")) {
-                    return Charset.forName(part.substring("charset=".length()));
-                }
-
-            }
-        } catch (Exception ignored) {
-
-        }
-        return StandardCharsets.UTF_8;
-    }
-
     /**
      * 将url中的请求参数解析到集合中
      *
@@ -63,7 +44,6 @@ public final class HttpReq {
      * @param map 请求参数集合
      */
     private static void getParams(final String url, final Map<String, List<String>> map) {
-
         if (isNull(url)) {
             return;
         }
@@ -92,7 +72,6 @@ public final class HttpReq {
      */
     public Headers headers() {
         return httpExchange().getRequestHeaders();
-
     }
 
     /**
@@ -120,14 +99,23 @@ public final class HttpReq {
      * @return {@link Charset}
      */
     public Charset charset() {
-        if (isNull(this.charset)) {
-            final String contentType = header(Header.content_type.v());
+        try {
+            final String contentType = contentType();
             if (nonNull(contentType)) {
-                this.charset = charset0(contentType);
+                String[] parts = contentType.split(";");
+                if (parts.length > 1) {
+                    final String part = parts[1];
+                    if (part.startsWith("charset=")) {
+                        return Charset.forName(part.substring("charset=".length()));
+                    }
+
+                }
             }
+        } catch (Exception ignored) {
+
         }
 
-        return this.charset;
+        return null;
     }
 
     /**
@@ -203,23 +191,16 @@ public final class HttpReq {
         if (isNull(paramMap)) {
             this.paramMap = new HashMap<>();
 
-            final String query = query();
-
-            if (nonNull(query)) {
-                getParams(query, paramMap);
-            }
+            ofNullable(query()).ifPresent(q -> getParams(q, paramMap));
 
             if (isMultipart()) {
-                try {
-                    parserForm();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+                parserForm();
             } else {
                 getParams(str(), paramMap);
             }
 
         }
+
         return paramMap;
     }
 
@@ -244,7 +225,7 @@ public final class HttpReq {
             return null;
         }
 
-        return new String(bytes(), charset());
+        return new String(bytes(), Objs.defaultIfNull(charset(), StandardCharsets.UTF_8));
     }
 
     /**
@@ -271,11 +252,7 @@ public final class HttpReq {
      */
     public Map<String, List<UploadFile>> fileMap() {
         if (isNull(fileMap)) {
-            try {
-                parserForm();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            parserForm();
         }
 
         return fileMap;

@@ -5,9 +5,9 @@ import java.lang.annotation.*;
 /**
  * <h1>拉取指定分支的内容</h1>
  * <p>
- * 被标注的方法只能有一个参数，通过参数的全类名拉取内容{@link  Operation}
+ * 被标注的方法只能有一个参数，通过参数的全类名拉取内容{@link  Oper}
  * <p>
- * 方法如果有返回值则会调用{@link Operation} 的res方法，触发推送者的回调方法
+ * 方法如果有返回值则会调用{@link Oper} 的res方法，触发推送者的回调方法
  *
  * @author kongweiguang
  */

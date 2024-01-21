@@ -18,12 +18,7 @@ public final class FormResolver {
      *
      * @param req http请求
      */
-    public static void parser(HttpReq req) {
-        boundaryIndex(req);
-    }
-
-
-    private static void boundaryIndex(HttpReq req) {
+    public static void parser(final HttpReq req) {
         byte[] boundary = ("--" + req.contentType().substring(req.contentType().indexOf("=") + 1)).getBytes(StandardCharsets.UTF_8);
         byte[] body = req.bytes();
         int count = 0;
@@ -121,16 +116,17 @@ public final class FormResolver {
 
     }
 
-    private static Part resolveParam(String lineStr) {
 
-        String[] kvs = lineStr.substring("Content-Disposition: form-data; ".length()).split(";");
+    private static Part resolveParam(final String lineStr) {
 
-        Part part = new Part();
+        final String[] kvs = lineStr.substring("Content-Disposition: form-data; ".length()).split(";");
+
+        final Part part = new Part();
 
         part.type("text");
 
         for (String kv : kvs) {
-            String[] k_v = kv.trim().split("=");
+            final String[] k_v = kv.trim().split("=");
 
             if ("name".equals(k_v[0])) {
                 part.name(k_v[1].replace("\"", ""));

@@ -32,6 +32,7 @@ public class Threads {
             try {
                 obj.wait();
             } catch (InterruptedException ignored) {
+
             }
         }
     }

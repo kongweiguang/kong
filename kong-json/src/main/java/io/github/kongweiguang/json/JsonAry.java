@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
+import static io.github.kongweiguang.json.Json.toNode;
+import static io.github.kongweiguang.json.Json.toStr;
 import static java.util.Optional.ofNullable;
 
 /**
@@ -15,10 +18,10 @@ import static java.util.Optional.ofNullable;
 public class JsonAry {
     private ArrayNode node = Json.mapper().createArrayNode();
 
-    public JsonAry() {
+    private JsonAry() {
     }
 
-    public JsonAry(ArrayNode node) {
+    private JsonAry(final ArrayNode node) {
         this.node = node;
     }
 
@@ -37,18 +40,18 @@ public class JsonAry {
      * @param node {@link ArrayNode}
      * @return {@link JsonAry}
      */
-    public static JsonAry of(ArrayNode node) {
+    public static JsonAry of(final ArrayNode node) {
         return new JsonAry(node);
     }
 
     /**
-     * 添加一个字符串
+     * 添加基本类型或者字符串，如果传入对象会转成字符串存储
      *
-     * @param str 内容
+     * @param obj 内容
      * @return {@link JsonAry}
      */
-    public JsonAry add(String str) {
-        node.add(str);
+    public JsonAry add(final Object obj) {
+        node.add(toStr(obj));
         return this;
     }
 
@@ -58,16 +61,21 @@ public class JsonAry {
      * @param obj 内容
      * @return {@link JsonAry}
      */
-    public JsonAry add(Object obj) {
-        if (obj instanceof String) {
-            return add((String) obj);
-        }
+    public JsonAry addObj(final Object obj) {
+        node.add(toNode(toStr(obj)));
+        return this;
+    }
 
-        if (obj instanceof Collection) {
-            return add(((Collection<?>) obj));
-        }
-
-        node.add(Json.toNode(Json.toStr(obj)));
+    /**
+     * 添加一个{@link JsonAry}
+     *
+     * @param con 构建器
+     * @return {@link JsonAry}
+     */
+    public JsonAry addAry(final Consumer<JsonAry> con) {
+        final JsonAry ary = JsonAry.of(node.arrayNode());
+        con.accept(ary);
+        addObj(ary.toJson());
         return this;
     }
 
@@ -77,7 +85,7 @@ public class JsonAry {
      * @param coll 集合
      * @return {@link JsonAry}
      */
-    public JsonAry add(Collection<?> coll) {
+    public JsonAry addColl(final Collection<?> coll) {
         ofNullable(coll).ifPresent(e -> e.forEach(this::add));
         return this;
     }
@@ -87,7 +95,7 @@ public class JsonAry {
      *
      * @return json数组
      */
-    public String build() {
+    public String toJson() {
         return node.toString();
     }
 
@@ -98,6 +106,6 @@ public class JsonAry {
      * @return {@link  List}
      */
     public <T> List<T> toList() {
-        return Json.toList(build());
+        return Json.toList(toJson());
     }
 }

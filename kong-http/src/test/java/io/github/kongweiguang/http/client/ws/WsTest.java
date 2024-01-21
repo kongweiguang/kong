@@ -18,7 +18,7 @@ public class WsTest {
 
             @Override
             public void msg(final ReqBuilder req, final String text) {
-                System.out.println(text);
+                System.out.println("text -> " + text);
             }
 
             @Override
@@ -46,6 +46,7 @@ public class WsTest {
                 .query("k", "v")
                 .wsListener(listener)
                 .ok();
+        Threads.sleep(1000);
 
         for (int i = 0; i < 3; i++) {
             listener.send("123");

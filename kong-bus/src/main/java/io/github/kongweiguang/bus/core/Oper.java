@@ -15,25 +15,25 @@ import static java.util.Objects.nonNull;
  * @param <R> 合并后返回的结果类型
  * @author kongweiguang
  */
-public final class Operation<C, R> {
+public final class Oper<C, R> {
     private final long id;
     private final String branch;
     private final C content;
     private Consumer<R> call;
     private Map<Object, Object> tag;
 
-    private Operation(final long id, final String branch, final C content) {
+    private Oper(final long id, final String branch, final C c) {
         this.id = id;
         this.branch = branch;
-        this.content = content;
+        this.content = c;
     }
 
-    public static <C, R> Operation<C, R> of(final String branch, final C c) {
+    public static <C, R> Oper<C, R> of(final String branch, final C c) {
         return of(IdGen.of.next(), branch, c);
     }
 
-    public static <C, R> Operation<C, R> of(final long id, final String branch, final C c) {
-        return new Operation<>(id, branch, c);
+    public static <C, R> Oper<C, R> of(final long id, final String branch, final C c) {
+        return new Oper<>(id, branch, c);
     }
 
     /**
@@ -106,7 +106,7 @@ public final class Operation<C, R> {
      * @param v 值
      * @return this
      */
-    public Operation<C, R> tag(final Object k, final Object v) {
+    public Oper<C, R> tag(final Object k, final Object v) {
         if (isNull(tag)) {
             this.tag = new HashMap<>();
         }
@@ -126,11 +126,11 @@ public final class Operation<C, R> {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", Operation.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", Oper.class.getSimpleName() + "[", "]")
                 .add("id=" + id)
                 .add("branch='" + branch + "'")
                 .add("content=" + content)
-                .add("attr=" + tag)
+                .add("tag=" + tag)
                 .toString();
     }
 }
