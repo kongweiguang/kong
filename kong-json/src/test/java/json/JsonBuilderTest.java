@@ -47,7 +47,7 @@ public class JsonBuilderTest {
 
         System.out.println(ary);
 
-        final List<Object> list = Json.toList(ary);
+        final List<Object> list = Json.toList(ary, Object.class);
 
         System.out.println(list);
     }
@@ -56,7 +56,7 @@ public class JsonBuilderTest {
     @Test
     void test1() throws Exception {
         final JsonObj jsonObj = Json.obj().put("1", "true");
-        System.out.println(jsonObj.toMap(String.class, String.class));
+        System.out.println(jsonObj.toMap());
         System.out.println(jsonObj.toJson());
     }
 

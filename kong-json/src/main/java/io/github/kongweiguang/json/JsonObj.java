@@ -142,12 +142,23 @@ public final class JsonObj {
     /**
      * 将json对象转成map
      *
-     * @param <K> 键的类型
-     * @param <V> 值的类型
+     * @param k 键的类型
+     * @param v 值的类型
      * @return map
      */
     public <K, V> Map<K, V> toMap(final Class<K> k, final Class<V> v) {
         return Json.toMap(toJson(), k, v);
+    }
+
+    /**
+     * 将json对象转成map
+     *
+     * @param <K> 键的类型
+     * @param <V> 值的类型
+     * @return map
+     */
+    public <K, V> Map<K, V> toMap() {
+        return Json.toMap(toJson());
     }
 
     /**

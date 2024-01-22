@@ -111,10 +111,10 @@ public final class Json {
             }
 
             if (format) {
-                return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+                return mapper().writerWithDefaultPrettyPrinter().writeValueAsString(obj);
             }
 
-            return mapper.writeValueAsString(obj);
+            return mapper().writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -134,7 +134,7 @@ public final class Json {
         }
 
         try {
-            return clazz.equals(String.class) ? (T) json : mapper.readValue(json, clazz);
+            return clazz.equals(String.class) ? (T) json : mapper().readValue(json, clazz);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -153,7 +153,7 @@ public final class Json {
         }
 
         try {
-            return mapper.readValue(json, typeReference);
+            return mapper().readValue(json, typeReference);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -165,7 +165,7 @@ public final class Json {
         }
 
         try {
-            return mapper.readValue(json, javaType);
+            return mapper().readValue(json, javaType);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -182,7 +182,7 @@ public final class Json {
         }
 
         try {
-            return mapper.readTree(json);
+            return mapper().readTree(json);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -201,7 +201,18 @@ public final class Json {
             return new HashMap<>();
         }
 
-        return toObj(json, mapper.getTypeFactory().constructParametricType(Map.class, k, v));
+        return toObj(json, mapper().getTypeFactory().constructParametricType(Map.class, k, v));
+    }
+
+    /**
+     * 对象转换为map对象
+     *
+     * @param json 需要转换的json字符串
+     * @return map
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> toMap(final String json) {
+        return (Map<K, V>) toMap(json, Object.class, Object.class);
     }
 
     /**
@@ -216,7 +227,18 @@ public final class Json {
             return new ArrayList<>();
         }
 
-        return toObj(json, mapper.getTypeFactory().constructParametricType(List.class, clazz));
+        return toObj(json, mapper().getTypeFactory().constructParametricType(List.class, clazz));
+    }
+
+    /**
+     * json字符串转换为list对象，并指定元素类型
+     *
+     * @param json json字符串
+     * @return list
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> toList(final String json) {
+        return (List<T>) toList(json, Object.class);
     }
 
 

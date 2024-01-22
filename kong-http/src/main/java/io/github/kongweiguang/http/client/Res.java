@@ -327,11 +327,33 @@ public final class Res implements AutoCloseable {
     /**
      * 返回list类型结果
      *
-     * @param <E> 集合中的元素
+     * @param <E>   集合中的元素
+     * @param clazz 元素的类型
      * @return 响应对象
      */
     public <E> List<E> list(final Class<E> clazz) {
         return toList(str(), clazz);
+    }
+
+    /**
+     * 返回list类型结果
+     *
+     * @param <E> 集合中的元素
+     * @return 响应对象
+     */
+    public <E> List<E> list() {
+        return toList(str());
+    }
+
+    /**
+     * 返回map类型结果
+     *
+     * @param k Map的key
+     * @param v Map的Value
+     * @return 当前对象 {@link Res}
+     */
+    public <K, V> Map<K, V> map(final Class<K> k, final Class<V> v) {
+        return toMap(str(), k, v);
     }
 
     /**
@@ -341,8 +363,8 @@ public final class Res implements AutoCloseable {
      * @param <V> Map的Value
      * @return 当前对象 {@link Res}
      */
-    public <K, V> Map<K, V> map(final Class<K> k, final Class<V> v) {
-        return toMap(str(), k, v);
+    public <K, V> Map<K, V> map() {
+        return toMap(str());
     }
 
     /**

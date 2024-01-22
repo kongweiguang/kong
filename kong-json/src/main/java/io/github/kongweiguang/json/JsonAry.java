@@ -127,6 +127,16 @@ public final class JsonAry {
     /**
      * 转成List
      *
+     * @param clazz 元素类型
+     * @return {@link  List}
+     */
+    public <T> List<T> toList(final Class<T> clazz) {
+        return Json.toList(toJson(), clazz);
+    }
+
+    /**
+     * 转成List
+     *
      * @param <T> 元素类型
      * @return {@link  List}
      */
