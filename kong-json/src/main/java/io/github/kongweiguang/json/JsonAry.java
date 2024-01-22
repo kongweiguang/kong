@@ -78,8 +78,7 @@ public final class JsonAry {
 
         final JsonObj obj = JsonObj.of(node.objectNode());
         con.accept(obj);
-        addObj(obj.toJson());
-        return this;
+        return addObj(obj.toJson());
     }
 
     /**
@@ -93,8 +92,7 @@ public final class JsonAry {
 
         final JsonAry ary = JsonAry.of(node.arrayNode());
         con.accept(ary);
-        addObj(ary.toJson());
-        return this;
+        return addObj(ary.toJson());
     }
 
     /**

@@ -2,6 +2,7 @@ package io.github.kongweiguang.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -9,11 +10,15 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import static com.fasterxml.jackson.core.json.JsonReadFeature.*;
+import static com.fasterxml.jackson.core.json.JsonReadFeature.ALLOW_LEADING_ZEROS_FOR_NUMBERS;
+import static com.fasterxml.jackson.core.json.JsonReadFeature.ALLOW_SINGLE_QUOTES;
+import static com.fasterxml.jackson.core.json.JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS;
+import static com.fasterxml.jackson.core.json.JsonReadFeature.ALLOW_UNQUOTED_FIELD_NAMES;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static com.fasterxml.jackson.databind.MapperFeature.USE_STD_BEAN_NAMING;
 import static com.fasterxml.jackson.databind.PropertyNamingStrategies.LOWER_CAMEL_CASE;
@@ -143,13 +148,25 @@ public final class Json {
      * @param typeReference 目标对象类型
      */
     public static <T> T toObj(final String json, final TypeReference<T> typeReference) {
-        if (isEmpty(json) || typeReference == null) {
+        if (isEmpty(json) || isNull(typeReference)) {
             return null;
         }
 
         try {
             return mapper.readValue(json, typeReference);
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> T toObj(final String json, final JavaType javaType) {
+        if (isEmpty(json) || isNull(javaType)) {
+            return null;
+        }
+
+        try {
+            return mapper.readValue(json, javaType);
+        } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
@@ -174,56 +191,34 @@ public final class Json {
     /**
      * 对象转换为map对象
      *
-     * @param obj 要转换的对象
+     * @param json 需要转换的json字符串
+     * @param k    健的类型
+     * @param v    值的类型
+     * @return map
      */
-    @SuppressWarnings("unchecked")
-    public static <K, V> Map<K, V> toMap(final Object obj) {
-        if (isNull(obj)) {
-            return null;
-        }
-
-        if (obj instanceof String) {
-            return toObj((String) obj, Map.class);
-        }
-
-        return mapper.convertValue(obj, Map.class);
-    }
-
-    /**
-     * json字符串转换为list对象
-     *
-     * @param json json字符串
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> List<T> toList(final String json) {
+    public static <K, V> Map<K, V> toMap(final String json, final Class<K> k, final Class<V> v) {
         if (isEmpty(json)) {
-            return new ArrayList<>();
+            return new HashMap<>();
         }
 
-        try {
-            return mapper.readValue(json, List.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return toObj(json, mapper.getTypeFactory().constructParametricType(Map.class, k, v));
     }
 
     /**
      * json字符串转换为list对象，并指定元素类型
      *
-     * @param json json字符串
-     * @param cls  list的元素类型
+     * @param json  json字符串
+     * @param clazz list的元素类型
+     * @return list
      */
-    public static <T> List<T> toList(final String json, final Class<T> cls) {
+    public static <T> List<T> toList(final String json, final Class<T> clazz) {
         if (isEmpty(json)) {
             return new ArrayList<>();
         }
 
-        try {
-            return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(List.class, cls));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return toObj(json, mapper.getTypeFactory().constructParametricType(List.class, clazz));
     }
+
 
     /**
      * 创建json对象

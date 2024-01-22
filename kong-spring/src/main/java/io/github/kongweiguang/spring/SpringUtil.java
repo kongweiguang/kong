@@ -1,19 +1,27 @@
 package io.github.kongweiguang.spring;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 
 @SuppressWarnings("all")
-public class SpringUtil implements ApplicationContextAware {
+public class SpringUtil implements ApplicationContextAware, BeanFactoryPostProcessor {
     private static ApplicationContext context;
 
 //    @Override
 //    public void initialize(final ConfigurableApplicationContext applicationContext) {
 //        SpringUtil.context = applicationContext;
 //    }
+
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        System.out.println(beanFactory);
+    }
 
     @Override
     public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
@@ -41,7 +49,7 @@ public class SpringUtil implements ApplicationContextAware {
     public static String env() {
         final String[] envs = envs();
 
-        return ofNullable(envs).isPresent() ? envs[0] : null;
+        return nonNull(envs) ? envs[0] : null;
     }
 
     public static String[] envs() {
@@ -56,7 +64,7 @@ public class SpringUtil implements ApplicationContextAware {
         return ofNullable(context).map(c -> c.getEnvironment()).map(e -> e.getProperty(name)).orElse(null);
     }
 
-    public static void publish(Object obj) {
+    public static void publish(final Object obj) {
         ofNullable(context).ifPresent(c -> c.publishEvent(obj));
     }
 

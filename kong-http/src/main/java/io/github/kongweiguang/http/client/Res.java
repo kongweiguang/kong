@@ -23,7 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static io.github.kongweiguang.json.Json.*;
+import static io.github.kongweiguang.json.Json.toList;
+import static io.github.kongweiguang.json.Json.toMap;
+import static io.github.kongweiguang.json.Json.toObj;
 import static java.nio.file.Files.copy;
 import static java.util.Optional.ofNullable;
 import static okhttp3.internal.Util.closeQuietly;
@@ -219,7 +221,7 @@ public final class Res implements AutoCloseable {
      * @param charset 字符集
      * @return 消息体字符串
      */
-    public String str(Charset charset) {
+    public String str(final Charset charset) {
         return new String(bytes(), charset);
     }
 
@@ -248,7 +250,7 @@ public final class Res implements AutoCloseable {
      * @param <R>   目标类型
      * @return 响应对象
      */
-    public <R> R obj(Class<R> clazz) {
+    public <R> R obj(final Class<R> clazz) {
         return toObj(str(), clazz);
     }
 
@@ -260,7 +262,7 @@ public final class Res implements AutoCloseable {
      * @param <R>   目标类型
      * @return 响应对象
      */
-    public <R> R defaultObj(Class<R> clazz, R r) {
+    public <R> R defaultObj(final Class<R> clazz, final R r) {
         try {
             return toObj(str(), clazz);
         } catch (Exception e) {
@@ -275,7 +277,7 @@ public final class Res implements AutoCloseable {
      * @param <R>     目标类型
      * @return 响应对象
      */
-    public <R> R obj(TypeReference<R> typeRef) {
+    public <R> R obj(final TypeReference<R> typeRef) {
         return toObj(str(), typeRef);
     }
 
@@ -287,7 +289,7 @@ public final class Res implements AutoCloseable {
      * @param <R>     目标类型
      * @return 响应对象
      */
-    public <R> R defaultObj(TypeReference<R> typeRef, R r) {
+    public <R> R defaultObj(final TypeReference<R> typeRef, R r) {
         try {
             return toObj(str(), typeRef);
         } catch (Exception e) {
@@ -328,8 +330,8 @@ public final class Res implements AutoCloseable {
      * @param <E> 集合中的元素
      * @return 响应对象
      */
-    public <E> List<E> list() {
-        return toList(str());
+    public <E> List<E> list(final Class<E> clazz) {
+        return toList(str(), clazz);
     }
 
     /**
@@ -339,8 +341,8 @@ public final class Res implements AutoCloseable {
      * @param <V> Map的Value
      * @return 当前对象 {@link Res}
      */
-    public <K, V> Map<K, V> map() {
-        return toMap(str());
+    public <K, V> Map<K, V> map(final Class<K> k, final Class<V> v) {
+        return toMap(str(), k, v);
     }
 
     /**
@@ -351,7 +353,7 @@ public final class Res implements AutoCloseable {
      * @return 读取或写入的字节数
      * @throws IOException IOException
      */
-    public long file(String path, CopyOption... options) throws IOException {
+    public long file(final String path, final CopyOption... options) throws IOException {
         return copy(stream(), Paths.get(path), options);
     }
 
@@ -361,7 +363,7 @@ public final class Res implements AutoCloseable {
      * @param con 操作
      * @return 当前对象 {@link Res}
      */
-    public Res then(Consumer<Res> con) {
+    public Res then(final Consumer<Res> con) {
         ofNullable(con).ifPresent(c -> c.accept(this));
         return this;
     }

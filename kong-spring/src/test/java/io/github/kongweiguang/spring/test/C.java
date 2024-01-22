@@ -8,16 +8,14 @@ import javax.annotation.PostConstruct;
 @Component("ccc")
 public class C {
 
-    A aaa;
+    A a;
 
     @PostConstruct
-    public void run() {
-//        aaa = SpringUtil.getBean(A.class);
-//        aaa.m1();
+    public void init() {
+        a = SpringUtil.getBean("aaa");
     }
 
-
     public void m1() {
-        aaa.m1();
+        a.m1();
     }
 }

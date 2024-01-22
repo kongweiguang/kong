@@ -146,8 +146,8 @@ public final class JsonObj {
      * @param <V> 值的类型
      * @return map
      */
-    public <K, V> Map<K, V> toMap() {
-        return Json.toMap(toJson());
+    public <K, V> Map<K, V> toMap(final Class<K> k, final Class<V> v) {
+        return Json.toMap(toJson(), k, v);
     }
 
     /**

@@ -1,6 +1,5 @@
 package io.github.kongweiguang.spring.test;
 
-import io.github.kongweiguang.spring.SpringUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -15,13 +14,14 @@ import javax.annotation.Resource;
 @EnableAutoConfiguration
 @ComponentScan("io.github.kongweiguang.spring.test")
 public class Test1 {
-
-    static A a = SpringUtil.getBean(A.class);
+    @Resource
+    C ccc;
 
     @Test
     public void test1() throws Exception {
-        a.m1();
-
+//        final C c = SpringUtil.getBean(C.class);
+//        c.m1();
+        ccc.m1();
     }
 
 }
