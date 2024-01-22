@@ -1,13 +1,13 @@
 package io.github.kongweiguang.json;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import io.github.kongweiguang.core.Assert;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static io.github.kongweiguang.json.Json.toNode;
-import static io.github.kongweiguang.json.Json.toStr;
 import static java.util.Optional.ofNullable;
 
 /**
@@ -22,6 +22,7 @@ public final class JsonAry {
     }
 
     private JsonAry(final ArrayNode node) {
+        Assert.notNull(node, "node must not be null");
         this.node = node;
     }
 
@@ -51,7 +52,7 @@ public final class JsonAry {
      * @return {@link JsonAry}
      */
     public JsonAry add(final Object obj) {
-        node.add(toStr(obj));
+        node.add(Json.toStr(obj));
         return this;
     }
 
@@ -62,7 +63,22 @@ public final class JsonAry {
      * @return {@link JsonAry}
      */
     public JsonAry addObj(final Object obj) {
-        node.add(toNode(toStr(obj)));
+        node.add(Json.toNode(Json.toStr(obj)));
+        return this;
+    }
+
+    /**
+     * 添加一个对象
+     *
+     * @param con 构建器
+     * @return {@link JsonAry}
+     */
+    public JsonAry addObj(final Consumer<JsonObj> con) {
+        Assert.notNull(con, "consumer must not be null");
+
+        final JsonObj obj = JsonObj.of(node.objectNode());
+        con.accept(obj);
+        addObj(obj.toJson());
         return this;
     }
 
@@ -73,6 +89,8 @@ public final class JsonAry {
      * @return {@link JsonAry}
      */
     public JsonAry addAry(final Consumer<JsonAry> con) {
+        Assert.notNull(con, "consumer must not be null");
+
         final JsonAry ary = JsonAry.of(node.arrayNode());
         con.accept(ary);
         addObj(ary.toJson());
@@ -116,5 +134,14 @@ public final class JsonAry {
      */
     public <T> List<T> toList() {
         return Json.toList(toJson());
+    }
+
+    /**
+     * 返回{@link JsonNode}
+     *
+     * @return {@link JsonNode}
+     */
+    public JsonNode toNode() {
+        return node;
     }
 }

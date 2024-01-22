@@ -82,7 +82,7 @@ public final class JavaServer {
      * @return 当前对象
      */
     public JavaServer web(final String path, final String... fileName) {
-        RestHandler.add(WebHandler.PATH, new WebHandler(path, fileName.length > 1 ? fileName[0] : null));
+        RestHandler.add(GET, WebHandler.PATH, new WebHandler(path, fileName.length > 1 ? fileName[0] : null));
         return this;
     }
 

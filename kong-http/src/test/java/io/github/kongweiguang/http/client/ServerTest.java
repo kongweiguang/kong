@@ -27,7 +27,7 @@ public class ServerTest {
                 //设置静态web地址，默认寻找index.html
                 .web("/Users/kongweiguang/Desktop/hegui/xm/gs")
                 .get("/get", (req, res) -> {
-                    System.out.println("req = " + req.params());
+//                    System.out.println("req = " + req.params());
                     res.send("ok");
                 })
                 .get("/get_string", (req, res) -> {

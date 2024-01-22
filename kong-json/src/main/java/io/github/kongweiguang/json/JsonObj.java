@@ -1,12 +1,12 @@
 package io.github.kongweiguang.json;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.github.kongweiguang.core.Assert;
 
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static io.github.kongweiguang.json.Json.toNode;
-import static io.github.kongweiguang.json.Json.toStr;
 import static java.util.Optional.ofNullable;
 
 /**
@@ -21,6 +21,8 @@ public final class JsonObj {
     }
 
     private JsonObj(final ObjectNode node) {
+        Assert.notNull(node, "node must not be null");
+
         this.node = node;
     }
 
@@ -52,8 +54,9 @@ public final class JsonObj {
      * @return {@link  JsonObj}
      */
     public JsonObj put(final String k, final Object v) {
+        Assert.notNull(k, "k must not be null");
 
-        node.put(k, toStr(v));
+        node.put(k, Json.toStr(v));
 
         return this;
     }
@@ -66,8 +69,9 @@ public final class JsonObj {
      * @return {@link  JsonObj}
      */
     public JsonObj putObj(final String k, final Object v) {
+        Assert.notNull(k, "k must not be null");
 
-        node.set(k, toNode(toStr(v)));
+        node.set(k, Json.toNode(Json.toStr(v)));
 
         return this;
     }
@@ -80,6 +84,8 @@ public final class JsonObj {
      * @return {@link  JsonObj}
      */
     public JsonObj putObj(final String k, final Consumer<JsonObj> con) {
+        Assert.notNull(k, "k must not be null");
+        Assert.notNull(con, "consumer must not be null");
 
         con.accept(JsonObj.of(node.putObject(k)));
 
@@ -94,6 +100,8 @@ public final class JsonObj {
      * @return {@link  JsonObj}
      */
     public JsonObj putAry(final String k, final Consumer<JsonAry> con) {
+        Assert.notNull(k, "k must not be null");
+        Assert.notNull(con, "consumer must not be null");
 
         con.accept(JsonAry.of(node.putArray(k)));
 
@@ -140,5 +148,14 @@ public final class JsonObj {
      */
     public <K, V> Map<K, V> toMap() {
         return Json.toMap(toJson());
+    }
+
+    /**
+     * 返回{@link JsonNode}
+     *
+     * @return {@link JsonNode}
+     */
+    public JsonNode toNode() {
+        return node;
     }
 }

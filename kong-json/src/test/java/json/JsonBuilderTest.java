@@ -18,26 +18,38 @@ public class JsonBuilderTest {
 
         final String str = JsonObj.of()
                 .put("a", "b")
-                .putAry("qq", o -> o.add("d").add("12312"))
-                .put("bbb", "jflsdjf")
-                .putAry("dd", c -> c.addColl(Arrays.asList(1, 2, 3, 4, 4)))
-                .putObj("u", u)
+                .putAry("c", o -> o.add("d1").add("d2"))
+                .put("e", "f")
+                .putAry("g", c -> c.addColl(Arrays.asList(1, 2, 3, 4, 4)))
+                .put("u1", u)
+                .putObj("u2", u)
                 .put("i", 1)
-                .toJson();
-
+                .toPrettyJson();
 
         System.out.println(str);
-        System.out.println(Json.toNode(str).get("dd").get(3).asInt());
+
+        System.out.println(Json.toNode(str).get("g").get(3).asInt());
     }
 
 
     @Test
     void testJsonAry() throws Exception {
 
-        final String ary = JsonAry.of().add(1).add(2).add(22).addObj(u).toJson();
+        final String ary = JsonAry.of()
+                .add(1)
+                .add(2)
+                .add(3)
+                .addObj(u)
+                .addObj(c -> c.put("a", "a").put("b", "b"))
+                .addAry(c -> c.add(6).add(7))
+                .addColl(Arrays.asList(0, 0))
+                .toJson();
+
         System.out.println(ary);
+
         final List<Object> list = Json.toList(ary);
-        System.out.println("list = " + list);
+
+        System.out.println(list);
     }
 
 

@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static io.github.kongweiguang.http.server.core.InnerUtil._404;
 import static java.util.Objects.nonNull;
+import static java.util.Optional.ofNullable;
 
 /**
  * rest处理器
@@ -17,15 +18,29 @@ import static java.util.Objects.nonNull;
  */
 public final class RestHandler implements com.sun.net.httpserver.HttpHandler {
 
-    private static final Map<Method, Map<String, HttpHandler>> rest_map = new ConcurrentHashMap<>();
-    private static final Map<String, HttpHandler> defalut_map = new ConcurrentHashMap<>();
+    private static final Map<String, Map<Method, HttpHandler>> rest_map = new ConcurrentHashMap<>();
 
+    /**
+     * 添加rest接口
+     *
+     * @param path    路径
+     * @param handler 处理器
+     */
     public static void add(final String path, final HttpHandler handler) {
-        defalut_map.put(path, handler);
+        for (Method method : Method.values()) {
+            add(method, path, handler);
+        }
     }
 
+    /**
+     * 添加接口
+     *
+     * @param method  方法
+     * @param path    路径
+     * @param handler 处理器
+     */
     public static void add(final Method method, final String path, final HttpHandler handler) {
-        rest_map.computeIfAbsent(method, k -> new ConcurrentHashMap<>()).put(path, handler);
+        rest_map.computeIfAbsent(path, k -> new ConcurrentHashMap<>()).put(method, handler);
     }
 
     /**
@@ -53,17 +68,16 @@ public final class RestHandler implements com.sun.net.httpserver.HttpHandler {
     public void handle(final HttpExchange he) throws IOException {
         final Method method = Method.valueOf(he.getRequestMethod());
 
-        final HttpHandler handler = rest_map.getOrDefault(method, defalut_map).get(he.getRequestURI().getPath());
+        final HttpHandler handler = ofNullable(rest_map.get(he.getRequestURI().getPath())).map(e -> e.get(method)).orElse(null);
 
         if (nonNull(handler)) {
             handler0(he, handler);
         } else {
             if (Method.GET.equals(method)) {
-                handler0(he, defalut_map.get(WebHandler.PATH));
+                handler0(he, ofNullable(rest_map.get(WebHandler.PATH)).map(e -> e.get(Method.GET)).orElse(null));
             }
         }
 
     }
-
 
 }
