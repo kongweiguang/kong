@@ -14,7 +14,6 @@ import okhttp3.internal.Util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.CopyOption;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -141,7 +140,7 @@ public final class Res implements AutoCloseable {
      * @return charset
      */
     public Charset charset() {
-        return body().contentType().charset(StandardCharsets.UTF_8);
+        return body().contentType().charset();
     }
 
     /**

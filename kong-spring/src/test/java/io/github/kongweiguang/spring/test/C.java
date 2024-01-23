@@ -12,10 +12,10 @@ public class C {
 
     @PostConstruct
     public void init() {
-        a = SpringUtil.getBean("aaa");
+        a = SpringUtil.getBean(A.class);
     }
 
     public void m1() {
-        a.m1();
+//        a.m1();
     }
 }

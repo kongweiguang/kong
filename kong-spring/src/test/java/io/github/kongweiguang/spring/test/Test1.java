@@ -14,14 +14,14 @@ import javax.annotation.Resource;
 @EnableAutoConfiguration
 @ComponentScan("io.github.kongweiguang.spring.test")
 public class Test1 {
-    @Resource
-    C ccc;
+//    @Resource
+//    C ccc;
 
     @Test
     public void test1() throws Exception {
 //        final C c = SpringUtil.getBean(C.class);
 //        c.m1();
-        ccc.m1();
+      new C().m1();
     }
 
 }
