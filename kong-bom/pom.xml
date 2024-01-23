@@ -20,6 +20,18 @@
         <dependencies>
             <dependency>
                 <groupId>io.github.kongweiguang</groupId>
+                <artifactId>kong-bus</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.kongweiguang</groupId>
+                <artifactId>kong-bus-springboot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.kongweiguang</groupId>
                 <artifactId>kong-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -38,15 +50,16 @@
 
             <dependency>
                 <groupId>io.github.kongweiguang</groupId>
-                <artifactId>kong-bus</artifactId>
+                <artifactId>kong-socket</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.github.kongweiguang</groupId>
-                <artifactId>kong-bus-springboot-starter</artifactId>
+                <artifactId>kong-spring</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 

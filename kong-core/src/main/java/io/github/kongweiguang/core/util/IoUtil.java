@@ -1,14 +1,17 @@
 package io.github.kongweiguang.core.util;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+
+import static java.util.Objects.isNull;
 
 /**
  * io工具
  *
  * @author kongweiguang
  */
-public class IOUtil {
+public class IoUtil {
 
     /**
      * 将流转成byte数组
@@ -43,4 +46,18 @@ public class IOUtil {
         }
     }
 
+    /**
+     * 关闭流
+     *
+     * @param c 流
+     */
+    public static void close(Closeable c) {
+        if (isNull(c)) {
+            try {
+                c.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

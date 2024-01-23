@@ -5,7 +5,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static io.github.kongweiguang.core.Assert.notNull;
+import static io.github.kongweiguang.core.lang.Assert.notNull;
 
 
 /**

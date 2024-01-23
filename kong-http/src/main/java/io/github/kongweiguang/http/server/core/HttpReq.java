@@ -2,8 +2,8 @@ package io.github.kongweiguang.http.server.core;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
-import io.github.kongweiguang.core.Objs;
-import io.github.kongweiguang.core.util.IOUtil;
+import io.github.kongweiguang.core.lang.Objs;
+import io.github.kongweiguang.core.util.IoUtil;
 import io.github.kongweiguang.http.client.core.Header;
 import io.github.kongweiguang.http.client.core.Method;
 
@@ -211,7 +211,7 @@ public final class HttpReq {
      */
     public byte[] bytes() {
         final String length = header(Header.content_length.v());
-        return IOUtil.toByteArray(stream(), Integer.parseInt(isNull(length) ? "0" : length));
+        return IoUtil.toByteArray(stream(), Integer.parseInt(isNull(length) ? "0" : length));
 
     }
 

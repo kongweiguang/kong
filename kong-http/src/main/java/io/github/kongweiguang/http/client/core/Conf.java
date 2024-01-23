@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
-import static io.github.kongweiguang.core.Assert.isTure;
-import static io.github.kongweiguang.core.Assert.notNull;
+import static io.github.kongweiguang.core.lang.Assert.isTure;
+import static io.github.kongweiguang.core.lang.Assert.notNull;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 

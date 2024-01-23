@@ -44,6 +44,7 @@
         <module>kong-bus</module>
         <module>kong-bus-springboot-starter</module>
         <module>kong-spring</module>
+        <module>kong-socket</module>
     </modules>
 
     <properties>

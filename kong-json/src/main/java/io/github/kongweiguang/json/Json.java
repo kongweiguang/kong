@@ -23,7 +23,7 @@ import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKN
 import static com.fasterxml.jackson.databind.MapperFeature.USE_STD_BEAN_NAMING;
 import static com.fasterxml.jackson.databind.PropertyNamingStrategies.LOWER_CAMEL_CASE;
 import static com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS;
-import static io.github.kongweiguang.core.Strs.isEmpty;
+import static io.github.kongweiguang.core.lang.Strs.isEmpty;
 import static java.util.Objects.isNull;
 import static java.util.TimeZone.getTimeZone;
 

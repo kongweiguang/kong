@@ -2,7 +2,7 @@ package io.github.kongweiguang.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.github.kongweiguang.core.Assert;
+import io.github.kongweiguang.core.lang.Assert;
 
 import java.util.Map;
 import java.util.function.Consumer;

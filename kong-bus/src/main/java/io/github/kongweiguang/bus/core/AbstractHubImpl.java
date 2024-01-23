@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
-import static io.github.kongweiguang.core.Assert.notNull;
+import static io.github.kongweiguang.core.lang.Assert.notNull;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 

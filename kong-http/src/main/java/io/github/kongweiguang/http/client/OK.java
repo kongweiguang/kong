@@ -1,6 +1,6 @@
 package io.github.kongweiguang.http.client;
 
-import io.github.kongweiguang.core.Threads;
+import io.github.kongweiguang.core.lang.Threads;
 import io.github.kongweiguang.http.client.core.Conf;
 import io.github.kongweiguang.http.client.core.ReqTypeEnum;
 import io.github.kongweiguang.http.client.sse.SSEListener;
@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
-import static io.github.kongweiguang.core.If.trueRun;
+import static io.github.kongweiguang.core.lang.If.trueRun;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 import static java.util.concurrent.CompletableFuture.completedFuture;

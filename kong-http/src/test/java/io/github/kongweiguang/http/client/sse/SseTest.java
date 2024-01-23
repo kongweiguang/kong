@@ -1,6 +1,6 @@
 package io.github.kongweiguang.http.client.sse;
 
-import io.github.kongweiguang.core.Threads;
+import io.github.kongweiguang.core.lang.Threads;
 import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.ReqBuilder;
 import io.github.kongweiguang.http.client.Res;
