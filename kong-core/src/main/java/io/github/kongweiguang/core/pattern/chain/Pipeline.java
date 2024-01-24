@@ -1,7 +1,7 @@
 package io.github.kongweiguang.core.pattern.chain;
 
 /**
- * pipeline模式
+ * 流水线模式
  *
  * @param <I> 输入类型
  * @param <O> 输出类型
@@ -10,7 +10,7 @@ package io.github.kongweiguang.core.pattern.chain;
 public final class Pipeline<I, O> {
     private final PipeHandler<I, O> currHandler;
 
-    private Pipeline(PipeHandler<I, O> rootHandler) {
+    private Pipeline(final PipeHandler<I, O> rootHandler) {
         this.currHandler = rootHandler;
     }
 
@@ -22,7 +22,7 @@ public final class Pipeline<I, O> {
      * @param <O>     输出的类型
      * @return {@link PipeHandler}
      */
-    public static <I, O> Pipeline<I, O> of(PipeHandler<I, O> handler) {
+    public static <I, O> Pipeline<I, O> of(final PipeHandler<I, O> handler) {
         return new Pipeline<>(handler);
     }
 
@@ -33,7 +33,7 @@ public final class Pipeline<I, O> {
      * @param <K>     处理器的输出类型
      * @return {@link PipeHandler}
      */
-    public <K> Pipeline<I, K> next(PipeHandler<O, K> handler) {
+    public <K> Pipeline<I, K> next(final PipeHandler<O, K> handler) {
         return of(input -> handler.handle(currHandler.handle(input)));
     }
 
@@ -43,7 +43,7 @@ public final class Pipeline<I, O> {
      * @param input 输入内容
      * @return 处理结果
      */
-    public O exec(I input) {
+    public O exec(final I input) {
         return currHandler.handle(input);
     }
 }
