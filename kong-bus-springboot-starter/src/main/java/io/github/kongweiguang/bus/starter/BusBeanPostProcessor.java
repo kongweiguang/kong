@@ -7,7 +7,7 @@ import static io.github.kongweiguang.bus.Bus.hub;
 
 
 /**
- * 注册销毁action
+ * 注册销毁oper
  *
  * @author kongweiguang
  */
