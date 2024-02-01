@@ -181,7 +181,7 @@ public final class HttpRes {
      * @param bytes 内容
      * @return {@link HttpRes}
      */
-    public HttpRes write(int code, final byte[] bytes) {
+    public HttpRes write(final int code, final byte[] bytes) {
         try {
             httpExchange().sendResponseHeaders(code, bytes.length);
             header(Header.content_type.v(), contentType);
