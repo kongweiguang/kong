@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static io.github.kongweiguang.http.client.core.Method.GET;
 import static io.github.kongweiguang.http.server.core.InnerUtil._404;
+import static io.github.kongweiguang.http.server.core.WebHandler.PATH;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 
@@ -66,16 +68,20 @@ public final class RestHandler implements com.sun.net.httpserver.HttpHandler {
      */
     @Override
     public void handle(final HttpExchange he) throws IOException {
-        final Method method = Method.valueOf(he.getRequestMethod());
+        try {
+            final Method method = Method.valueOf(he.getRequestMethod());
 
-        final HttpHandler handler = ofNullable(rest_map.get(he.getRequestURI().getPath())).map(e -> e.get(method)).orElse(null);
+            final HttpHandler handler = ofNullable(rest_map.get(he.getRequestURI().getPath())).map(e -> e.get(method)).orElse(null);
 
-        if (nonNull(handler)) {
-            handler0(he, handler);
-        } else {
-            if (Method.GET.equals(method)) {
-                handler0(he, ofNullable(rest_map.get(WebHandler.PATH)).map(e -> e.get(Method.GET)).orElse(null));
+            if (nonNull(handler)) {
+                handler0(he, handler);
+            } else {
+                if (GET.equals(method)) {
+                    handler0(he, ofNullable(rest_map.get(PATH)).map(e -> e.get(GET)).orElse(null));
+                }
             }
+        } finally {
+            he.close();
         }
 
     }

@@ -11,7 +11,11 @@ import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -102,7 +106,7 @@ public final class HttpReq {
         try {
             final String contentType = contentType();
             if (nonNull(contentType)) {
-                String[] parts = contentType.split(";");
+                final String[] parts = contentType.split(";");
                 if (parts.length > 1) {
                     final String part = parts[1];
                     if (part.startsWith("charset=")) {

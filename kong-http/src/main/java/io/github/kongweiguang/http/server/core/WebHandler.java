@@ -2,9 +2,9 @@ package io.github.kongweiguang.http.server.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 import static io.github.kongweiguang.http.server.core.InnerUtil._404;
+import static java.nio.file.Files.readAllBytes;
 import static java.util.Objects.nonNull;
 
 /**
@@ -53,7 +53,7 @@ public final class WebHandler implements HttpHandler {
                 }
             }
 
-            res.send(Files.readAllBytes(file.toPath()));
+            res.send(readAllBytes(file.toPath()));
 
         } else {
             _404(req.httpExchange(), null);

@@ -1,6 +1,7 @@
 package io.github.kongweiguang.http.server;
 
 import com.sun.net.httpserver.Filter;
+import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
@@ -18,14 +19,14 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
+import static io.github.kongweiguang.core.lang.Assert.notNull;
 import static io.github.kongweiguang.http.client.core.Method.DELETE;
 import static io.github.kongweiguang.http.client.core.Method.GET;
 import static io.github.kongweiguang.http.client.core.Method.POST;
 import static io.github.kongweiguang.http.client.core.Method.PUT;
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.Optional.ofNullable;
 
 /**
  * 基于内置httpserver封装的简易http服务器
@@ -35,12 +36,20 @@ import static java.util.Objects.nonNull;
 public final class JavaServer {
 
     private final List<Filter> filters = new ArrayList<>();
-    private HttpServer httpServer;
-    private HttpsConfigurator config;
-    private Executor executor;
+    private final HttpServer httpServer;
 
-
-    private JavaServer() {
+    private JavaServer(final HttpsConfigurator config) {
+        try {
+            if (nonNull(config)) {
+                final HttpsServer server = HttpsServer.create();
+                server.setHttpsConfigurator(config);
+                this.httpServer = server;
+            } else {
+                this.httpServer = HttpServer.create();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -49,18 +58,17 @@ public final class JavaServer {
      * @return JavaServer实例
      */
     public static JavaServer of() {
-        return new JavaServer();
+        return new JavaServer(null);
     }
 
     /**
-     * 添加http的配置
+     * 创建一个JavaServer实例，添加https的配置
      *
      * @param config http配置 {@link HttpsConfigurator}
      * @return 当前对象
      */
-    public JavaServer httpsConfig(final HttpsConfigurator config) {
-        this.config = config;
-        return this;
+    public static JavaServer of(final HttpsConfigurator config) {
+        return new JavaServer(config);
     }
 
     /**
@@ -70,7 +78,7 @@ public final class JavaServer {
      * @return 当前对象
      */
     public JavaServer executor(final Executor executor) {
-        this.executor = executor;
+        ofNullable(executor).ifPresent(e -> server().setExecutor(e));
         return this;
     }
 
@@ -93,7 +101,9 @@ public final class JavaServer {
      * @return 当前对象
      */
     public JavaServer filter(final HttpFilter filter) {
-        filters().add(new Filter() {
+        notNull(filter, "filter must not be null");
+
+        filters.add(new Filter() {
             @Override
             public void doFilter(final HttpExchange exchange, final com.sun.net.httpserver.Filter.Chain chain) throws IOException {
                 filter.doFilter(new HttpReq(exchange), new HttpRes(exchange), chain);
@@ -204,10 +214,6 @@ public final class JavaServer {
         try {
             final long start = System.currentTimeMillis();
 
-            init();
-
-            server().setExecutor(executor());
-
             server().bind(address, 0);
 
             addContext();
@@ -221,21 +227,12 @@ public final class JavaServer {
         }
     }
 
-    private void init() throws IOException {
-        if (nonNull(config())) {
-            final HttpsServer server = HttpsServer.create();
-            server.setHttpsConfigurator(config());
-            this.httpServer = server;
-        } else {
-            this.httpServer = HttpServer.create();
-        }
-    }
-
     private void addContext() {
-        server()
-                .createContext("/", new RestHandler())
-                .getFilters()
-                .addAll(filters());
+        final HttpContext context = server().createContext("/", new RestHandler());
+
+        if (!filters.isEmpty()) {
+            context.getFilters().addAll(filters);
+        }
     }
 
     private void print(long start) {
@@ -265,19 +262,4 @@ public final class JavaServer {
         return httpServer;
     }
 
-    public List<Filter> filters() {
-        return filters;
-    }
-
-    public HttpsConfigurator config() {
-        return config;
-    }
-
-    public Executor executor() {
-        if (isNull(executor)) {
-            this.executor = Executors.newCachedThreadPool();
-        }
-
-        return executor;
-    }
 }
