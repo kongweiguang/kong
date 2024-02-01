@@ -1,4 +1,4 @@
-package io.github.kongweiguang.core.pattern.chain;
+package io.github.kongweiguang.core.pattern.pipe;
 
 /**
  * 流水线的处理器
