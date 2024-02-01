@@ -2,6 +2,7 @@ package io.github.kongweiguang.http.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import io.github.kongweiguang.core.util.IoUtil;
 import io.github.kongweiguang.http.client.core.Header;
 import io.github.kongweiguang.json.Json;
 import kotlin.Pair;
@@ -27,7 +28,6 @@ import static io.github.kongweiguang.json.Json.toMap;
 import static io.github.kongweiguang.json.Json.toObj;
 import static java.nio.file.Files.copy;
 import static java.util.Optional.ofNullable;
-import static okhttp3.internal.Util.closeQuietly;
 
 /**
  * http的响应
@@ -394,7 +394,7 @@ public final class Res implements AutoCloseable {
      */
     @Override
     public void close() {
-        closeQuietly(raw());
+        IoUtil.close(raw());
     }
 
     @Override

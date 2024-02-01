@@ -2,10 +2,15 @@ package io.github.kongweiguang.http.server.core;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
+import io.github.kongweiguang.core.util.IoUtil;
 import io.github.kongweiguang.http.client.core.ContentType;
 import io.github.kongweiguang.http.client.core.Header;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -209,11 +214,7 @@ public final class HttpRes {
      * 关闭响应流
      */
     public void close() {
-        try {
-            out().close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        IoUtil.close(out());
     }
 
 }

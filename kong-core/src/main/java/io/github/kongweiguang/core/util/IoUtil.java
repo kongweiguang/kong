@@ -4,7 +4,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 /**
  * io工具
@@ -51,12 +51,12 @@ public class IoUtil {
      *
      * @param c 流
      */
-    public static void close(Closeable c) {
-        if (isNull(c)) {
+    public static void close(final Closeable c) {
+        if (nonNull(c)) {
             try {
                 c.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ignored) {
+
             }
         }
     }
