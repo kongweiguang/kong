@@ -1,4 +1,4 @@
-package io.github.kongweiguang.core.lang;
+package io.github.kongweiguang.core.util;
 
 import static java.util.Objects.isNull;
 

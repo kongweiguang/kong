@@ -1,6 +1,6 @@
 package io.github.kongweiguang.http.client;
 
-import io.github.kongweiguang.core.lang.Threads;
+import io.github.kongweiguang.core.util.Threads;
 import io.github.kongweiguang.http.client.core.Conf;
 import io.github.kongweiguang.http.client.core.ReqTypeEnum;
 import io.github.kongweiguang.http.client.sse.SSEListener;

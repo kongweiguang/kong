@@ -1,4 +1,4 @@
-package io.github.kongweiguang.core.lang;
+package io.github.kongweiguang.core.util;
 
 /**
  * 线程工具

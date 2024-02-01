@@ -2,7 +2,7 @@ package io.github.kongweiguang.http.server.core;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
-import io.github.kongweiguang.core.lang.Objs;
+import io.github.kongweiguang.core.util.Objs;
 import io.github.kongweiguang.core.util.IoUtil;
 import io.github.kongweiguang.http.client.core.Header;
 import io.github.kongweiguang.http.client.core.Method;
