@@ -15,7 +15,7 @@ public class UrlQueryTest {
         final Res res = Req.get("http://localhost:8080/get/one/two?q=1")
                 .query("k1", "v1")
                 .query("k2", Arrays.asList("1", "2"))
-                .query(new HashMap<String, String>() {{
+                .query(new HashMap<String, Object>() {{
                     put("k3", "v3");
                     put("k4", "v4");
                 }})

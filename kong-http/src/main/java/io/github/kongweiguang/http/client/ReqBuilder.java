@@ -287,7 +287,7 @@ public final class ReqBuilder {
      * @param read    读取超时时间
      * @return ReqBuilder {@link ReqBuilder}
      */
-    public ReqBuilder timeout(Duration connect, Duration write, Duration read) {
+    public ReqBuilder timeout(final Duration connect, final Duration write, final Duration read) {
         notNull(connect, "connect must not be null");
         notNull(write, "write must not be null");
         notNull(read, "read must not be null");
@@ -581,10 +581,10 @@ public final class ReqBuilder {
      * @param v 值
      * @return ReqBuilder {@link ReqBuilder}
      */
-    public ReqBuilder query(final String k, final String v) {
+    public ReqBuilder query(final String k, final Object v) {
 
         if (nonNull(k) && nonNull(v)) {
-            urlBuilder().addQueryParameter(k, v);
+            urlBuilder().addQueryParameter(k, String.valueOf(v));
         }
 
         return this;
@@ -597,10 +597,10 @@ public final class ReqBuilder {
      * @param v 值
      * @return ReqBuilder {@link ReqBuilder}
      */
-    public ReqBuilder encodeQuery(final String k, final String v) {
+    public ReqBuilder encodeQuery(final String k, final Object v) {
 
         if (nonNull(k) && nonNull(v)) {
-            urlBuilder().addEncodedQueryParameter(k, v);
+            urlBuilder().addEncodedQueryParameter(k, String.valueOf(v));
         }
 
         return this;
@@ -613,10 +613,10 @@ public final class ReqBuilder {
      * @param vs 值集合
      * @return ReqBuilder {@link ReqBuilder}
      */
-    public ReqBuilder query(final String k, final Iterable<String> vs) {
+    public ReqBuilder query(final String k, final Iterable<Object> vs) {
 
         if (nonNull(k) && nonNull(vs)) {
-            vs.forEach(v -> urlBuilder().addQueryParameter(k, v));
+            vs.forEach(v -> urlBuilder().addQueryParameter(k, String.valueOf(v)));
         }
 
         return this;
@@ -629,10 +629,10 @@ public final class ReqBuilder {
      * @param vs 值集合
      * @return ReqBuilder {@link ReqBuilder}
      */
-    public ReqBuilder encodedQuery(final String k, final Iterable<String> vs) {
+    public ReqBuilder encodedQuery(final String k, final Iterable<Object> vs) {
 
         if (nonNull(k) && nonNull(vs)) {
-            vs.forEach(v -> urlBuilder().addEncodedQueryParameter(k, v));
+            vs.forEach(v -> urlBuilder().addEncodedQueryParameter(k, String.valueOf(v)));
         }
 
         return this;
@@ -644,9 +644,9 @@ public final class ReqBuilder {
      * @param querys query的map集合
      * @return ReqBuilder {@link ReqBuilder}
      */
-    public ReqBuilder query(final Map<String, String> querys) {
+    public ReqBuilder query(final Map<String, Object> querys) {
 
-        ofNullable(querys).ifPresent(q -> q.forEach(urlBuilder()::addQueryParameter));
+        ofNullable(querys).ifPresent(q -> q.forEach((k, v) -> urlBuilder().addQueryParameter(k, String.valueOf(v))));
 
         return this;
     }
@@ -657,9 +657,9 @@ public final class ReqBuilder {
      * @param querys query的map集合
      * @return ReqBuilder {@link ReqBuilder}
      */
-    public ReqBuilder encodedQuery(final Map<String, String> querys) {
+    public ReqBuilder encodedQuery(final Map<String, Object> querys) {
 
-        ofNullable(querys).ifPresent(q -> q.forEach(urlBuilder()::addEncodedQueryParameter));
+        ofNullable(querys).ifPresent(q -> q.forEach((k, v) -> urlBuilder().addEncodedQueryParameter(k, String.valueOf(v))));
 
         return this;
     }
@@ -770,11 +770,11 @@ public final class ReqBuilder {
      * @param value 值
      * @return ReqBuilder {@link ReqBuilder}
      */
-    public ReqBuilder form(final String name, final String value) {
+    public ReqBuilder form(final String name, final Object value) {
 
         if (isFormUrl() || isMul()) {
             if (nonNull(name) && nonNull(value)) {
-                form().put(name, value);
+                form().put(name, String.valueOf(value));
             }
         } else {
             throw new IllegalArgumentException("use form table must is form_urlencoded or multipart");
@@ -806,10 +806,10 @@ public final class ReqBuilder {
      * @param form form表单map
      * @return ReqBuilder {@link ReqBuilder}
      */
-    public ReqBuilder form(final Map<String, String> form) {
+    public ReqBuilder form(final Map<String, Object> form) {
 
         if (isFormUrl() || isMul()) {
-            ofNullable(form).ifPresent(form()::putAll);
+            ofNullable(form).ifPresent(map -> form.forEach((k, v) -> form().put(k, String.valueOf(v))));
         } else {
             throw new IllegalArgumentException("use form table must is form_urlencoded or multipart");
         }

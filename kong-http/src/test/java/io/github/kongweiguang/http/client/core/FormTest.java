@@ -16,7 +16,7 @@ public class FormTest {
         //application/x-www-form-urlencoded
         final Res ok = Req.formUrlencoded("http://localhost:8080/post_form")
                 .form("a", "1")
-                .form(new HashMap<String, String>() {{
+                .form(new HashMap<String, Object>() {{
                     put("b", "2");
                 }})
                 .ok();
@@ -29,7 +29,7 @@ public class FormTest {
         final Res ok = Req.multipart("http://localhost:8080/post_mul_form")
                 .file("k", "k.txt", Files.readAllBytes(Paths.get("/Users/kongweiguang/Desktop/Snipaste_2023-12-25_14-25-51.png")))
                 .form("a", "1")
-                .form(new HashMap<String, String>() {{
+                .form(new HashMap<String, Object>() {{
                     put("b", "2");
                 }})
                 .ok();
