@@ -13,6 +13,24 @@ public class JsonBuilderTest {
 
     User u = new User().setAge(1).setName("kong").setHobby(new String[]{"j", "n"});
 
+    /**
+     * {
+     *   "a" : "b",
+     *   "c" : [ "d1", "d2" ],
+     *   "e" : "f",
+     *   "g" : [ "1", "2", "3", "4", "4" ],
+     *   "u1" : "{\"name\":\"kong\",\"age\":1,\"hobby\":[\"j\",\"n\"]}",
+     *   "u2" : {
+     *     "name" : "kong",
+     *     "age" : 1,
+     *     "hobby" : [ "j", "n" ]
+     *   },
+     *   "i" : "1"
+     * }
+     * 4
+     *
+     * @throws Exception
+     */
     @Test
     void testJsonObj() throws Exception {
 
@@ -31,7 +49,12 @@ public class JsonBuilderTest {
         System.out.println(Json.toNode(str).get("g").get(3).asInt());
     }
 
-
+    /**
+     * ["1","2","3",{"name":"kong","age":1,"hobby":["j","n"]},{"a":"a","b":"b"},["6","7"],"0","0"]
+     * [1, 2, 3, {name=kong, age=1, hobby=[j, n]}, {a=a, b=b}, [6, 7], 0, 0]
+     *
+     * @throws Exception
+     */
     @Test
     void testJsonAry() throws Exception {
 
@@ -52,7 +75,12 @@ public class JsonBuilderTest {
         System.out.println(list);
     }
 
-
+    /**
+     * {1=true}
+     * {"1":"true"}
+     *
+     * @throws Exception
+     */
     @Test
     void test1() throws Exception {
         final JsonObj jsonObj = Json.obj().put("1", "true");
@@ -60,12 +88,24 @@ public class JsonBuilderTest {
         System.out.println(jsonObj.toJson());
     }
 
+    /**
+     * ["1","2",["66","888"],{"name":"kong","age":1,"hobby":["j","n"]}]
+     *
+     * @throws Exception
+     */
     @Test
     void test2() throws Exception {
         final String json = Json.ary().add(1).add(new BigDecimal(2)).addAry(e -> e.add(66).add(888)).addObj(u).toJson();
         System.out.println(json);
     }
 
+    /**
+     *  {
+     *   "1" : null
+     *  }
+     *
+     * @throws Exception
+     */
     @Test
     void test3() throws Exception {
         System.out.println(Json.obj().put("1", null).toPrettyJson());
