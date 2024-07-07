@@ -26,7 +26,7 @@ Maven
 ```xml
 <dependency>
     <groupId>io.github.kongweiguang</groupId>
-    <artifactId>kong-java</artifactId>
+    <artifactId>kong-http</artifactId>
     <version>0.1</version>
 </dependency>
 ```
@@ -34,13 +34,13 @@ Maven
 Gradle
 
 ```
-implementation 'io.github.kongweiguang:kong-java:0.1'
+implementation 'io.github.kongweiguang:kong-http:0.1'
 ```
 
 Gradle-Kotlin
 
 ```
-implementation("io.github.kongweiguang:kong-java:0.1")
+implementation("io.github.kongweiguang:kong-http:0.1")
 ```
 
 # 简单介绍
