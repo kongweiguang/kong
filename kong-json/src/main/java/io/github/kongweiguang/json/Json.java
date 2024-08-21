@@ -238,6 +238,23 @@ public final class Json {
     }
 
     /**
+     * json字符串转换为map对象
+     *
+     * @param json          json字符串
+     * @param typeReference 目标对象类型
+     * @param <K>           健的类型
+     * @param <V>           值的类型
+     * @return 对象
+     */
+    public static <K, V> Map<K, V> toMap(final String json, TypeReference<Map<K, V>> typeReference) {
+        if (isEmpty(json)) {
+            return new HashMap<>();
+        }
+
+        return toObj(json, typeReference);
+    }
+
+    /**
      * 对象转换为map对象
      *
      * @param json 需要转换的json字符串
@@ -278,6 +295,23 @@ public final class Json {
     }
 
     /**
+     * 对象转换为map对象
+     *
+     * @param obj           对象
+     * @param typeReference 目标对象类型
+     * @param <K>           健的类型
+     * @param <V>           值的类型
+     * @return 对象
+     */
+    public static <K, V> Map<K, V> toMap(final Object obj, TypeReference<Map<K, V>> typeReference) {
+        if (isNull(obj)) {
+            return new HashMap<>();
+        }
+
+        return mapper().convertValue(obj, typeReference);
+    }
+
+    /**
      * json字符串转换为list对象，并指定元素类型
      *
      * @param json  json字符串
@@ -289,7 +323,23 @@ public final class Json {
             return new ArrayList<>();
         }
 
-        return toObj(json, mapper().getTypeFactory().constructParametricType(List.class, clazz));
+        return toObj(json, javaType(List.class, clazz));
+    }
+
+    /**
+     * 对象转换为list对象，并指定元素类型
+     *
+     * @param json          对象
+     * @param typeReference 目标对象类型
+     * @param <T>           元素类型
+     * @return 对象
+     */
+    public static <T> List<T> toList(final String json, TypeReference<List<T>> typeReference) {
+        if (isEmpty(json)) {
+            return new ArrayList<>();
+        }
+
+        return toObj(json, typeReference);
     }
 
     /**
@@ -318,6 +368,23 @@ public final class Json {
 
         return mapper().convertValue(obj, javaType(List.class, clazz));
     }
+
+    /**
+     * 对象转换为list对象，并指定元素类型
+     *
+     * @param obj           对象
+     * @param typeReference 目标对象类型
+     * @param <T>           元素类型
+     * @return 对象
+     */
+    public static <T> List<T> toList(final Object obj, final TypeReference<List<T>> typeReference) {
+        if (isNull(obj)) {
+            return new ArrayList<>();
+        }
+
+        return mapper().convertValue(obj, typeReference);
+    }
+
 
     /**
      * 对象转换为list对象，并指定元素类型
