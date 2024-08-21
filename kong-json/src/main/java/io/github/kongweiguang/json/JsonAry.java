@@ -63,7 +63,18 @@ public final class JsonAry {
      * @return {@link JsonAry}
      */
     public JsonAry addObj(final Object obj) {
-        node.add(Json.toNode(Json.toStr(obj)));
+        node.add(Json.toNode(obj));
+        return this;
+    }
+
+    /**
+     * 添加一个jsonNode
+     *
+     * @param n jsonNode
+     * @return {@link JsonAry}
+     */
+    public JsonAry addObj(final JsonNode n) {
+        node.add(n);
         return this;
     }
 
@@ -78,7 +89,7 @@ public final class JsonAry {
 
         final JsonObj obj = JsonObj.of(node.objectNode());
         con.accept(obj);
-        return addObj(obj.toJson());
+        return addObj(obj.toNode());
     }
 
     /**
@@ -92,7 +103,7 @@ public final class JsonAry {
 
         final JsonAry ary = JsonAry.of(node.arrayNode());
         con.accept(ary);
-        return addObj(ary.toJson());
+        return addObj(ary.toNode());
     }
 
     /**
@@ -131,7 +142,7 @@ public final class JsonAry {
      * @return {@link  List}
      */
     public <T> List<T> toList(final Class<T> clazz) {
-        return Json.toList(toJson(), clazz);
+        return Json.toList(node, clazz);
     }
 
     /**
@@ -141,7 +152,7 @@ public final class JsonAry {
      * @return {@link  List}
      */
     public <T> List<T> toList() {
-        return Json.toList(toJson());
+        return Json.toList(node);
     }
 
     /**

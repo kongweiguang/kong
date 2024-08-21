@@ -9,10 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static com.fasterxml.jackson.core.json.JsonReadFeature.ALLOW_LEADING_ZEROS_FOR_NUMBERS;
@@ -159,6 +156,13 @@ public final class Json {
         }
     }
 
+    /**
+     * 字符串转换为指定对象
+     *
+     * @param json     字符串
+     * @param javaType 目标对象类型
+     * @return 对象
+     */
     public static <T> T toObj(final String json, final JavaType javaType) {
         if (isEmpty(json) || isNull(javaType)) {
             return null;
@@ -178,7 +182,7 @@ public final class Json {
      */
     public static JsonNode toNode(final String json) {
         if (isEmpty(json)) {
-            return null;
+            return mapper().createObjectNode();
         }
 
         try {
@@ -186,6 +190,35 @@ public final class Json {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 对象转换为JsonNode对象
+     *
+     * @param obj 对象
+     * @return jsonNode
+     */
+    public static JsonNode toNode(final Object obj) {
+        if (isNull(obj)) {
+            return mapper().createObjectNode();
+        }
+
+        try {
+            return mapper().valueToTree(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 获取javaType
+     *
+     * @param parametrized     泛型
+     * @param parameterClasses 泛型参数
+     * @return javaType
+     */
+    public static JavaType javaType(Class<?> parametrized, Class<?>... parameterClasses) {
+        return mapper().getTypeFactory().constructParametricType(parametrized, parameterClasses);
     }
 
     /**
@@ -201,7 +234,7 @@ public final class Json {
             return new HashMap<>();
         }
 
-        return toObj(json, mapper().getTypeFactory().constructParametricType(Map.class, k, v));
+        return toObj(json, javaType(Map.class, k, v));
     }
 
     /**
@@ -213,6 +246,35 @@ public final class Json {
     @SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> toMap(final String json) {
         return (Map<K, V>) toMap(json, Object.class, Object.class);
+    }
+
+    /**
+     * 对象转换为map对象
+     *
+     * @param obj 对象
+     * @param <K> 健的类型
+     * @param <V> 值的类型
+     * @return map
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> toMap(final Object obj) {
+        return (Map<K, V>) toMap(obj, Object.class, Object.class);
+    }
+
+    /**
+     * 对象转换为map对象
+     *
+     * @param obj 对象
+     * @param <K> 健的类型
+     * @param <V> 值的类型
+     * @return map
+     */
+    public static <K, V> Map<K, V> toMap(final Object obj, final Class<K> k, final Class<V> v) {
+        if (isNull(obj)) {
+            return new HashMap<>();
+        }
+
+        return mapper().convertValue(obj, javaType(Map.class, k, v));
     }
 
     /**
@@ -241,6 +303,33 @@ public final class Json {
         return (List<T>) toList(json, Object.class);
     }
 
+    /**
+     * 对象转换为list对象，并指定元素类型
+     *
+     * @param obj   对象
+     * @param clazz 元素类型
+     * @param <T>   元素类型
+     * @return 对象
+     */
+    public static <T> List<T> toList(final Object obj, final Class<T> clazz) {
+        if (isNull(obj)) {
+            return new ArrayList<>();
+        }
+
+        return mapper().convertValue(obj, javaType(List.class, clazz));
+    }
+
+    /**
+     * 对象转换为list对象，并指定元素类型
+     *
+     * @param obj 对象
+     * @param <T> 元素类型
+     * @return 对象
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> toList(final Object obj) {
+        return (List<T>) toList(obj, Object.class);
+    }
 
     /**
      * 创建json对象

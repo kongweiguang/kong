@@ -71,7 +71,7 @@ public final class JsonObj {
     public JsonObj putObj(final String k, final Object v) {
         Assert.notNull(k, "k must not be null");
 
-        node.set(k, Json.toNode(Json.toStr(v)));
+        node.set(k, Json.toNode(v));
 
         return this;
     }
@@ -147,7 +147,7 @@ public final class JsonObj {
      * @return map
      */
     public <K, V> Map<K, V> toMap(final Class<K> k, final Class<V> v) {
-        return Json.toMap(toJson(), k, v);
+        return Json.toMap(node, k, v);
     }
 
     /**
@@ -158,7 +158,7 @@ public final class JsonObj {
      * @return map
      */
     public <K, V> Map<K, V> toMap() {
-        return Json.toMap(toJson());
+        return Json.toMap(node);
     }
 
     /**
