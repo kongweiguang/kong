@@ -18,7 +18,7 @@
 <br/>
 
 <hr />
-工具包介绍
+工具包介绍(具体使用方法请看模块的readme.md)
 
 * kong-bom 版本管理
 * kong-bus 类似git操作的轻量级eventbus
