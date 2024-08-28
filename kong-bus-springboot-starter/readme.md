@@ -27,7 +27,7 @@ Maven
 <dependency>
     <groupId>io.github.kongweiguang</groupId>
     <artifactId>kong-bus-springboot-starter</artifactId>
-    <version>0.2</version>
+    <version>0.3</version>
 </dependency>
 ```
 

@@ -145,15 +145,6 @@ public final class JsonAry {
         return Json.toList(node, clazz);
     }
 
-    /**
-     * 转成List
-     *
-     * @param <T> 元素类型
-     * @return {@link  List}
-     */
-    public <T> List<T> toList() {
-        return Json.toList(node);
-    }
 
     /**
      * 返回{@link JsonNode}

@@ -23,9 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static io.github.kongweiguang.json.Json.toList;
-import static io.github.kongweiguang.json.Json.toMap;
-import static io.github.kongweiguang.json.Json.toObj;
+import static io.github.kongweiguang.json.Json.*;
 import static java.nio.file.Files.copy;
 import static java.util.Optional.ofNullable;
 
@@ -340,8 +338,8 @@ public final class Res implements AutoCloseable {
      * @param <E> 集合中的元素
      * @return 响应对象
      */
-    public <E> List<E> list() {
-        return toList(str());
+    public <E> List<E> list(final TypeReference<List<E>> typeRef) {
+        return toList(str(), typeRef);
     }
 
     /**
@@ -362,8 +360,8 @@ public final class Res implements AutoCloseable {
      * @param <V> Map的Value
      * @return 当前对象 {@link Res}
      */
-    public <K, V> Map<K, V> map() {
-        return toMap(str());
+    public <K, V> Map<K, V> map(final TypeReference<Map<K, V>> typeRef) {
+        return toMap(str(), typeRef);
     }
 
     /**

@@ -150,16 +150,6 @@ public final class JsonObj {
         return Json.toMap(node, k, v);
     }
 
-    /**
-     * 将json对象转成map
-     *
-     * @param <K> 键的类型
-     * @param <V> 值的类型
-     * @return map
-     */
-    public <K, V> Map<K, V> toMap() {
-        return Json.toMap(node);
-    }
 
     /**
      * 返回{@link JsonNode}

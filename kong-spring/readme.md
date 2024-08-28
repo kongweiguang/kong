@@ -28,7 +28,7 @@ Maven
 <dependency>
     <groupId>io.github.kongweiguang</groupId>
     <artifactId>kong-spring</artifactId>
-    <version>0.2</version>
+    <version>0.3</version>
 </dependency>
 ```
 

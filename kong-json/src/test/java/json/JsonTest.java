@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class JsonBuilderTest {
+public class JsonTest {
 
     User u = new User().setAge(1).setName("kong").setHobby(new String[]{"j", "n"});
 
@@ -87,7 +87,7 @@ public class JsonBuilderTest {
     @Test
     void test1() throws Exception {
         final JsonObj jsonObj = Json.obj().put("1", "true");
-        System.out.println(jsonObj.toMap());
+        System.out.println(jsonObj.toMap(Object.class, Object.class));
         System.out.println(jsonObj.toJson());
     }
 
@@ -134,8 +134,62 @@ public class JsonBuilderTest {
     public void test6() throws Exception {
         String json = "{\"name\":[\"j\",\"n\"],\"age\":[\"j\",\"n\"],\"hobby\":[\"j\",\"n\"]}";
         JsonNode node = Json.toNode(json);
-        Map<String,  List<String>> map = Json.toMap(node, new TypeReference<Map<String,  List<String>>>() {
+        Map<String, List<String>> map = Json.toMap(node, new TypeReference<Map<String, List<String>>>() {
         });
         System.out.println("map = " + map);
+    }
+
+    @Test
+    public void test7() throws Exception {
+        String json = "{\"name\":\"kong\",\"age\":1,\"hobby\":[\"j\",\"n\"]}";
+        User node = Json.toObj(json, User.class);
+        System.out.println("node = " + node);
+        Person obj = Json.toObj(node, Person.class);
+        System.out.println("obj = " + obj);
+    }
+
+    @Test
+    public void test8() throws Exception {
+        String json = "name";
+        String obj = Json.toObj(json, String.class);
+        System.out.println("obj = " + obj);
+    }
+
+    @Test
+    public void test9() throws Exception {
+        String json = "{\"name\":\"kong\",\"age\":1,\"hobby\":[\"j\",\"n\"]}";
+        User node = Json.toObj(json, User.class);
+        JsonNode node1 = Json.toNode(node);
+        System.out.println("node1 = " + node1);
+
+        JsonNode node2 = Json.toNode(json);
+        System.out.println("node2 = " + node2);
+    }
+
+    @Test
+    public void test10() throws Exception {
+        String json = "[{\"name\":\"kong\",\"age\":1,\"hobby\":[\"j\",\"n\"]}]";
+        List<Object> list = Json.toList(json, Object.class);
+        System.out.println("list = " + list);
+        List<User> list1 = Json.toList(json, User.class);
+
+        System.out.println("list1 = " + list1);
+
+        List<Person> list2 = Json.toList(json, new TypeReference<List<Person>>() {
+        });
+
+        System.out.println("list2 = " + list2);
+
+        List<Person> list3 = Json.toList(list1, Person.class);
+        System.out.println("list3 = " + list3);
+
+
+    }
+
+    @Test
+    public void test11() throws Exception {
+        String json = "{\"name\":\"kong\",\"age\":1,\"hobby\":[\"j\",\"n\"]}";
+        Map<Object, Object> map = Json.toMap(json, Object.class, Object.class);
+
     }
 }

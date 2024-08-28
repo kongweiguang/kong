@@ -26,8 +26,8 @@ public class ResTest {
         final User obj = res.obj(User.class);
         final List<User> obj1 = res.obj(new TypeReference<List<User>>() {
         });
-        final List<String> list = res.list();
-        final Map<String, String> map = res.map();
+        final List<String> list = res.list(String.class);
+        final Map<String, String> map = res.map(String.class, String.class);
         final InputStream stream = res.stream();
         final Integer i = res.i32();
         final Boolean b = res.bool();

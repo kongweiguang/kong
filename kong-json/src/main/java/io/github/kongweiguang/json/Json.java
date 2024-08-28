@@ -9,18 +9,15 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import static com.fasterxml.jackson.core.json.JsonReadFeature.ALLOW_LEADING_ZEROS_FOR_NUMBERS;
-import static com.fasterxml.jackson.core.json.JsonReadFeature.ALLOW_SINGLE_QUOTES;
-import static com.fasterxml.jackson.core.json.JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS;
-import static com.fasterxml.jackson.core.json.JsonReadFeature.ALLOW_UNQUOTED_FIELD_NAMES;
+import static com.fasterxml.jackson.core.json.JsonReadFeature.*;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static com.fasterxml.jackson.databind.MapperFeature.USE_STD_BEAN_NAMING;
 import static com.fasterxml.jackson.databind.PropertyNamingStrategies.LOWER_CAMEL_CASE;
 import static com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS;
-import static io.github.kongweiguang.core.util.Strs.isEmpty;
 import static java.util.Objects.isNull;
 import static java.util.TimeZone.getTimeZone;
 
@@ -125,13 +122,25 @@ public final class Json {
      * @return 对象
      */
     @SuppressWarnings("all")
-    public static <T> T toObj(final String json, final Class<T> clazz) {
-        if (isEmpty(json) || isNull(clazz)) {
+    public static <T> T toObj(final Object json, final Class<T> clazz) {
+        if (isNull(clazz)) {
             return null;
         }
 
         try {
-            return clazz.equals(String.class) ? (T) json : mapper().readValue(json, clazz);
+            if (clazz.equals(String.class)) {
+                return (T) json;
+            }
+
+            if (json instanceof String) {
+                return mapper().readValue((String) json, clazz);
+            }
+
+            if (json instanceof JsonNode) {
+                return mapper().treeToValue((JsonNode) json, clazz);
+            }
+
+            return mapper().convertValue(json, clazz);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -144,13 +153,22 @@ public final class Json {
      * @param json          json字符串
      * @param typeReference 目标对象类型
      */
-    public static <T> T toObj(final String json, final TypeReference<T> typeReference) {
-        if (isEmpty(json) || isNull(typeReference)) {
+    public static <T> T toObj(final Object json, final TypeReference<T> typeReference) {
+        if (isNull(typeReference)) {
             return null;
         }
 
         try {
-            return mapper().readValue(json, typeReference);
+            if (json instanceof String) {
+
+                return mapper().readValue((String) json, typeReference);
+            }
+
+            if (json instanceof JsonNode) {
+                return mapper().treeToValue((JsonNode) json, typeReference);
+            }
+
+            return mapper().convertValue(json, typeReference);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -163,31 +181,21 @@ public final class Json {
      * @param javaType 目标对象类型
      * @return 对象
      */
-    public static <T> T toObj(final String json, final JavaType javaType) {
-        if (isEmpty(json) || isNull(javaType)) {
+    public static <T> T toObj(final Object json, final JavaType javaType) {
+        if (isNull(javaType)) {
             return null;
         }
-
         try {
-            return mapper().readValue(json, javaType);
+            if (json instanceof String) {
+                return mapper().readValue((String) json, javaType);
+            }
+
+            if (json instanceof JsonNode) {
+                return mapper().treeToValue((JsonNode) json, javaType);
+            }
+
+            return mapper().convertValue(json, javaType);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * 字符串转换为JsonNode对象
-     *
-     * @param json json字符串
-     */
-    public static JsonNode toNode(final String json) {
-        if (isEmpty(json)) {
-            return mapper().createObjectNode();
-        }
-
-        try {
-            return mapper().readTree(json);
-        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -200,10 +208,18 @@ public final class Json {
      */
     public static JsonNode toNode(final Object obj) {
         if (isNull(obj)) {
-            return mapper().createObjectNode();
+            return null;
         }
 
         try {
+            if (obj instanceof String) {
+                return mapper().readTree((String) obj);
+            }
+
+            if (obj instanceof JsonNode) {
+                return (JsonNode) obj;
+            }
+
             return mapper().valueToTree(obj);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -224,63 +240,6 @@ public final class Json {
     /**
      * 对象转换为map对象
      *
-     * @param json 需要转换的json字符串
-     * @param k    健的类型
-     * @param v    值的类型
-     * @return map
-     */
-    public static <K, V> Map<K, V> toMap(final String json, final Class<K> k, final Class<V> v) {
-        if (isEmpty(json)) {
-            return new HashMap<>();
-        }
-
-        return toObj(json, javaType(Map.class, k, v));
-    }
-
-    /**
-     * json字符串转换为map对象
-     *
-     * @param json          json字符串
-     * @param typeReference 目标对象类型
-     * @param <K>           健的类型
-     * @param <V>           值的类型
-     * @return 对象
-     */
-    public static <K, V> Map<K, V> toMap(final String json, TypeReference<Map<K, V>> typeReference) {
-        if (isEmpty(json)) {
-            return new HashMap<>();
-        }
-
-        return toObj(json, typeReference);
-    }
-
-    /**
-     * 对象转换为map对象
-     *
-     * @param json 需要转换的json字符串
-     * @return map
-     */
-    @SuppressWarnings("unchecked")
-    public static <K, V> Map<K, V> toMap(final String json) {
-        return (Map<K, V>) toMap(json, Object.class, Object.class);
-    }
-
-    /**
-     * 对象转换为map对象
-     *
-     * @param obj 对象
-     * @param <K> 健的类型
-     * @param <V> 值的类型
-     * @return map
-     */
-    @SuppressWarnings("unchecked")
-    public static <K, V> Map<K, V> toMap(final Object obj) {
-        return (Map<K, V>) toMap(obj, Object.class, Object.class);
-    }
-
-    /**
-     * 对象转换为map对象
-     *
      * @param obj 对象
      * @param <K> 健的类型
      * @param <V> 值的类型
@@ -288,7 +247,11 @@ public final class Json {
      */
     public static <K, V> Map<K, V> toMap(final Object obj, final Class<K> k, final Class<V> v) {
         if (isNull(obj)) {
-            return new HashMap<>();
+            return null;
+        }
+
+        if (obj instanceof String) {
+            return toObj(obj, javaType(Map.class, k, v));
         }
 
         return mapper().convertValue(obj, javaType(Map.class, k, v));
@@ -305,53 +268,16 @@ public final class Json {
      */
     public static <K, V> Map<K, V> toMap(final Object obj, TypeReference<Map<K, V>> typeReference) {
         if (isNull(obj)) {
-            return new HashMap<>();
+            return null;
+        }
+
+        if (obj instanceof String) {
+            return toObj(obj, typeReference);
         }
 
         return mapper().convertValue(obj, typeReference);
     }
 
-    /**
-     * json字符串转换为list对象，并指定元素类型
-     *
-     * @param json  json字符串
-     * @param clazz list的元素类型
-     * @return list
-     */
-    public static <T> List<T> toList(final String json, final Class<T> clazz) {
-        if (isEmpty(json)) {
-            return new ArrayList<>();
-        }
-
-        return toObj(json, javaType(List.class, clazz));
-    }
-
-    /**
-     * 对象转换为list对象，并指定元素类型
-     *
-     * @param json          对象
-     * @param typeReference 目标对象类型
-     * @param <T>           元素类型
-     * @return 对象
-     */
-    public static <T> List<T> toList(final String json, TypeReference<List<T>> typeReference) {
-        if (isEmpty(json)) {
-            return new ArrayList<>();
-        }
-
-        return toObj(json, typeReference);
-    }
-
-    /**
-     * json字符串转换为list对象，并指定元素类型
-     *
-     * @param json json字符串
-     * @return list
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> List<T> toList(final String json) {
-        return (List<T>) toList(json, Object.class);
-    }
 
     /**
      * 对象转换为list对象，并指定元素类型
@@ -363,7 +289,11 @@ public final class Json {
      */
     public static <T> List<T> toList(final Object obj, final Class<T> clazz) {
         if (isNull(obj)) {
-            return new ArrayList<>();
+            return null;
+        }
+
+        if (obj instanceof String) {
+            return toObj(obj, javaType(List.class, clazz));
         }
 
         return mapper().convertValue(obj, javaType(List.class, clazz));
@@ -372,30 +302,21 @@ public final class Json {
     /**
      * 对象转换为list对象，并指定元素类型
      *
-     * @param obj           对象
-     * @param typeReference 目标对象类型
-     * @param <T>           元素类型
+     * @param obj     对象
+     * @param typeRef 目标对象类型
+     * @param <T>     元素类型
      * @return 对象
      */
-    public static <T> List<T> toList(final Object obj, final TypeReference<List<T>> typeReference) {
+    public static <T> List<T> toList(final Object obj, final TypeReference<List<T>> typeRef) {
         if (isNull(obj)) {
-            return new ArrayList<>();
+            return null;
         }
 
-        return mapper().convertValue(obj, typeReference);
-    }
+        if (obj instanceof String) {
+            return toObj(obj, typeRef);
+        }
 
-
-    /**
-     * 对象转换为list对象，并指定元素类型
-     *
-     * @param obj 对象
-     * @param <T> 元素类型
-     * @return 对象
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> List<T> toList(final Object obj) {
-        return (List<T>) toList(obj, Object.class);
+        return mapper().convertValue(obj, typeRef);
     }
 
     /**
