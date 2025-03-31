@@ -225,11 +225,13 @@ public final class HttpReq {
      * @return 字符串
      */
     public String str() {
-        if (bytes().length == 0) {
+        byte[] bytes = bytes();
+
+        if (bytes.length == 0) {
             return null;
         }
 
-        return new String(bytes(), Objs.defaultIfNull(charset(), StandardCharsets.UTF_8));
+        return new String(bytes, Objs.defaultIfNull(charset(), StandardCharsets.UTF_8));
     }
 
     /**
