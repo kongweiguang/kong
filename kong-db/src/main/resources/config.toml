@@ -1,0 +1,28 @@
+[mysql]
+url = "jdbc:mysql://172.16.40.21:3306/ai-kcj?useUnicode=true&characterEncoding=utf8&useSSL=true&autoReconnect=true&reWriteBatchedInserts=true"
+jdbcUrl = "jdbc:mysql://172.16.40.21:3306/ai-kcj?useUnicode=true&characterEncoding=utf8&useSSL=true&autoReconnect=true&reWriteBatchedInserts=true"
+username = "ai-kcj"
+password = "5zKfHZ8FhQtB6e8D"
+driver = "com.mysql.cj.jdbc.Driver"
+autoCommit = true
+connectionTimeout = 30000
+idleTimeout = 600000
+maxLifetime = 1800000
+connectionTestQuery = "SELECT 1"
+minimumIdle = 10
+maximumPoolSize = 10
+
+
+[pgsql]
+url = "jdbc:mysql://172.16.40.21:3306/ai-kcj?useUnicode=true&characterEncoding=utf8&useSSL=true&autoReconnect=true&reWriteBatchedInserts=true"
+jdbcUrl = "jdbc:mysql://172.16.40.21:3306/ai-kcj?useUnicode=true&characterEncoding=utf8&useSSL=true&autoReconnect=true&reWriteBatchedInserts=true"
+username = "ai-kcj"
+password = "5zKfHZ8FhQtB6e8D"
+driver = "com.mysql.cj.jdbc.Driver"
+autoCommit = true
+connectionTimeout = 30000
+idleTimeout = 600000
+maxLifetime = 1800000
+connectionTestQuery = "SELECT 1"
+minimumIdle = 10
+maximumPoolSize = 10

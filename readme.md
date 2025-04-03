@@ -22,9 +22,11 @@
 # 工具包介绍(具体使用方法请看模块的readme.md)
 
 * kong-bom 版本管理
-* kong-bus 类似git操作的轻量级eventbus
-* kong-bus-springboot-starter bus的springboot-starter
 * kong-core 简单的util
 * kong-http 基于okhttp的http请求工具
 * kong-json 基于jackson的json工具类
+* kong-ai 大模型工具封装
+* kong-db 基于jdbc的数据库操作工具
+* kong-bus 类似git操作的轻量级eventbus
+* kong-bus-springboot-starter bus的springboot-starter
 * kong-spring spring相关工具

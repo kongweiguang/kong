@@ -11,7 +11,7 @@ import static java.util.Objects.nonNull;
  *
  * @author kongweiguang
  */
-public class IoUtil {
+public class IOs {
 
     /**
      * 将流转成byte数组
@@ -58,6 +58,23 @@ public class IoUtil {
             } catch (IOException ignored) {
 
             }
+        }
+    }
+
+    /**
+     * 关闭流
+     *
+     * @param c 流
+     */
+    public static void close(final Object c) {
+        if (nonNull(c)) {
+            if (c instanceof AutoCloseable) {
+                try {
+                    ((AutoCloseable) c).close();
+                } catch (Exception ignore) {
+                }
+            }
+
         }
     }
 }

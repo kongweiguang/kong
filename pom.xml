@@ -44,6 +44,8 @@
         <module>kong-bus</module>
         <module>kong-bus-springboot-starter</module>
         <module>kong-spring</module>
+        <module>kong-db</module>
+        <module>kong-ai</module>
     </modules>
 
     <properties>

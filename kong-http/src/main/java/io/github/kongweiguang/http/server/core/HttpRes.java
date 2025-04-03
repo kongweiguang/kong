@@ -2,7 +2,7 @@ package io.github.kongweiguang.http.server.core;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
-import io.github.kongweiguang.core.util.IoUtil;
+import io.github.kongweiguang.core.util.IOs;
 import io.github.kongweiguang.http.client.core.ContentType;
 import io.github.kongweiguang.http.client.core.Header;
 
@@ -214,7 +214,7 @@ public final class HttpRes {
      * 关闭响应流
      */
     public void close() {
-        IoUtil.close(out());
+        IOs.close(out());
     }
 
 }
