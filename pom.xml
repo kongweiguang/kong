@@ -42,10 +42,10 @@
         <module>kong-http</module>
         <module>kong-json</module>
         <module>kong-bus</module>
-        <module>kong-bus-springboot-starter</module>
         <module>kong-spring</module>
         <module>kong-db</module>
         <module>kong-ai</module>
+        <module>kong-socket</module>
     </modules>
 
     <properties>

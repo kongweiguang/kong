@@ -1,79 +1,118 @@
 package io.github.kongweiguang.db.sql;
 
 
-import io.github.kongweiguang.core.util.Strs;
+import io.github.kongweiguang.core.lang.Pair;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.StringJoiner;
 
+/**
+ * 条件对象
+ *
+ * @author kongweiguang
+ */
 public class Where {
 
-    // 比较运算符
-    public static final String EQUALS = "=";
-    public static final String NOT_EQUALS = "<>";
-    public static final String GREATER_THAN = ">";
-    public static final String LESS_THAN = "<";
-    public static final String GREATER_THAN_OR_EQUAL = ">=";
-    public static final String LESS_THAN_OR_EQUAL = "<=";
+    private final String field;
+    private final String oper;
+    private final List<Object> value = new ArrayList<>();
 
-    // 逻辑运算符
-    public static final String AND = "AND";
-    public static final String OR = "OR";
-    public static final String NOT = "NOT";
-
-    // 模糊查询
-    public static final String LIKE = "LIKE";
-    public static final String NOT_LIKE = "NOT LIKE";
-
-    // BETWEEN
-    public static final String BETWEEN = "BETWEEN";
-    public static final String NOT_BETWEEN = "NOT BETWEEN";
-
-    // 存在性检查
-    public static final String EXISTS = "EXISTS";
-    public static final String NOT_EXISTS = "NOT EXISTS";
-
-
-    private String field;
-    private String oper;
-    private String value;
-
-
-    public Where(String field, String oper, String value) {
+    public Where(String field, String oper, Object... value) {
         this.field = field;
         this.oper = oper;
-        this.value = value;
+        this.value.addAll(Arrays.asList(value));
     }
 
-    public static Where of(String field, String oper, String value) {
+    public static Where of(String field, String oper, Object... value) {
         return new Where(field, oper, value);
     }
 
-    public static Where of(String field, String oper) {
-        return of(field, oper, null);
+    public static Where of(String field, Object oper) {
+        return of(field, oper.toString(), (Object) null);
     }
 
+    // region ---- 基本运算符
+    public static Where eq(String field, Object value) {
+        return of(field, "=?", value);
+    }
 
-    public static Where in(String field, List<Object> list) {
+    public static Where ne(String field, Object value) {
+        return of(field, "<>?", value);
+    }
+
+    public static Where gt(String field, Object value) {
+        return of(field, ">?", value);
+    }
+
+    public static Where lt(String field, Object value) {
+        return of(field, "<?", value);
+    }
+
+    public static Where ge(String field, Object value) {
+        return of(field, ">=?", value);
+    }
+
+    public static Where le(String field, Object value) {
+        return of(field, "<=?", value);
+    }
+
+    // endregion
+
+    // region ---- like
+
+    public static Where like(String field, String value) {
+        return of(field, "LIKE ?%", value);
+    }
+
+    public static Where likeStart(String field, String value) {
+        return of(field, "LIKE %?", value);
+    }
+
+    public static Where likeEnd(String field, String value) {
+        return of(field, "LIKE ?%", value);
+    }
+
+    public static Where notLike(String field, String value) {
+        return of(field, "NOT LIKE ?%", value);
+    }
+
+    public static Where notLikeStart(String field, String value) {
+        return of(field, "NOT LIKE %?", value);
+    }
+
+    public static Where notLikeEnd(String field, String value) {
+        return of(field, "NOT LIKE ?%", value);
+    }
+
+    // endregion
+
+    // region ---- in
+    public static Where in(String field, Object... parms) {
         StringBuilder sb = new StringBuilder();
         sb.append("(");
-        for (Object o : list) {
-            sb.append("?,");
+        for (Object o : parms) {
+            sb.append(" ?,");
         }
         sb.deleteCharAt(sb.length() - 1).append(")");
-        return of(field, "IN", sb.toString());
+        return of(field, "IN " + sb, parms);
 
     }
 
-    public static Where notIn(String field, List<Object> list) {
+    public static Where notIn(String field, Object... parms) {
         StringBuilder sb = new StringBuilder();
         sb.append("(");
-        for (Object o : list) {
-            sb.append("?,");
+        for (Object o : parms) {
+            sb.append(" ?,");
         }
         sb.deleteCharAt(sb.length() - 1).append(")");
-        return of(field, "NOT IN", sb.toString());
+        return of(field, "NOT IN " + sb, parms);
     }
 
+    // endregion
+
+    // region ---- is null
     public static Where isNull(String field) {
         return of(field, "IS NULL");
     }
@@ -82,33 +121,30 @@ public class Where {
         return of(field, "IS NOT NULL");
     }
 
+    // endregion
+
+    // region ---- between
+
     public static Where between(String field, Object v1, Object v2) {
-        return of(field, "BETWEEN", "? AND ?");
+        return of(field, "BETWEEN ? AND ?", v1, v2);
     }
 
-    public String field() {
-        return field;
+    public static Where notBetween(String field, Object v1, Object v2) {
+        return of(field, "NOT BETWEEN ? AND ?", v1, v2);
     }
 
-    public String oper() {
-        return oper;
+    // endregion
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Where.class.getSimpleName() + "[", "]")
+                .add("field='" + field + "'")
+                .add("oper='" + oper + "'")
+                .add("value=" + value)
+                .toString();
     }
 
-    public String value() {
-        return value;
-    }
-
-
-    public static Where group() {
-        return null;
-    }
-
-    public String ok() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(field).append(' ').append(oper).append(' ');
-        if (!Strs.isEmpty(value)) {
-            sb.append(value);
-        }
-        return sb.toString();
+    public Pair<String, List<Object>> ok() {
+        return Pair.of(field + " " + oper + " ", value);
     }
 }

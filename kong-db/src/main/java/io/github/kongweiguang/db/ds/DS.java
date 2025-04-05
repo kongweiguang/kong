@@ -26,7 +26,7 @@ public class DS {
             Properties props = new Properties();
             props.putAll(result.getTable(source).toMap());
             props.put("user", props.getProperty("username"));
-            return new KongDataSource(props);
+            return new JdkDataSource(props);
         });
     }
 

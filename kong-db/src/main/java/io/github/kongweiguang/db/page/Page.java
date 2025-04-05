@@ -1,8 +1,15 @@
 package io.github.kongweiguang.db.page;
 
 
+/**
+ * 分页对象
+ *
+ * @author kongweiguang
+ */
 public class Page {
+    // 当前页 默认是1
     private int pageNumber;
+    // 每页显示记录数
     private int pageSize;
 
     public Page(int pn, int ps) {

@@ -1,7 +1,7 @@
 package io.github.kongweiguang.db;
 
-
 import io.github.kongweiguang.core.util.IOs;
+import io.github.kongweiguang.db.func.RsFn;
 import io.github.kongweiguang.db.func.SqlRun;
 import io.github.kongweiguang.db.page.Page;
 import io.github.kongweiguang.db.page.PageRes;
@@ -15,123 +15,248 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 数据库操作类
+ *
+ * @author kongweiguang
+ */
 public class DbRun {
-    private final Connection con;
+    private static final InheritableThreadLocal<Connection> cache = new InheritableThreadLocal<>();
+    private final DataSource ds;
 
     public DbRun(DataSource ds) {
-        try {
-            this.con = ds.getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        this.ds = ds;
     }
 
+    /**
+     * 创建DbRun对象
+     *
+     * @param ds 数据源
+     * @return DbRun对象
+     */
     public static DbRun of(DataSource ds) {
         return new DbRun(ds);
     }
 
-    public Map<String, Object> select(String sql, Object... params) {
-        PreparedStatement ps = null;
+    /**
+     * 获取连接
+     *
+     * @return 连接
+     * @throws SQLException SQL异常
+     */
+    public Connection con() throws SQLException {
+        Connection con = cache.get();
+        if (con == null) {
+            cache.set(ds.getConnection());
+            con = cache.get();
+        }
+        return con;
+    }
+
+    /**
+     * 关闭连接
+     *
+     * @param con 连接
+     * @throws SQLException SQL异常
+     */
+    public void closeCon(Connection con) throws SQLException {
+        boolean autoCommit = con.getAutoCommit();
+        if (!autoCommit) {
+            return;
+        }
+        cache.remove();
+        IOs.close(con);
+    }
+
+    /**
+     * 执行查询
+     *
+     * @param sql       查询语句
+     * @param extractor 提取器
+     * @param params    参数
+     * @param <T>       返回对象类型
+     * @return 提取器返回对象
+     * @throws SQLException SQL异常
+     */
+    private <T> T executeQuery(String sql, RsFn<T> extractor, Object... params) throws SQLException {
+        Connection con = con();
         try {
-            ps = ps(sql, params);
-            ps.close();
+            PreparedStatement ps = prepareStatement(con, sql, params);
             ResultSet rs = ps.executeQuery();
-            return Rs.map(rs);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            return extractor.hd(rs);
         } finally {
-            IOs.close(ps);
+            closeCon(con);
         }
     }
 
-    public List<Map<String, Object>> selectList(String sql, Object... params) {
-        PreparedStatement ps = null;
+    /**
+     * 执行更新
+     *
+     * @param sql    更新语句
+     * @param params 参数
+     * @return 更新行数
+     * @throws SQLException SQL异常
+     */
+    private int executeUpdate(String sql, Object... params) throws SQLException {
+        Connection con = con();
         try {
-            ps = ps(sql, params);
-            ResultSet rs = ps.executeQuery();
-            return Rs.list(rs);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            IOs.close(ps);
-
-        }
-    }
-
-
-    public long count(String sql, Object... params) {
-        PreparedStatement ps = null;
-        try {
-            ps = ps(sql, params);
-            ResultSet rs = ps.executeQuery();
-            return Rs.count(rs).longValue();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            IOs.close(ps);
-
-        }
-    }
-
-    public PageRes<Map<String, Object>> page(String sql, Page page, Object... params) {
-        PreparedStatement ps = null;
-        try {
-            long count = count(sql, params);
-            sql += "LIMIT " + page.getPageNumber() + ", " + page.getPageSize();
-            ps = ps(sql, params);
-            ResultSet rs = ps.executeQuery();
-            return PageRes.of(count, Rs.list(rs));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            IOs.close(ps);
-
-        }
-    }
-
-
-    public int execute(String sql, Object... params) {
-        PreparedStatement ps = null;
-        try {
-            ps = ps(sql, params);
+            PreparedStatement ps = prepareStatement(con, sql, params);
             return ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         } finally {
-            IOs.close(ps);
-
+            closeCon(con);
         }
     }
 
-    public void tx(SqlRun run) throws SQLException {
-
-        final boolean auto = con.getAutoCommit();
+    /**
+     * 批量执行更新
+     *
+     * @param sql    更新语句
+     * @param params 参数
+     * @return 更新行数
+     * @throws SQLException SQL异常
+     */
+    private int[] executeBatch0(String sql, List<Object[]> params) throws SQLException {
+        Connection con = con();
         try {
-            if (auto) {
-                con.setAutoCommit(false);
+            PreparedStatement ps = con.prepareStatement(sql);
+            for (Object[] param : params) {
+                for (int i = 0; i < param.length; i++) {
+                    ps.setObject(i + 1, param[i]);
+                }
+                ps.addBatch();
             }
-            run.run(this);
-            con.commit();
-        } catch (Exception e) {
-            try {
-                con.rollback();
-            } catch (SQLException ex) {
-                throw new SQLException(ex);
-            }
+            return ps.executeBatch();
         } finally {
-            con.setAutoCommit(auto);
+            closeCon(con);
         }
     }
 
+    /**
+     * 执行查询
+     *
+     * @param sql    查询语句
+     * @param params 参数
+     * @return 查询结果
+     * @throws SQLException SQL异常
+     */
+    public Map<String, Object> select(String sql, Object... params) throws SQLException {
+        return executeQuery(sql, Rs::map, params);
+    }
 
-    private PreparedStatement ps(String sql, Object[] params) throws SQLException {
+    /**
+     * 执行查询
+     *
+     * @param sql    查询语句
+     * @param params 参数
+     * @return 查询结果
+     * @throws SQLException SQL异常
+     */
+    public List<Map<String, Object>> selectList(String sql, Object... params) throws SQLException {
+        return executeQuery(sql, Rs::list, params);
+    }
+
+    /**
+     * 执行查询
+     *
+     * @param sql    查询语句
+     * @param params 参数
+     * @return 查询结果
+     * @throws SQLException SQL异常
+     */
+    public long count(String sql, Object... params) throws SQLException {
+        String countSql = "SELECT COUNT(*) FROM (" + sql + ") AS count_table";
+        return executeQuery(countSql, rs -> Rs.count(rs).longValue(), params);
+    }
+
+    /**
+     * 执行分页查询
+     *
+     * @param sql    查询语句
+     * @param page   分页对象
+     * @param params 参数
+     * @return 分页结果
+     * @throws SQLException SQL异常
+     */
+    public PageRes<Map<String, Object>> page(String sql, Page page, Object... params) throws SQLException {
+        long totalCount = count(sql, params);
+        String pageSql = sql + " LIMIT ? OFFSET ?";
+
+        Object[] allParams = new Object[params.length + 2];
+        System.arraycopy(params, 0, allParams, 0, params.length);
+
+        int limit = page.getPageSize();
+        int offset = (page.getPageNumber() - 1) * limit;
+
+        allParams[params.length] = limit;
+        allParams[params.length + 1] = offset;
+
+        return PageRes.of(totalCount, executeQuery(pageSql, Rs::list, allParams));
+    }
+
+    /**
+     * 执行更新
+     *
+     * @param sql    更新语句
+     * @param params 参数
+     * @return 更新行数
+     * @throws SQLException SQL异常
+     */
+    public int execute(String sql, Object... params) throws SQLException {
+        return executeUpdate(sql, params);
+    }
+
+    /**
+     * 执行更新
+     *
+     * @param sql    更新语句
+     * @param params 参数
+     * @return 更新行数
+     * @throws SQLException SQL异常
+     */
+    public int[] executeBatch(String sql, List<Object[]> params) throws SQLException {
+        return executeBatch0(sql, params);
+    }
+
+    /**
+     * 事务
+     *
+     * @param run 事务对象
+     * @throws SQLException SQL异常
+     */
+    public void tx(SqlRun run) throws SQLException {
+        Connection con = con();
+        try {
+            con.setAutoCommit(false);
+            try {
+                run.run(this);
+                con.commit();
+            } catch (Exception e) {
+                con.rollback();
+                throw e;
+            }
+        } finally {
+            con.setAutoCommit(true);
+            closeCon(con);
+        }
+    }
+
+    /**
+     * 创建PreparedStatement
+     *
+     * @param con    连接
+     * @param sql    查询语句
+     * @param params 参数
+     * @return PreparedStatement
+     * @throws SQLException SQL异常
+     */
+    private PreparedStatement prepareStatement(Connection con, String sql, Object[] params) throws SQLException {
         PreparedStatement ps = con.prepareStatement(sql);
-
-        if (null != params) {
+        if (params != null) {
             for (int i = 0; i < params.length; i++) {
                 ps.setObject(i + 1, params[i]);
             }
         }
         return ps;
     }
+
 }

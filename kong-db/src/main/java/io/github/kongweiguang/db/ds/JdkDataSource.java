@@ -9,10 +9,10 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-public class KongDataSource implements DataSource {
+public class JdkDataSource implements DataSource {
     private final Properties props;
 
-    public KongDataSource(Properties props) {
+    public JdkDataSource(Properties props) {
         this.props = props;
     }
 

@@ -1,7 +1,5 @@
 package io.github.kongweiguang.core.util;
 
-import static java.util.Objects.isNull;
-
 /**
  * object工具类
  *
@@ -23,5 +21,9 @@ public class Objs {
         }
 
         return obj;
+    }
+
+    public static boolean isNull(Object obj) {
+        return obj == null;
     }
 }
