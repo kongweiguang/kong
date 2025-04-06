@@ -7,7 +7,7 @@ import java.util.List;
 
 import static io.github.kongweiguang.bus.Bus.hub;
 import static io.github.kongweiguang.bus.core.InnerUtil.generics;
-import static io.github.kongweiguang.core.lang.Assert.isTure;
+import static io.github.kongweiguang.core.lang.Assert.isTrue;
 import static io.github.kongweiguang.core.lang.Assert.notNull;
 import static io.github.kongweiguang.core.lang.If.trueSupF1;
 import static io.github.kongweiguang.core.util.Strs.defaultIfEmpty;
@@ -53,9 +53,9 @@ public class DefaultHubImpl<C, R> extends AbstractHubImpl<C, R> {
         if (pull != null) {
             Class<?>[] params = m.getParameterTypes();
 
-            isTure(!(params.length == 0 && pull.value().isEmpty()), "method or branch must have a value ");
+            isTrue(!(params.length == 0 && pull.value().isEmpty()), "method or branch must have a value ");
 
-            isTure(params.length <= 1, "method params not > 1");
+            isTrue(params.length <= 1, "method params not > 1");
 
             m.setAccessible(true);
 
@@ -85,7 +85,7 @@ public class DefaultHubImpl<C, R> extends AbstractHubImpl<C, R> {
 
                 final List<String> generics = generics(m);
 
-                isTure(!generics.isEmpty(), "action generics must not be null");
+                isTrue(!generics.isEmpty(), "action generics must not be null");
 
                 branch = generics.get(0);
             } else {

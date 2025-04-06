@@ -13,8 +13,8 @@ public class User {
     private String email;
     private String firstName;
     private String lastName;
-    private Date createdAt;
-    private Date updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private List<Role> roles;
 
     public Long id() {
@@ -65,19 +65,19 @@ public class User {
         this.lastName = lastName;
     }
 
-    public Date createdAt() {
+    public LocalDateTime createdAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date updatedAt() {
+    public LocalDateTime updatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
-import static io.github.kongweiguang.core.lang.Assert.isTure;
+import static io.github.kongweiguang.core.lang.Assert.isTrue;
 import static io.github.kongweiguang.core.lang.Assert.notNull;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -226,7 +226,7 @@ public final class Conf {
     public Conf proxy(final Proxy.Type type, final String host, final int port) {
         notNull(type, "type must not be null");
         notNull(host, "host must not be null");
-        isTure(port > 0, "port must > 0");
+        isTrue(port > 0, "port must > 0");
 
         this.proxy = new Proxy(type, new InetSocketAddress(host, port));
         return this;

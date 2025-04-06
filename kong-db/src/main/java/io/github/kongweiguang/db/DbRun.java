@@ -140,7 +140,7 @@ public class DbRun {
      * @throws SQLException SQL异常
      */
     public Map<String, Object> select(String sql, Object... params) throws SQLException {
-        return executeQuery(sql, Rs::map, params);
+        return executeQuery(sql, Rs::toMap, params);
     }
 
     /**
@@ -152,7 +152,7 @@ public class DbRun {
      * @throws SQLException SQL异常
      */
     public List<Map<String, Object>> selectList(String sql, Object... params) throws SQLException {
-        return executeQuery(sql, Rs::list, params);
+        return executeQuery(sql, Rs::toList, params);
     }
 
     /**
@@ -184,13 +184,13 @@ public class DbRun {
         Object[] allParams = new Object[params.length + 2];
         System.arraycopy(params, 0, allParams, 0, params.length);
 
-        int limit = page.getPageSize();
-        int offset = (page.getPageNumber() - 1) * limit;
+        int limit = page.pageSize();
+        int offset = (page.pageNumber() - 1) * limit;
 
         allParams[params.length] = limit;
         allParams[params.length + 1] = offset;
 
-        return PageRes.of(totalCount, executeQuery(pageSql, Rs::list, allParams));
+        return PageRes.of(totalCount, executeQuery(pageSql, Rs::toList, allParams));
     }
 
     /**

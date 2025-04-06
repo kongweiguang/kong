@@ -17,11 +17,18 @@ public class Page {
         this.pageSize = ps;
     }
 
+    /**
+     * 创建分页对象
+     *
+     * @param pn 当前页
+     * @param ps 每页显示记录数
+     * @return Page
+     */
     public static Page of(int pn, int ps) {
         return new Page(pn, ps);
     }
 
-    public int getPageNumber() {
+    public int pageNumber() {
         return pageNumber;
     }
 
@@ -29,7 +36,7 @@ public class Page {
         this.pageNumber = pageNumber;
     }
 
-    public int getPageSize() {
+    public int pageSize() {
         return pageSize;
     }
 

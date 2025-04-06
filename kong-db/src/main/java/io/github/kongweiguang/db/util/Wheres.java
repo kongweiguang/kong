@@ -8,8 +8,18 @@ import io.github.kongweiguang.db.sql.WhereGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Where条件工具类
+ *
+ * @author kongweiguang
+ */
 public class Wheres {
-
+    /**
+     * 构建Where条件
+     *
+     * @param wheres 条件列表
+     * @return Pair
+     */
     public static Pair<String, List<Object>> buildWhere(Where[] wheres) {
         StringBuilder sb = new StringBuilder();
         List<Object> paramsList = new ArrayList<>();
@@ -22,6 +32,12 @@ public class Wheres {
         return Pair.of(sb.toString(), paramsList);
     }
 
+    /**
+     * 构建Where条件组
+     *
+     * @param groups 条件组列表
+     * @return  Pair
+     */
     public static Pair<String, List<Object>> buildGroup(WhereGroup... groups) {
         StringBuilder sb = new StringBuilder();
         List<Object> paramsList = new ArrayList<>();

@@ -25,15 +25,31 @@ public class Where {
         this.value.addAll(Arrays.asList(value));
     }
 
+    /**
+     * 创建Where条件
+     *
+     * @param field 字段
+     * @param oper  操作符
+     * @param value 值
+     * @return Where
+     */
     public static Where of(String field, String oper, Object... value) {
         return new Where(field, oper, value);
     }
 
+    /**
+     * 创建Where条件
+     *
+     * @param field 字段
+     * @param oper  操作符
+     * @return Where
+     */
     public static Where of(String field, Object oper) {
         return of(field, oper.toString(), (Object) null);
     }
 
     // region ---- 基本运算符
+
     public static Where eq(String field, Object value) {
         return of(field, "=?", value);
     }
@@ -63,7 +79,7 @@ public class Where {
     // region ---- like
 
     public static Where like(String field, String value) {
-        return of(field, "LIKE ?%", value);
+        return of(field, "LIKE %?%", value);
     }
 
     public static Where likeStart(String field, String value) {
@@ -75,7 +91,7 @@ public class Where {
     }
 
     public static Where notLike(String field, String value) {
-        return of(field, "NOT LIKE ?%", value);
+        return of(field, "NOT LIKE %?%", value);
     }
 
     public static Where notLikeStart(String field, String value) {
@@ -144,6 +160,11 @@ public class Where {
                 .toString();
     }
 
+    /**
+     * 获得结果
+     *
+     * @return Pair
+     */
     public Pair<String, List<Object>> ok() {
         return Pair.of(field + " " + oper + " ", value);
     }

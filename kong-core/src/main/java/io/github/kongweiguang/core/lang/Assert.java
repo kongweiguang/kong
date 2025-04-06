@@ -25,7 +25,7 @@ public class Assert {
      * @param bool 需要判断的结果
      * @param msg  异常信息
      */
-    public static void isTure(final boolean bool, final String msg) {
+    public static void isTrue(final boolean bool, final String msg) {
         if (!bool) {
             throw new IllegalArgumentException(msg);
         }

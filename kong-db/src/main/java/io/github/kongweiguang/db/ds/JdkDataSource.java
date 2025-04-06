@@ -9,6 +9,11 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+/**
+ * JDK DataSource
+ *
+ * @author kongweiguang
+ */
 public class JdkDataSource implements DataSource {
     private final Properties props;
 

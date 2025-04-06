@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static io.github.kongweiguang.core.lang.Assert.isTure;
+import static io.github.kongweiguang.core.lang.Assert.isTrue;
 import static io.github.kongweiguang.core.lang.Assert.notNull;
 import static io.github.kongweiguang.core.lang.If.trueRun;
 import static java.util.Optional.ofNullable;
@@ -99,7 +99,7 @@ public final class Chain<C> {
      * @param i 从后续的第几个
      */
     public void skip(final int i) {
-        isTure(i >= 0, "skip num must > 0");
+        isTrue(i >= 0, "skip num must > 0");
 
         indexProcess(index.addAndGet(i + 1));
     }

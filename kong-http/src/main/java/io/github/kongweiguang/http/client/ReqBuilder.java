@@ -40,7 +40,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
-import static io.github.kongweiguang.core.lang.Assert.isTure;
+import static io.github.kongweiguang.core.lang.Assert.isTrue;
 import static io.github.kongweiguang.core.lang.Assert.notNull;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -555,7 +555,7 @@ public final class ReqBuilder {
      * @return ReqBuilder {@link ReqBuilder}
      */
     public ReqBuilder port(final int port) {
-        isTure(port >= 1 && port <= 65535, "port must >= 1 && port <= 65535 ");
+        isTrue(port >= 1 && port <= 65535, "port must >= 1 && port <= 65535 ");
 
         urlBuilder().port(port);
         return this;
@@ -916,7 +916,7 @@ public final class ReqBuilder {
      * @return ReqBuilder {@link ReqBuilder}
      */
     public ReqBuilder retry(final int max, final Duration delay, final BiPredicate<Res, Throwable> predicate) {
-        isTure(max > 0, "max must > 0");
+        isTrue(max > 0, "max must > 0");
         notNull(delay, "delay must not be null");
         notNull(predicate, "predicate must not be null");
 

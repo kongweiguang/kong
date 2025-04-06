@@ -1,8 +1,8 @@
 package io.github.kongweiguang.test;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.kongweiguang.core.lang.Pair;
 import io.github.kongweiguang.core.util.Maps;
-import io.github.kongweiguang.core.util.Strs;
 import io.github.kongweiguang.db.DB;
 import io.github.kongweiguang.db.DbRun;
 import io.github.kongweiguang.db.page.Page;
@@ -36,6 +36,7 @@ public class DBTest {
                 WhereGroup.of(
                         Where.eq("id", 23),
                         Where.eq("username", "zhang_san")
+
                 ),
                 WhereGroup.or(
                         Where.eq("id", 20),
@@ -206,7 +207,7 @@ public class DBTest {
                 .from("users")
                 .ok();
         System.out.println("sr = " + sr);
-        PageRes<Map<String, Object>> pages = run1.page(sr.sql(), Page.of(1, 1), sr.params());
+        PageRes<Map<String, Object>> pages = run1.page(sr.sql(), Page.of(1, 2), sr.params());
         System.out.println("pages = " + pages);
     }
 
@@ -238,13 +239,14 @@ public class DBTest {
     @Test
     public void test4() throws Exception {
         SqlRes sr = Sql.of()
-                .select("count(*)")
+                .select("*")
                 .from("users")
                 .ok();
+        //SELECT * FROM users
         System.out.println("sr = " + sr);
         long select = run.count(sr.sql(), sr.params());
+        //10
         System.out.println(select);
-
     }
 
     @Test
@@ -253,8 +255,11 @@ public class DBTest {
                 .select("*")
                 .from("users")
                 .ok();
+        //SELECT * FROM users
         System.out.println("sr = " + sr);
         PageRes<Map<String, Object>> pages = run.page(sr.sql(), Page.of(1, 1), sr.params());
+
+        //pages = PageRes[total=10, data=[{password=$2a$10$EIXIX.USQKzdbTXDqyXneiHeRXkVkDxBdRpYxL1pJq2YFfjZq2mIpa, updated_at=2025-04-05T00:16:19, last_name=Doe, created_at=2025-04-05T00:16:19, id=1, first_name=John, email=john.doe@example.com, username=john_doe}]]
         System.out.println("pages = " + pages);
     }
 
@@ -264,13 +269,19 @@ public class DBTest {
                 .select("*")
                 .from("users")
                 .ok();
+        //SELECT * FROM users
         System.out.println("sr = " + sr);
+
         List<Map<String, Object>> maps = run.selectList(sr.sql(), sr.params());
+
+        //maps = [{password=$2a$10$EIXIX.USQKzdbTXDqyXneiHeRXkVkDxBdRpYxL1pJq2YFfjZq2mIpa, updated_at=2025-04-05T00:16:19, last_name=Doe, created_at=2025-04-05T00:16:19, id=1, first_name=John, email=john.doe@example.com, username=john_doe}, {password=$2a$10$EIXIX.USQKzdbTXDqyXneiHeRXkVkDxBdRpYxL1pJq2YFfjZq2mIpa, updated_at=2025-04-05T00:16:19, last_name=Smith, created_at=2025-04-05T00:16:19, id=2, first_name=Jane, email=jane.smith@example.com, username=jane_smith}, {password=$2a$10$EIXIX.USQKzdbTXDqyXneiHeRXkVkDxBdRpYxL1pJq2YFfjZq2mIpa, updated_at=2025-04-05T00:16:19, last_name=Wonder, created_at=2025-04-05T00:16:19, id=3, first_name=Alice, email=alice.wonder@example.com, username=alice_wonder}, {password=123456, updated_at=2025-04-05T14:41:35, last_name=san, created_at=2025-04-05T14:41:35, id=10, first_name=zhang, email=wangyunchao@163.com, username=zhang_san}, {password=123456, updated_at=2025-04-05T14:55:18, last_name=san, created_at=2025-04-05T14:55:18, id=11, first_name=zhang, email=wangyunchao@163.com, username=zhang_san}, {password=123456, updated_at=2025-04-05T14:55:18, last_name=san, created_at=2025-04-05T14:55:18, id=12, first_name=zhang, email=wangyunchao@163.com, username=zhang_san}, {password=123456, updated_at=2025-04-05T14:56:24, last_name=san, created_at=2025-04-05T14:56:24, id=15, first_name=zhang, email=wangyunchao@163.com, username=zhang_san}, {password=123456, updated_at=2025-04-05T14:56:24, last_name=san, created_at=2025-04-05T14:56:24, id=16, first_name=zhang, email=wangyunchao@163.com, username=zhang_san}, {password=123456, updated_at=2025-04-05T15:09:04, last_name=san, created_at=2025-04-05T15:09:04, id=21, first_name=zhang, email=wangyunchao@163.com, username=zhang_san}, {password=123456, updated_at=2025-04-05T15:09:04, last_name=san, created_at=2025-04-05T15:09:04, id=22, first_name=zhang, email=wangyunchao@163.com, username=zhang_san}]
         System.out.println("maps = " + maps);
+
         List<User> collect = maps.stream()
                 .map(Maps::key2CamelCase)
                 .map(e -> Json.toObj(e, User.class))
                 .collect(Collectors.toList());
+        //collect = [User[id=1, username='john_doe', password='$2a$10$EIXIX.USQKzdbTXDqyXneiHeRXkVkDxBdRpYxL1pJq2YFfjZq2mIpa', email='john.doe@example.com', firstName='John', lastName='Doe', createdAt=2025-04-05T00:16:19, updatedAt=2025-04-05T00:16:19, roles=null], User[id=2, username='jane_smith', password='$2a$10$EIXIX.USQKzdbTXDqyXneiHeRXkVkDxBdRpYxL1pJq2YFfjZq2mIpa', email='jane.smith@example.com', firstName='Jane', lastName='Smith', createdAt=2025-04-05T00:16:19, updatedAt=2025-04-05T00:16:19, roles=null], User[id=3, username='alice_wonder', password='$2a$10$EIXIX.USQKzdbTXDqyXneiHeRXkVkDxBdRpYxL1pJq2YFfjZq2mIpa', email='alice.wonder@example.com', firstName='Alice', lastName='Wonder', createdAt=2025-04-05T00:16:19, updatedAt=2025-04-05T00:16:19, roles=null], User[id=10, username='zhang_san', password='123456', email='wangyunchao@163.com', firstName='zhang', lastName='san', createdAt=2025-04-05T14:41:35, updatedAt=2025-04-05T14:41:35, roles=null], User[id=11, username='zhang_san', password='123456', email='wangyunchao@163.com', firstName='zhang', lastName='san', createdAt=2025-04-05T14:55:18, updatedAt=2025-04-05T14:55:18, roles=null], User[id=12, username='zhang_san', password='123456', email='wangyunchao@163.com', firstName='zhang', lastName='san', createdAt=2025-04-05T14:55:18, updatedAt=2025-04-05T14:55:18, roles=null], User[id=15, username='zhang_san', password='123456', email='wangyunchao@163.com', firstName='zhang', lastName='san', createdAt=2025-04-05T14:56:24, updatedAt=2025-04-05T14:56:24, roles=null], User[id=16, username='zhang_san', password='123456', email='wangyunchao@163.com', firstName='zhang', lastName='san', createdAt=2025-04-05T14:56:24, updatedAt=2025-04-05T14:56:24, roles=null], User[id=21, username='zhang_san', password='123456', email='wangyunchao@163.com', firstName='zhang', lastName='san', createdAt=2025-04-05T15:09:04, updatedAt=2025-04-05T15:09:04, roles=null], User[id=22, username='zhang_san', password='123456', email='wangyunchao@163.com', firstName='zhang', lastName='san', createdAt=2025-04-05T15:09:04, updatedAt=2025-04-05T15:09:04, roles=null]]
         System.out.println("collect = " + collect);
     }
 
@@ -280,16 +291,19 @@ public class DBTest {
                 .select("*")
                 .from("users")
                 .where("id = ?", 1)
-                .orderBy(Order.desc("id"))
+                .orderBy(Order.desc("created_at"))
                 .ok();
+        //SELECT * FROM users WHERE id = ? ORDER BY created_at DESC
         System.out.println("sr = " + sr);
+
         Map<String, Object> select = run.select(sr.sql(), sr.params());
+        // {password=$2a$10$EIXIX.USQKzdbTXDqyXneiHeRXkVkDxBdRpYxL1pJq2YFfjZq2mIpa, updated_at=2025-04-05T00:16:19, last_name=Doe, created_at=2025-04-05T00:16:19, id=1, first_name=John, email=john.doe@example.com, username=john_doe}
         System.out.println(select);
-        Map<String, Object> select1 = new HashMap<>();
-        select.forEach((k, v) -> {
-            select1.put(Strs.toCamelCase(k), v);
+
+        User user = Json.toObj(Maps.key2CamelCase(select), new TypeReference<User>() {
         });
-        User user = Json.toObj(select1, User.class);
+
+        //User[id=1, username='john_doe', password='$2a$10$EIXIX.USQKzdbTXDqyXneiHeRXkVkDxBdRpYxL1pJq2YFfjZq2mIpa', email='john.doe@example.com', firstName='John', lastName='Doe', createdAt=2025-04-05T00:16:19, updatedAt=2025-04-05T00:16:19, roles=null]
         System.out.println(user);
     }
 }

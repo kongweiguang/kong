@@ -3,6 +3,11 @@ package io.github.kongweiguang.db.sql;
 import java.util.Arrays;
 import java.util.StringJoiner;
 
+/**
+ * SQL执行结果
+ *
+ * @author kongweiguang
+ */
 public class SqlRes {
     private final String sql;
     private final Object[] params;
