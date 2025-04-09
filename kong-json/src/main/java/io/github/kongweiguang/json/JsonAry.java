@@ -63,7 +63,11 @@ public final class JsonAry {
      * @return {@link JsonAry}
      */
     public JsonAry addObj(final Object obj) {
-        node.add(Json.toNode(obj));
+        if (obj instanceof String) {
+            add(obj);
+        } else {
+            node.add(Json.toNode(obj));
+        }
         return this;
     }
 

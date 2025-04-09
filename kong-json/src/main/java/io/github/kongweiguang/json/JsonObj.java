@@ -70,8 +70,11 @@ public final class JsonObj {
      */
     public JsonObj putObj(final String k, final Object v) {
         Assert.notNull(k, "k must not be null");
-
-        node.set(k, Json.toNode(v));
+        if (v instanceof String) {
+            put(k, v);
+        } else {
+            node.set(k, Json.toNode(v));
+        }
 
         return this;
     }
