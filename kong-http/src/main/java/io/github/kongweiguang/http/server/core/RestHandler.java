@@ -68,20 +68,16 @@ public final class RestHandler implements com.sun.net.httpserver.HttpHandler {
      */
     @Override
     public void handle(final HttpExchange he) throws IOException {
-        try {
-            final Method method = Method.valueOf(he.getRequestMethod());
+        final Method method = Method.valueOf(he.getRequestMethod());
 
-            final HttpHandler handler = ofNullable(rest_map.get(he.getRequestURI().getPath())).map(e -> e.get(method)).orElse(null);
+        final HttpHandler handler = ofNullable(rest_map.get(he.getRequestURI().getPath())).map(e -> e.get(method)).orElse(null);
 
-            if (nonNull(handler)) {
-                handler0(he, handler);
-            } else {
-                if (GET.equals(method)) {
-                    handler0(he, ofNullable(rest_map.get(PATH)).map(e -> e.get(GET)).orElse(null));
-                }
+        if (nonNull(handler)) {
+            handler0(he, handler);
+        } else {
+            if (GET.equals(method)) {
+                handler0(he, ofNullable(rest_map.get(PATH)).map(e -> e.get(GET)).orElse(null));
             }
-        } finally {
-            he.close();
         }
 
     }
