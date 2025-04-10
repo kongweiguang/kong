@@ -83,56 +83,72 @@ public class Strs {
     }
 
     /**
-     * 格式化字符串 <br>
-     * 转义符可以使用 \\ 转义 <br>
-     * 例如：a b \\{\\} d -> a b {} d <br>
-     * 例如：a b \\\\{\\\\} d -> a b \{\} d <br>
+     * 格式化字符串 </br>
+     * 例如：</br>
+     * String template = "Hello {}, this is {} test\\{\\}  \\123 {}"; </br>
+     * 输出：Hello World, this is performance test{}  \123 {} </br>
+     * 转义符可以使用 \\ 转义 </br>
+     * 例如：</br>
+     * a b \\{\\} d -> a b {} d </br>
+     * a b \\\\{\\\\} d -> a b \{\} d </br>
      *
-     * @param str  模板
-     * @param args 参数
+     * @param str  模板字符串
+     * @param args 参数列表
      * @return 格式化后的字符串
      */
     public static String fmt(final String str, final Object... args) {
-        if (str == null || args == null) {
+        if (str == null || args == null || args.length == 0) {
             return str;
         }
 
-        StringBuilder sb = new StringBuilder(str.length() * 2);
+        final char[] chars = str.toCharArray();
+        final int len = chars.length;
+        StringBuilder sb = new StringBuilder(len * 2);
         int argIndex = 0;
-        int length = str.length();
-        int i = 0;
 
-        while (i < length) {
-            char c = str.charAt(i);
-            if (c == '\\' && i + 1 < length) {
-                char c1 = str.charAt(++i);
-                if (c1 == '{' || c1 == '}') {
-                    sb.append(c1);
-                } else {
-                    sb.append(c);
+        for (int i = 0; i < len; i++) {
+            if (i < len - 1) {
+                char c = chars[i];
+                char next = chars[i + 1];
+                if (c == '\\') {
+                    if (next == '{' || next == '}') {
+                        sb.append(next);
+                        i++;
+                        continue;
+                    }
+                } else if (c == '{' && next == '}') {
+                    if (argIndex < args.length) {
+                        sb.append(args[argIndex]);
+                    } else {
+                        sb.append("{}");
+                    }
+                    argIndex++;
+                    i++;
+                    continue;
                 }
-                i++;
-            } else if (c == '{' && i + 1 < length && str.charAt(i + 1) == '}') {
-                sb.append(args[argIndex]);
-                argIndex++;
-                i += 2;
-            } else {
-                sb.append(c);
-                i++;
             }
+            sb.append(chars[i]);
         }
-
         return sb.toString();
     }
 
+
     /**
      * 格式化字符串
-     * 转义符可以使用 \\ 转义 <br>
-     * 例如：a b \\{c\\} d -> a b {c} d <br>
-     * 例如：a b \\\\{c\\\\} d -> a b \{c\} d <br>
+     * 将字符串中{key}与map中对应key相同的值替换，找不到对应的值保留原样 </br>
+     * 例如：</br>
+     * Map<String, String> map = new HashMap<>();</br>
+     * map.put("name", "Alice");</br>
+     * map.put("age", "30");</br>
+     * String template2 = "User {name} is {age} years old \\{meta\\}  \\123 {demo} "; </br>
+     * 输出：User Alice is 30 years old {meta}   \123 {demo} </br>
+     * 转义符可以使用 \ 转义 </br>
+     * 例如：</br>
+     * a b \{c\} d -> a b {c} d </br>
+     * a b \\{c\\} d -> a b \{c\} d </br>
      *
-     * @param str 模板
-     * @param map 参数
+     * @param str 模板字符串
+     * @param map 参数映射
      * @return 格式化后的字符串
      */
     public static String fmt(final String str, final Map<String, String> map) {
@@ -140,37 +156,48 @@ public class Strs {
             return str;
         }
 
-        StringBuilder sb = new StringBuilder(str.length() * 2);
-        int length = str.length();
-        int i = 0;
+        char[] chars = str.toCharArray();
+        int len = chars.length;
+        StringBuilder sb = new StringBuilder(len * 2);
 
-        while (i < length) {
-            char c = str.charAt(i);
-            if (c == '\\' && i + 1 < length) {
-                char c1 = str.charAt(++i);
-                if (c1 == '{' || c1 == '}') {
-                    sb.append(c1);
+        for (int i = 0; i < len; i++) {
+            char c = chars[i];
+            if (c == '\\' && i + 1 < len) {
+                char next = chars[i + 1];
+                if (next == '{' || next == '}') {
+                    sb.append(next);
+                    i++;
+                    continue;
                 } else {
                     sb.append(c);
+                    continue;
                 }
-                i++;
-            } else if (c == '{') {
-                int end = str.indexOf('}', i + 1);
-                if (end == -1) {
-                    sb.append(str, i, length);
+            }
+
+            if (c == '{') {
+                int j = i + 1;
+                while (j < len && chars[j] != '}') {
+                    j++;
+                }
+                if (j == len) {
+                    sb.append(str, i, len - i);
                     break;
                 }
-                String key = str.substring(i + 1, end);
-                String value = map.getOrDefault(key, "{" + key + "}");
-                sb.append(value);
-                i = end + 1;
+                String key = new String(chars, i + 1, j - i - 1);
+                String replacement = map.get(key);
+                if (replacement != null) {
+                    sb.append(replacement);
+                } else {
+                    sb.append('{').append(key).append('}');
+                }
+                i = j;
             } else {
                 sb.append(c);
-                i++;
             }
         }
 
         return sb.toString();
     }
+
 
 }
