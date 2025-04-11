@@ -1,18 +1,10 @@
 package io.github.kongweiguang.http.server;
 
-import com.sun.net.httpserver.Filter;
-import com.sun.net.httpserver.HttpContext;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.HttpsConfigurator;
-import com.sun.net.httpserver.HttpsServer;
+import com.sun.net.httpserver.*;
 import io.github.kongweiguang.http.client.core.Method;
-import io.github.kongweiguang.http.server.core.HttpFilter;
+import io.github.kongweiguang.http.server.core.*;
 import io.github.kongweiguang.http.server.core.HttpHandler;
-import io.github.kongweiguang.http.server.core.HttpReq;
-import io.github.kongweiguang.http.server.core.HttpRes;
-import io.github.kongweiguang.http.server.core.RestHandler;
-import io.github.kongweiguang.http.server.core.WebHandler;
+import io.github.kongweiguang.http.server.sse.SSEHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -21,10 +13,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 import static io.github.kongweiguang.core.lang.Assert.notNull;
-import static io.github.kongweiguang.http.client.core.Method.DELETE;
-import static io.github.kongweiguang.http.client.core.Method.GET;
-import static io.github.kongweiguang.http.client.core.Method.POST;
-import static io.github.kongweiguang.http.client.core.Method.PUT;
+import static io.github.kongweiguang.http.client.core.Method.*;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 
@@ -90,7 +79,7 @@ public final class JavaServer {
      * @return 当前对象
      */
     public JavaServer web(final String path, final String... fileName) {
-        RestHandler.add(GET, WebHandler.PATH, new WebHandler(path, fileName.length > 1 ? fileName[0] : null));
+        RestHands.add(ReqType.STATIC, GET, WebHandler.PATH, new WebHandler(path, fileName.length > 1 ? fileName[0] : null));
         return this;
     }
 
@@ -118,15 +107,40 @@ public final class JavaServer {
     }
 
     /**
+     * 添加sse接口
+     *
+     * @param method  方法
+     * @param path    路径
+     * @param handler 处理器
+     * @return 当前对象
+     */
+    public JavaServer sse(final Method method, final String path, final SSEHandler handler) {
+        RestHands.add(ReqType.SSE, method, path, handler);
+        return this;
+    }
+
+    /**
+     * 添加sse接口
+     *
+     * @param path    路径
+     * @param handler 处理器
+     * @return 当前对象
+     */
+    public JavaServer sse(final String path, final SSEHandler handler) {
+        RestHands.add(ReqType.SSE, path, handler);
+        return this;
+    }
+
+    /**
      * 添加restful接口
      *
      * @param method  方法 {@link Method}
      * @param path    路径
      * @param handler 处理器 {@link HttpHandler}
-     * @return
+     * @return 当前对象
      */
     public JavaServer rest(final Method method, final String path, final HttpHandler handler) {
-        RestHandler.add(method, path, handler);
+        RestHands.add(ReqType.REST, method, path, handler);
         return this;
     }
 
@@ -138,7 +152,7 @@ public final class JavaServer {
      * @return 当前对象
      */
     public JavaServer rest(final String path, final HttpHandler handler) {
-        RestHandler.add(path, handler);
+        RestHands.add(ReqType.REST, path, handler);
         return this;
     }
 
@@ -150,7 +164,7 @@ public final class JavaServer {
      * @return 当前对象
      */
     public JavaServer get(final String path, final HttpHandler handler) {
-        RestHandler.add(GET, path, handler);
+        RestHands.add(ReqType.REST, GET, path, handler);
         return this;
     }
 
@@ -162,7 +176,7 @@ public final class JavaServer {
      * @return 当前对象
      */
     public JavaServer post(final String path, final HttpHandler handler) {
-        RestHandler.add(POST, path, handler);
+        RestHands.add(ReqType.REST, POST, path, handler);
         return this;
     }
 
@@ -174,7 +188,7 @@ public final class JavaServer {
      * @return 当前对象
      */
     public JavaServer delete(final String path, final HttpHandler handler) {
-        RestHandler.add(DELETE, path, handler);
+        RestHands.add(ReqType.REST, DELETE, path, handler);
         return this;
     }
 
@@ -186,7 +200,7 @@ public final class JavaServer {
      * @return 当前对象
      */
     public JavaServer put(final String path, final HttpHandler handler) {
-        RestHandler.add(PUT, path, handler);
+        RestHands.add(ReqType.REST, PUT, path, handler);
         return this;
     }
 
@@ -228,7 +242,7 @@ public final class JavaServer {
     }
 
     private void addContext() {
-        final HttpContext context = server().createContext("/", new RestHandler());
+        final HttpContext context = server().createContext("/", RestHands.of());
 
         if (!filters.isEmpty()) {
             context.getFilters().addAll(filters);
