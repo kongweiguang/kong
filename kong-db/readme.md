@@ -28,20 +28,20 @@ Maven
 <dependency>
     <groupId>io.github.kongweiguang</groupId>
     <artifactId>kong-db</artifactId>
-    <version>0.4</version>
+    <version>0.5</version>
 </dependency>
 ```
 
 Gradle
 
 ```
-implementation 'io.github.kongweiguang:kong-db:0.4'
+implementation 'io.github.kongweiguang:kong-db:0.5'
 ```
 
 Gradle-Kotlin
 
 ```
-implementation("io.github.kongweiguang:kong-db:0.4")
+implementation("io.github.kongweiguang:kong-db:0.5")
 ```
 
 # 简单介绍

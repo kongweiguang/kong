@@ -2,7 +2,7 @@ package io.github.kongweiguang.core.retry;
 
 
 import io.github.kongweiguang.core.lang.Assert;
-import io.github.kongweiguang.core.util.Threads;
+import io.github.kongweiguang.core.threads.Threads;
 
 import java.time.Duration;
 import java.util.Arrays;

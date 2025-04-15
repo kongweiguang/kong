@@ -1,4 +1,4 @@
-package io.github.kongweiguang.core.util;
+package io.github.kongweiguang.core.threads;
 
 /**
  * 线程工具
