@@ -22,7 +22,7 @@ import static java.util.Objects.nonNull;
 public abstract class SSEHandler implements HttpHandler {
 
     @Override
-    public void doHandler(final HttpReq req, final HttpRes res) throws IOException {
+    public void doHandler(HttpReq req, HttpRes res) throws IOException {
         res.contentType(ContentType.event_stream.v());
         res.header(Header.cache_control.v(), "no-cache");
         res.header(Header.connection.v(), "keep-alive");
@@ -33,11 +33,11 @@ public abstract class SSEHandler implements HttpHandler {
     /**
      * 处理请求
      *
-     * @param request  请求对象
-     * @param response 响应对象
+     * @param req  请求对象
+     * @param res 响应对象
      * @throws IOException IO异常
      */
-    public abstract void handler(final HttpReq req, final HttpRes res);
+    public abstract void handler(HttpReq req, HttpRes res);
 
     /**
      * 发送数据给客户端
@@ -46,7 +46,7 @@ public abstract class SSEHandler implements HttpHandler {
      * @param event 数据对象 {@link SseEvent}
      * @return this
      */
-    public SSEHandler send(final HttpRes res, final SseEvent event) {
+    public SSEHandler send(HttpRes res, final SseEvent event) {
         if (nonNull(res)) {
             final PrintWriter writer = res.writer();
             writer.write(event.toString());

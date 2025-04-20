@@ -11,6 +11,7 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
+import java.util.function.Consumer;
 
 import static io.github.kongweiguang.core.lang.Assert.notNull;
 import static io.github.kongweiguang.http.client.core.Method.*;
@@ -22,7 +23,7 @@ import static java.util.Optional.ofNullable;
  *
  * @author kongweiguang
  */
-public final class JavaServer {
+public class JavaServer {
 
     private final List<Filter> filters = new ArrayList<>();
     private final HttpServer httpServer;
@@ -30,7 +31,7 @@ public final class JavaServer {
     private JavaServer(final HttpsConfigurator config) {
         try {
             if (nonNull(config)) {
-                final HttpsServer server = HttpsServer.create();
+                HttpsServer server = HttpsServer.create();
                 server.setHttpsConfigurator(config);
                 this.httpServer = server;
             } else {
@@ -39,6 +40,19 @@ public final class JavaServer {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    
+
+    /**
+     * 设置自定义错误页面
+     * 
+     * @param statusCode 状态码
+     * @param content 错误页面内容
+     * @return 当前对象
+     */
+    public JavaServer errorPage(int statusCode, String content) {
+        InnerUtil.setErrorPage(statusCode, content);
+        return this;
     }
 
     /**
@@ -56,7 +70,7 @@ public final class JavaServer {
      * @param config http配置 {@link HttpsConfigurator}
      * @return 当前对象
      */
-    public static JavaServer of(final HttpsConfigurator config) {
+    public static JavaServer of(HttpsConfigurator config) {
         return new JavaServer(config);
     }
 
@@ -66,20 +80,51 @@ public final class JavaServer {
      * @param executor 线程池 {@link Executor}
      * @return 当前对象
      */
-    public JavaServer executor(final Executor executor) {
+    public JavaServer executor(Executor executor) {
         ofNullable(executor).ifPresent(e -> server().setExecutor(e));
         return this;
     }
 
     /**
-     * 添加静态资源目的，并设置默认文件（默认是index.html）
+     * 添加静态资源目录，并设置默认文件（默认是index.html）
      *
-     * @param path     路径
+     * @param path     请求前缀
+     * @param filePath 静态资源路径
      * @param fileName 文件名称
      * @return 当前对象
      */
-    public JavaServer web(final String path, final String... fileName) {
-        RestHands.add(ReqType.STATIC, GET, WebHandler.PATH, new WebHandler(path, fileName.length > 1 ? fileName[0] : null));
+    public JavaServer web(final String path,final String filePath, final String fileName) {
+        CenterHandler.add(ReqType.STATIC, GET,path, new StaticHandler(path, filePath,fileName));
+        return this;
+    }
+    
+    /**
+     * 添加静态资源目录，并设置高级选项
+     *
+     * @param path         请求前缀
+     * @param enableCache  是否启用缓存
+     * @param cacheMaxAge  缓存时间(秒)
+     * @param indexFile    默认文件名称
+     * @return 当前对象
+     */
+    public JavaServer web(final String path,final String filePath, boolean enableCache, int cacheMaxAge, String indexFile) {
+        StaticHandler handler = new StaticHandler(path,filePath, indexFile, enableCache, cacheMaxAge);
+        CenterHandler.add(ReqType.STATIC, GET,path, handler);
+        return this;
+    }
+    
+    /**
+     * 添加静态资源目录，使用高级WebHandler配置
+     *
+     * @param path     请求前缀
+     * @param filePath 静态资源路径
+     * @param config   WebHandler配置函数
+     * @return 当前对象
+     */
+    public JavaServer web(final String path,final String filePath, Consumer<StaticHandler> config) {
+        StaticHandler handler = new StaticHandler(path, filePath,null);
+        config.accept(handler);
+        CenterHandler.add(ReqType.STATIC, GET, path, handler);
         return this;
     }
 
@@ -115,7 +160,7 @@ public final class JavaServer {
      * @return 当前对象
      */
     public JavaServer sse(final Method method, final String path, final SSEHandler handler) {
-        RestHands.add(ReqType.SSE, method, path, handler);
+        CenterHandler.add(ReqType.SSE, method, path, handler);
         return this;
     }
 
@@ -127,7 +172,7 @@ public final class JavaServer {
      * @return 当前对象
      */
     public JavaServer sse(final String path, final SSEHandler handler) {
-        RestHands.add(ReqType.SSE, path, handler);
+        CenterHandler.add(ReqType.SSE, path, handler);
         return this;
     }
 
@@ -140,7 +185,7 @@ public final class JavaServer {
      * @return 当前对象
      */
     public JavaServer rest(final Method method, final String path, final HttpHandler handler) {
-        RestHands.add(ReqType.REST, method, path, handler);
+        CenterHandler.add(ReqType.REST, method, path, handler);
         return this;
     }
 
@@ -152,7 +197,7 @@ public final class JavaServer {
      * @return 当前对象
      */
     public JavaServer rest(final String path, final HttpHandler handler) {
-        RestHands.add(ReqType.REST, path, handler);
+        CenterHandler.add(ReqType.REST, path, handler);
         return this;
     }
 
@@ -164,7 +209,7 @@ public final class JavaServer {
      * @return 当前对象
      */
     public JavaServer get(final String path, final HttpHandler handler) {
-        RestHands.add(ReqType.REST, GET, path, handler);
+        CenterHandler.add(ReqType.REST, GET, path, handler);
         return this;
     }
 
@@ -176,7 +221,7 @@ public final class JavaServer {
      * @return 当前对象
      */
     public JavaServer post(final String path, final HttpHandler handler) {
-        RestHands.add(ReqType.REST, POST, path, handler);
+        CenterHandler.add(ReqType.REST, POST, path, handler);
         return this;
     }
 
@@ -188,7 +233,7 @@ public final class JavaServer {
      * @return 当前对象
      */
     public JavaServer delete(final String path, final HttpHandler handler) {
-        RestHands.add(ReqType.REST, DELETE, path, handler);
+        CenterHandler.add(ReqType.REST, DELETE, path, handler);
         return this;
     }
 
@@ -200,7 +245,7 @@ public final class JavaServer {
      * @return 当前对象
      */
     public JavaServer put(final String path, final HttpHandler handler) {
-        RestHands.add(ReqType.REST, PUT, path, handler);
+        CenterHandler.add(ReqType.REST, PUT, path, handler);
         return this;
     }
 
@@ -242,7 +287,7 @@ public final class JavaServer {
     }
 
     private void addContext() {
-        final HttpContext context = server().createContext("/", RestHands.of());
+        final HttpContext context = server().createContext("/", CenterHandler.of());
 
         if (!filters.isEmpty()) {
             context.getFilters().addAll(filters);

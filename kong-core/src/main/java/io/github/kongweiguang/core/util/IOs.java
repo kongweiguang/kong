@@ -20,14 +20,14 @@ public class IOs {
      * @param size  byte大小
      * @return byte数组
      */
-    public static byte[] toByteArray(final InputStream input, final int size) {
+    public static byte[] toByteArray(InputStream input, int size) {
 
         try {
             if (size < 0 || size == 0) {
                 return new byte[0];
             }
 
-            final byte[] data = new byte[size];
+            byte[] data = new byte[size];
             int offset = 0;
             int read;
 
@@ -51,7 +51,7 @@ public class IOs {
      *
      * @param c 流
      */
-    public static void close(final Closeable c) {
+    public static void close(Closeable c) {
         if (nonNull(c)) {
             try {
                 c.close();
@@ -66,7 +66,7 @@ public class IOs {
      *
      * @param c 流
      */
-    public static void close(final Object c) {
+    public static void close(Object c) {
         if (nonNull(c)) {
             if (c instanceof AutoCloseable) {
                 try {

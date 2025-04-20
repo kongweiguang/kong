@@ -10,5 +10,5 @@ import java.io.IOException;
 @FunctionalInterface
 public interface HttpHandler {
 
-    void doHandler(final HttpReq req, final HttpRes res) throws IOException;
+    void doHandler(HttpReq req, HttpRes res) throws IOException;
 }

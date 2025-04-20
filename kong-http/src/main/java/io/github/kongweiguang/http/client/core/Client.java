@@ -18,13 +18,13 @@ import static javax.net.ssl.SSLContext.getInstance;
  *
  * @author kongweiguang
  */
-public final class Client {
+public class Client {
 
     /**
      * 默认分发器
      */
     private static final Supplier<Dispatcher> disSup = () -> {
-        final Dispatcher dis = new Dispatcher();
+        Dispatcher dis = new Dispatcher();
         dis.setMaxRequests(1 << 20);
         dis.setMaxRequestsPerHost(1 << 20);
         return dis;
@@ -55,8 +55,8 @@ public final class Client {
      * @param conf 配置
      * @return OkHttpClient {@link OkHttpClient}
      */
-    public static OkHttpClient of(final Conf conf) {
-        final OkHttpClient.Builder builder = client.newBuilder();
+    public static OkHttpClient of(Conf conf) {
+        OkHttpClient.Builder builder = client.newBuilder();
 
         ofNullable(conf.httpLoggingInterceptor()).ifPresent(conf::addInterceptor);
 
@@ -98,11 +98,11 @@ public final class Client {
      *
      * @param builder 构建类
      */
-    private static void ssl(final Builder builder) {
+    private static void ssl(Builder builder) {
         try {
-            final TrustManager[] trustAllCerts = DefaultTrustManager.of.managers();
+            TrustManager[] trustAllCerts = DefaultTrustManager.of.managers();
 
-            final SSLContext sslContext = getInstance("SSL");
+            SSLContext sslContext = getInstance("SSL");
 
             sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
 

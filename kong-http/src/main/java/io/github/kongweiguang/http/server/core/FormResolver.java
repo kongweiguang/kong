@@ -9,7 +9,7 @@ import java.util.ArrayList;
  *
  * @author kongweiguang
  */
-public final class FormResolver {
+public class FormResolver {
 
     private static final byte[] sep = "\r\n".getBytes(StandardCharsets.UTF_8);
 
@@ -18,7 +18,7 @@ public final class FormResolver {
      *
      * @param req http请求
      */
-    public static void parser(final HttpReq req) {
+    public static void parser(HttpReq req) {
         byte[] boundary = ("--" + req.contentType().substring(req.contentType().indexOf("=") + 1)).getBytes(StandardCharsets.UTF_8);
         byte[] body = req.bytes();
         int count = 0;
@@ -99,7 +99,7 @@ public final class FormResolver {
 
                     req.params().computeIfAbsent(part.name(), k -> new ArrayList<>()).add(new String(val));
                 } else {
-                    final UploadFile uf = new UploadFile();
+                    UploadFile uf = new UploadFile();
                     uf.content(new ByteArrayInputStream(body, cursor, (i - boundaryLen - 1 - 2) - cursor));
                     uf.fileName(part.filename());
 
@@ -117,11 +117,11 @@ public final class FormResolver {
     }
 
 
-    private static Part resolveParam(final String lineStr) {
+    private static Part resolveParam(String lineStr) {
 
-        final String[] kvs = lineStr.substring("Content-Disposition: form-data; ".length()).split(";");
+        String[] kvs = lineStr.substring("Content-Disposition: form-data; ".length()).split(";");
 
-        final Part part = new Part();
+        Part part = new Part();
 
         part.type("text");
 

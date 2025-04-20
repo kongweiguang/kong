@@ -25,7 +25,7 @@ import static java.util.Objects.isNull;
  *
  * @author kongweiguang
  */
-public final class HttpRes {
+public class HttpRes {
 
     private final HttpExchange he;
     private Charset charset = StandardCharsets.UTF_8;
@@ -36,7 +36,7 @@ public final class HttpRes {
      *
      * @param httpExchange {@link  HttpExchange}
      */
-    public HttpRes(final HttpExchange httpExchange) {
+    public HttpRes(HttpExchange httpExchange) {
         this.he = httpExchange;
     }
 
@@ -72,7 +72,7 @@ public final class HttpRes {
      * @param value 值
      * @return {@link HttpRes}
      */
-    public HttpRes header(final String name, final String value) {
+    public HttpRes header(String name, String value) {
         getHeaders().set(name, value);
         return this;
     }
@@ -83,7 +83,7 @@ public final class HttpRes {
      * @param headers 响应头
      * @return {@link HttpRes}
      */
-    public HttpRes headers(final Map<String, List<String>> headers) {
+    public HttpRes headers(Map<String, List<String>> headers) {
         getHeaders().putAll(headers);
         return this;
     }
@@ -94,7 +94,7 @@ public final class HttpRes {
      * @param charset 编码集
      * @return {@link HttpRes}
      */
-    public HttpRes charset(final Charset charset) {
+    public HttpRes charset(Charset charset) {
         this.charset = charset;
         return this;
     }
@@ -114,7 +114,7 @@ public final class HttpRes {
      * @param contentType contentType
      * @return {@link HttpRes}
      */
-    public HttpRes contentType(final String contentType) {
+    public HttpRes contentType(String contentType) {
         this.contentType = contentType;
         header(Header.content_type.v(), String.join(";charset=", contentType, charset().name()));
         return this;
@@ -140,7 +140,7 @@ public final class HttpRes {
      * @param str 内容
      * @return {@link HttpRes}
      */
-    public HttpRes send(final String str) {
+    public HttpRes send(String str) {
         if (isNull(str)) {
             return this;
         }
@@ -154,7 +154,7 @@ public final class HttpRes {
      * @param bytes 内容
      * @return {@link HttpRes}
      */
-    public HttpRes send(final byte[] bytes) {
+    public HttpRes send(byte[] bytes) {
         return write(200, bytes);
     }
 

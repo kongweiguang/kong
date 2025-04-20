@@ -26,7 +26,7 @@ import static java.util.Optional.ofNullable;
  *
  * @author kongweiguang
  */
-public final class HttpReq {
+public class HttpReq {
 
     private final HttpExchange he;
     private Map<String, List<String>> paramMap;
@@ -37,7 +37,7 @@ public final class HttpReq {
      *
      * @param httpExchange {@link HttpExchange}
      */
-    public HttpReq(final HttpExchange httpExchange) {
+    public HttpReq(HttpExchange httpExchange) {
         this.he = httpExchange;
     }
 
@@ -47,7 +47,7 @@ public final class HttpReq {
      * @param url 请求地址
      * @param map 请求参数集合
      */
-    private static void getParams(final String url, final Map<String, List<String>> map) {
+    private static void getParams(String url, final Map<String, List<String>> map) {
         if (isNull(url)) {
             return;
         }

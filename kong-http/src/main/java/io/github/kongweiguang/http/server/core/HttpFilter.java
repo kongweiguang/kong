@@ -12,7 +12,7 @@ import java.io.IOException;
 @FunctionalInterface
 public interface HttpFilter {
 
-    void doFilter(final HttpReq req, final HttpRes res, final Filter.Chain chain) throws IOException;
+    void doFilter(HttpReq req, HttpRes res, Filter.Chain chain) throws IOException;
 
     default String description() {
         return "default";
