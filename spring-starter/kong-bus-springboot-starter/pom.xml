@@ -12,7 +12,7 @@
     <artifactId>kong-bus-springboot-starter</artifactId>
 
     <properties>
-        <spring.version>2.0.4.RELEASE</spring.version>
+        <spring.version>3.4.3</spring.version>
     </properties>
 
     <dependencies>
