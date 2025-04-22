@@ -12,11 +12,11 @@ import java.util.*;
  *
  * @author kongweiguang
  */
-public class Rs {
+public class RS {
 
     private static final int DEFAULT_MAP_CAPACITY = 16;
 
-    private Rs() {
+    private RS() {
         throw new UnsupportedOperationException("Utility class");
     }
 

@@ -3,11 +3,12 @@ package io.github.kongweiguang.db.ds;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import io.github.kongweiguang.core.lang.ClassPathResource;
+import io.github.kongweiguang.core.util.Tomls;
 import io.github.kongweiguang.db.DB;
-import io.github.kongweiguang.db.util.Tomls;
-import org.tomlj.TomlParseResult;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,9 +41,8 @@ public class DS {
      */
     public static DataSource of(String source) {
         return cache.computeIfAbsent(source, s -> {
-            TomlParseResult result = Tomls.resource(DB.config);
             Properties props = new Properties();
-            props.putAll(result.getTable(source).toMap());
+            props.putAll((Map<?, ?>) getConfig().get(source));
             props.put("user", props.getProperty("username"));
             return new JdkDataSource(props);
         });
@@ -56,9 +56,8 @@ public class DS {
      */
     public static DataSource ofHikari(String source) {
         return cache.computeIfAbsent(source, s -> {
-            TomlParseResult result = Tomls.resource(DB.config);
             Properties props = new Properties();
-            props.putAll(result.getTable(source).toMap());
+            props.putAll((Map<?, ?>) getConfig().get(source));
 
             Properties p = new Properties();
             p.put("jdbcUrl", props.get("url"));
@@ -69,5 +68,13 @@ public class DS {
             hikariConfig.setDataSourceProperties(props);
             return new HikariDataSource(hikariConfig);
         });
+    }
+
+    private static Map<String, Object> getConfig() {
+        try {
+            return Tomls.toMap(new ClassPathResource(DB.config).getStr());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

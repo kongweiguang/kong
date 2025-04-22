@@ -5,7 +5,7 @@ import io.github.kongweiguang.db.func.RsFn;
 import io.github.kongweiguang.db.func.SqlRun;
 import io.github.kongweiguang.db.page.Page;
 import io.github.kongweiguang.db.page.PageRes;
-import io.github.kongweiguang.db.util.Rs;
+import io.github.kongweiguang.db.util.RS;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -140,7 +140,7 @@ public class DbRun {
      * @throws SQLException SQL异常
      */
     public Map<String, Object> select(String sql, Object... params) throws SQLException {
-        return executeQuery(sql, Rs::toMap, params);
+        return executeQuery(sql, RS::toMap, params);
     }
 
     /**
@@ -152,7 +152,7 @@ public class DbRun {
      * @throws SQLException SQL异常
      */
     public List<Map<String, Object>> selectList(String sql, Object... params) throws SQLException {
-        return executeQuery(sql, Rs::toList, params);
+        return executeQuery(sql, RS::toList, params);
     }
 
     /**
@@ -165,7 +165,7 @@ public class DbRun {
      */
     public long count(String sql, Object... params) throws SQLException {
         String countSql = "SELECT COUNT(*) FROM (" + sql + ") AS count_table";
-        return executeQuery(countSql, rs -> Rs.count(rs).longValue(), params);
+        return executeQuery(countSql, rs -> RS.count(rs).longValue(), params);
     }
 
     /**
@@ -190,7 +190,7 @@ public class DbRun {
         allParams[params.length] = limit;
         allParams[params.length + 1] = offset;
 
-        return PageRes.of(totalCount, executeQuery(pageSql, Rs::toList, allParams));
+        return PageRes.of(totalCount, executeQuery(pageSql, RS::toList, allParams));
     }
 
     /**
