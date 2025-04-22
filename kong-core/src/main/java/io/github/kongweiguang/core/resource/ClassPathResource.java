@@ -1,4 +1,4 @@
-package io.github.kongweiguang.core.lang;
+package io.github.kongweiguang.core.resource;
 
 import java.io.File;
 import java.io.IOException;
@@ -173,6 +173,18 @@ public class ClassPathResource {
     public String getStr(Charset charset) throws IOException {
         try (InputStream is = getInputStream()) {
             return new String(is.readAllBytes(), charset);
+        }
+    }
+
+    /**
+     * 将资源内容作为字节数组读取
+     *
+     * @return 资源内容字节数组
+     * @throws IOException 如果读取失败
+     */
+    public byte[] getByte() throws IOException {
+        try (InputStream is = getInputStream()) {
+            return is.readAllBytes();
         }
     }
 

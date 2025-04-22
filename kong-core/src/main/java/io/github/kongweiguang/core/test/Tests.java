@@ -15,7 +15,7 @@ public class Tests {
      * @param duration  持续时间
      * @return 测试解雇
      */
-    public static Tester test(int threadNum, Duration duration, Runnable run) {
+    public static TestResult test(int threadNum, Duration duration, Runnable run) {
         return LimitDateConcurrentTester.of(threadNum, duration).ok(run);
     }
 
@@ -26,7 +26,7 @@ public class Tests {
      * @param run       测试任务
      * @return 测试结果
      */
-    public static Tester test(int threadNum, Runnable run) {
+    public static TestResult test(int threadNum, Runnable run) {
         return FixedThreadConcurrentTester.of(threadNum).ok(run);
     }
 }

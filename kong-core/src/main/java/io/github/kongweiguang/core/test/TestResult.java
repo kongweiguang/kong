@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author kongweiguang
  */
-public class Tester {
+public class TestResult {
     // 总线程数
     private Integer totalThreads;
     // 持续时间

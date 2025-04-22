@@ -10,7 +10,7 @@ public class ConcurrentTest {
     public void test1() {
 //        ThreadPools.pool = Executors.newVirtualThreadPerTaskExecutor();
 
-        Tester tester = Tests.test(20, Duration.ofMinutes(1), () -> {
+        TestResult tester = Tests.test(20, Duration.ofMinutes(1), () -> {
             try {
                 // 模拟正常请求（80%概率）
                 if (Math.random() < 0.8) {
@@ -31,7 +31,7 @@ public class ConcurrentTest {
     public void test2() {
 //        ThreadPools.pool = Executors.newVirtualThreadPerTaskExecutor();
 
-        Tester tester = Tests.test(20, () -> {
+        TestResult tester = Tests.test(20, () -> {
             try {
                 // 模拟正常请求（80%概率）
                 if (Math.random() < 0.8) {

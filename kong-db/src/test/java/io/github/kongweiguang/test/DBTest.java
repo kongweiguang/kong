@@ -2,7 +2,7 @@ package io.github.kongweiguang.test;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.kongweiguang.core.lang.Pair;
-import io.github.kongweiguang.core.util.Maps;
+import io.github.kongweiguang.core.lang.Maps;
 import io.github.kongweiguang.db.DB;
 import io.github.kongweiguang.db.DbRun;
 import io.github.kongweiguang.db.page.Page;

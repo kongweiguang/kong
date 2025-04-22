@@ -1,6 +1,6 @@
 package io.github.kongweiguang.socket.nio.server;
 
-import io.github.kongweiguang.core.util.IOs;
+import io.github.kongweiguang.core.lang.IOs;
 
 import java.net.InetSocketAddress;
 import java.util.function.Consumer;

@@ -10,8 +10,8 @@ import static io.github.kongweiguang.bus.core.InnerUtil.generics;
 import static io.github.kongweiguang.core.lang.Assert.isTrue;
 import static io.github.kongweiguang.core.lang.Assert.notNull;
 import static io.github.kongweiguang.core.lang.If.trueSupF1;
-import static io.github.kongweiguang.core.util.Strs.defaultIfEmpty;
-import static io.github.kongweiguang.core.util.Strs.isEmpty;
+import static io.github.kongweiguang.core.lang.Strs.defaultIfEmpty;
+import static io.github.kongweiguang.core.lang.Strs.isEmpty;
 
 /**
  * 默认hub实现

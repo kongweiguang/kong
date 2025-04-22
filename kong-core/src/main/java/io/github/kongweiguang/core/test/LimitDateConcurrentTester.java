@@ -34,7 +34,7 @@ public class LimitDateConcurrentTester extends ConcurrentTester {
      * @param task 测试任务
      * @return 测试结果
      */
-    public Tester ok(Runnable task) {
+    public TestResult ok(Runnable task) {
         long endTime = System.currentTimeMillis() + durationMillis;
         CompletableFuture<?>[] futures = new CompletableFuture[threadNum];
 

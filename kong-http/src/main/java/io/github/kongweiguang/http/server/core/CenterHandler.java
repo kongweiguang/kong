@@ -1,7 +1,7 @@
 package io.github.kongweiguang.http.server.core;
 
 import com.sun.net.httpserver.HttpExchange;
-import io.github.kongweiguang.core.util.IOs;
+import io.github.kongweiguang.core.lang.IOs;
 import io.github.kongweiguang.http.client.core.Method;
 
 import java.io.IOException;

@@ -36,20 +36,20 @@ public abstract class ConcurrentTester {
      * @param task 测试任务
      * @return 测试结果
      */
-    abstract Tester ok(Runnable task);
+    abstract TestResult ok(Runnable task);
 
-    protected Tester buildTester() {
-        Tester tester = new Tester();
+    protected TestResult buildTester() {
+        TestResult tester = new TestResult();
         tester.setTotalThreads(threadNum);
         tester.setDurationMillis(durationMillis);
 
-        Tester.BaseStatistics statistics = new Tester.BaseStatistics();
+        TestResult.BaseStatistics statistics = new TestResult.BaseStatistics();
         statistics.setTotalCount(totalRequests.get());
         statistics.setSuccessCount(successRequests.get());
         statistics.setFailureCount(failedRequests.get());
         tester.setStatistics(statistics);
 
-        Tester.PerformanceMetrics metrics = new Tester.PerformanceMetrics();
+        TestResult.PerformanceMetrics metrics = new TestResult.PerformanceMetrics();
         metrics.setUseTime(totalCost.get());
         metrics.setAvgTime(average(sortedCosts) / 1_000_000);
         metrics.setMaxTime(max(sortedCosts) / 1_000_000);
@@ -60,7 +60,7 @@ public abstract class ConcurrentTester {
         metrics.setQps(qps(sortedCosts));
         tester.setPerformanceMetrics(metrics);
 
-        Tester.ErrorAnalysis errorAnalysis = new Tester.ErrorAnalysis();
+        TestResult.ErrorAnalysis errorAnalysis = new TestResult.ErrorAnalysis();
         errorAnalysis.setExceptionCounter(exceptionCounter);
         tester.setErrorAnalysis(errorAnalysis);
         return tester;

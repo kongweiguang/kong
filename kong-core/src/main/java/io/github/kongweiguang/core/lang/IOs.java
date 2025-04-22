@@ -1,4 +1,4 @@
-package io.github.kongweiguang.core.util;
+package io.github.kongweiguang.core.lang;
 
 import java.io.Closeable;
 import java.io.IOException;

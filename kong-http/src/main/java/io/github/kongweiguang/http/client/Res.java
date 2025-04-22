@@ -2,7 +2,7 @@ package io.github.kongweiguang.http.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import io.github.kongweiguang.core.util.IOs;
+import io.github.kongweiguang.core.lang.IOs;
 import io.github.kongweiguang.http.client.core.Header;
 import io.github.kongweiguang.json.Json;
 import kotlin.Pair;

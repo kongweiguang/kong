@@ -1,7 +1,7 @@
 package io.github.kongweiguang.socket.nio.client;
 
 import io.github.kongweiguang.core.threads.ThreadPools;
-import io.github.kongweiguang.core.util.IOs;
+import io.github.kongweiguang.core.lang.IOs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

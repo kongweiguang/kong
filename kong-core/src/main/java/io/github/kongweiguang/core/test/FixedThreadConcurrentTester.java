@@ -26,7 +26,7 @@ public class FixedThreadConcurrentTester extends ConcurrentTester {
 
 
     @Override
-    Tester ok(Runnable task) {
+    TestResult ok(Runnable task) {
         CompletableFuture<?>[] futures = new CompletableFuture[threadNum];
 
         // 初始化所有任务

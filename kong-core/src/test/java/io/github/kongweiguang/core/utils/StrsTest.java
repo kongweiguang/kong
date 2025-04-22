@@ -1,6 +1,6 @@
 package io.github.kongweiguang.core.utils;
 
-import io.github.kongweiguang.core.util.Strs;
+import io.github.kongweiguang.core.lang.Strs;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

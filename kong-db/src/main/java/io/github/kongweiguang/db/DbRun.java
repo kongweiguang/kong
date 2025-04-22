@@ -1,6 +1,6 @@
 package io.github.kongweiguang.db;
 
-import io.github.kongweiguang.core.util.IOs;
+import io.github.kongweiguang.core.lang.IOs;
 import io.github.kongweiguang.db.func.RsFn;
 import io.github.kongweiguang.db.func.SqlRun;
 import io.github.kongweiguang.db.page.Page;
