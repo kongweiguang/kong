@@ -2,10 +2,8 @@ package io.github.kongweiguang.spring.test.bean;
 
 import io.github.kongweiguang.spring.BeanUtil;
 import io.github.kongweiguang.spring.test.User;
-import org.junit.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.Test;
 import org.springframework.cglib.beans.BeanMap;
-import org.springframework.context.annotation.ComponentScan;
 
 import java.util.Arrays;
 import java.util.HashMap;

@@ -1,9 +1,9 @@
 package io.github.kongweiguang.spring.test;
 
 import io.github.kongweiguang.spring.SpringUtil;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 
 @Component("ccc")
 public class C {
