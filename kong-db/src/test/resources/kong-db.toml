@@ -6,7 +6,7 @@ driver = "com.mysql.cj.jdbc.Driver"
 
 
 [pgsql]
-url = "jdbc:postgresql://192.168.30.100:5432/demo1
+url = "jdbc:postgresql://192.168.30.100:5432/demo1"
 username = "demo1"
 password = "MpmeKNHdaAKR4yyR"
 driver = "org.postgresql.Driver"
