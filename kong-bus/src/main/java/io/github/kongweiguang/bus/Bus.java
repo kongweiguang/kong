@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author kongweiguang
  */
 @SuppressWarnings("all")
-public final class Bus {
+public class Bus {
     private Bus() {
         throw new UnsupportedOperationException("bus not must be construct");
     }
@@ -40,7 +40,7 @@ public final class Bus {
      * @param <R>  返回的结果类型
      * @return hub
      */
-    public static <C, R> Hub<C, R> hub(final String name) {
+    public static <C, R> Hub<C, R> hub(String name) {
         return (Hub<C, R>) hubs.computeIfAbsent(name, k -> new DefaultHubImpl<>());
     }
 }

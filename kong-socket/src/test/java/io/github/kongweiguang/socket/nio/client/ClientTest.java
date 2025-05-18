@@ -10,17 +10,14 @@ import java.util.Scanner;
 public class ClientTest {
 
     public static void main(String[] args) {
-        // 创建自定义配置
-        NioClientConfig config = NioClientConfig.of()
-                .bufferSize(8192);
-
         // 创建客户端实例并连接
-        NioClient client = NioClient.of(config)
+        NioClient client = NioClient.of(c -> c.bufferSize(100))
                 .socketHandler((response, channel) -> {
                     //打印响应
                     byte[] data = new byte[response.remaining()];
                     response.get(data);
                     System.out.println("收到响应: " + new String(data, StandardCharsets.UTF_8));
+                    return null;
                 })
                 .connect("localhost", 8888);
 

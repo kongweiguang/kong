@@ -1,5 +1,5 @@
 <h1 align="center" style="text-align:center;">
-  kong-http
+  kong-db
 </h1>
 <p align="center">
 	<strong>基于jdbc封装的轻量级操作数据库客户端</strong>
@@ -10,7 +10,7 @@
 		<img src="https://img.shields.io/:license-Apache2-blue.svg" alt="Apache 2" />
 	</a>
     <a target="_blank" href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">
-		<img src="https://img.shields.io/badge/JDK-8+-green.svg" alt="jdk-8+" />
+				<img src="https://img.shields.io/badge/JDK-21-green.svg" alt="jdk-21" />
 	</a>
     <br />
 </p>
@@ -52,23 +52,19 @@ implementation("io.github.kongweiguang:kong-db:0.5")
 
 @Test
 void test1() throws Exception {
-    SqlRes sr = Sql.of()
+    SqlRes sr = Sql
             .select("*")
             .from("users")
             .where("id = ?", 1)
             .orderBy(Order.desc("created_at"))
             .ok();
-    //SELECT * FROM users WHERE id = ? ORDER BY created_at DESC 
-    System.out.println("sr = " + sr);
+    assertEquals("SELECT * FROM users WHERE id = ? ORDER BY created_at DESC", sr.sql());
 
     Map<String, Object> select = run.select(sr.sql(), sr.params());
-    // {password=$2a$10$EIXIX.USQKzdbTXDqyXneiHeRXkVkDxBdRpYxL1pJq2YFfjZq2mIpa, updated_at=2025-04-05T00:16:19, last_name=Doe, created_at=2025-04-05T00:16:19, id=1, first_name=John, email=john.doe@example.com, username=john_doe}
-    System.out.println(select);
 
-    User user = Json.toObj(Maps.key2CamelCase(select), new TypeReference<User>() {
+    User user = Json.toObj(Maps.key2CamelCase(select), new TypeReference<>() {
     });
 
-    //User[id=1, username='john_doe', password='$2a$10$EIXIX.USQKzdbTXDqyXneiHeRXkVkDxBdRpYxL1pJq2YFfjZq2mIpa', email='john.doe@example.com', firstName='John', lastName='Doe', createdAt=2025-04-05T00:16:19, updatedAt=2025-04-05T00:16:19, roles=null]
     System.out.println(user);
 }
 ```
@@ -79,23 +75,19 @@ void test1() throws Exception {
 
 @Test
 void test2() throws Exception {
-    SqlRes sr = Sql.of()
+    SqlRes sr = Sql
             .select("*")
             .from("users")
             .ok();
-    //SELECT * FROM users
-    System.out.println("sr = " + sr);
+    assertEquals("SELECT * FROM users", sr.sql());
 
     List<Map<String, Object>> maps = run.selectList(sr.sql(), sr.params());
-
-    //maps = [{password=$2a$10$EIXIX.USQKzdbTXDqyXneiHeRXkVkDxBdRpYxL1pJq2YFfjZq2mIpa, updated_at=2025-04-05T00:16:19, last_name=Doe, created_at=2025-04-05T00:16:19, id=1, first_name=John, email=john.doe@example.com, username=john_doe}, {password=$2a$10$EIXIX.USQKzdbTXDqyXneiHeRXkVkDxBdRpYxL1pJq2YFfjZq2mIpa, updated_at=2025-04-05T00:16:19, last_name=Smith, created_at=2025-04-05T00:16:19, id=2, first_name=Jane, email=jane.smith@example.com, username=jane_smith}, {password=$2a$10$EIXIX.USQKzdbTXDqyXneiHeRXkVkDxBdRpYxL1pJq2YFfjZq2mIpa, updated_at=2025-04-05T00:16:19, last_name=Wonder, created_at=2025-04-05T00:16:19, id=3, first_name=Alice, email=alice.wonder@example.com, username=alice_wonder}, {password=123456, updated_at=2025-04-05T14:41:35, last_name=san, created_at=2025-04-05T14:41:35, id=10, first_name=zhang, email=wangyunchao@163.com, username=zhang_san}, {password=123456, updated_at=2025-04-05T14:55:18, last_name=san, created_at=2025-04-05T14:55:18, id=11, first_name=zhang, email=wangyunchao@163.com, username=zhang_san}, {password=123456, updated_at=2025-04-05T14:55:18, last_name=san, created_at=2025-04-05T14:55:18, id=12, first_name=zhang, email=wangyunchao@163.com, username=zhang_san}, {password=123456, updated_at=2025-04-05T14:56:24, last_name=san, created_at=2025-04-05T14:56:24, id=15, first_name=zhang, email=wangyunchao@163.com, username=zhang_san}, {password=123456, updated_at=2025-04-05T14:56:24, last_name=san, created_at=2025-04-05T14:56:24, id=16, first_name=zhang, email=wangyunchao@163.com, username=zhang_san}, {password=123456, updated_at=2025-04-05T15:09:04, last_name=san, created_at=2025-04-05T15:09:04, id=21, first_name=zhang, email=wangyunchao@163.com, username=zhang_san}, {password=123456, updated_at=2025-04-05T15:09:04, last_name=san, created_at=2025-04-05T15:09:04, id=22, first_name=zhang, email=wangyunchao@163.com, username=zhang_san}]
-    System.out.println("maps = " + maps);
 
     List<User> collect = maps.stream()
             .map(Maps::key2CamelCase)
             .map(e -> Json.toObj(e, User.class))
-            .collect(Collectors.toList());
-    //collect = [User[id=1, username='john_doe', password='$2a$10$EIXIX.USQKzdbTXDqyXneiHeRXkVkDxBdRpYxL1pJq2YFfjZq2mIpa', email='john.doe@example.com', firstName='John', lastName='Doe', createdAt=2025-04-05T00:16:19, updatedAt=2025-04-05T00:16:19, roles=null], User[id=2, username='jane_smith', password='$2a$10$EIXIX.USQKzdbTXDqyXneiHeRXkVkDxBdRpYxL1pJq2YFfjZq2mIpa', email='jane.smith@example.com', firstName='Jane', lastName='Smith', createdAt=2025-04-05T00:16:19, updatedAt=2025-04-05T00:16:19, roles=null], User[id=3, username='alice_wonder', password='$2a$10$EIXIX.USQKzdbTXDqyXneiHeRXkVkDxBdRpYxL1pJq2YFfjZq2mIpa', email='alice.wonder@example.com', firstName='Alice', lastName='Wonder', createdAt=2025-04-05T00:16:19, updatedAt=2025-04-05T00:16:19, roles=null], User[id=10, username='zhang_san', password='123456', email='wangyunchao@163.com', firstName='zhang', lastName='san', createdAt=2025-04-05T14:41:35, updatedAt=2025-04-05T14:41:35, roles=null], User[id=11, username='zhang_san', password='123456', email='wangyunchao@163.com', firstName='zhang', lastName='san', createdAt=2025-04-05T14:55:18, updatedAt=2025-04-05T14:55:18, roles=null], User[id=12, username='zhang_san', password='123456', email='wangyunchao@163.com', firstName='zhang', lastName='san', createdAt=2025-04-05T14:55:18, updatedAt=2025-04-05T14:55:18, roles=null], User[id=15, username='zhang_san', password='123456', email='wangyunchao@163.com', firstName='zhang', lastName='san', createdAt=2025-04-05T14:56:24, updatedAt=2025-04-05T14:56:24, roles=null], User[id=16, username='zhang_san', password='123456', email='wangyunchao@163.com', firstName='zhang', lastName='san', createdAt=2025-04-05T14:56:24, updatedAt=2025-04-05T14:56:24, roles=null], User[id=21, username='zhang_san', password='123456', email='wangyunchao@163.com', firstName='zhang', lastName='san', createdAt=2025-04-05T15:09:04, updatedAt=2025-04-05T15:09:04, roles=null], User[id=22, username='zhang_san', password='123456', email='wangyunchao@163.com', firstName='zhang', lastName='san', createdAt=2025-04-05T15:09:04, updatedAt=2025-04-05T15:09:04, roles=null]]
+            .toList();
+
     System.out.println("collect = " + collect);
 }
 
@@ -107,17 +99,17 @@ void test2() throws Exception {
 
 @Test
 void test3() throws Exception {
-    SqlRes sr = Sql.of()
+    SqlRes sr = Sql
             .select("*")
             .from("users")
             .ok();
-    //SELECT * FROM users 
-    System.out.println("sr = " + sr);
+    assertEquals("SELECT * FROM users", sr.sql());
+
     PageRes<Map<String, Object>> pages = run.page(sr.sql(), Page.of(1, 1), sr.params());
 
-    //pages = PageRes[total=10, data=[{password=$2a$10$EIXIX.USQKzdbTXDqyXneiHeRXkVkDxBdRpYxL1pJq2YFfjZq2mIpa, updated_at=2025-04-05T00:16:19, last_name=Doe, created_at=2025-04-05T00:16:19, id=1, first_name=John, email=john.doe@example.com, username=john_doe}]]
     System.out.println("pages = " + pages);
 }
+
 ```
 
 ## count
@@ -126,14 +118,145 @@ void test3() throws Exception {
 
 @Test
 public void test4() throws Exception {
-    SqlRes sr = Sql.of()
+    SqlRes sr = Sql
             .select("*")
             .from("users")
             .ok();
-    //SELECT * FROM users 
-    System.out.println("sr = " + sr);
+    assertEquals("SELECT * FROM users", sr.sql());
+
     long select = run.count(sr.sql(), sr.params());
-    //10
+
     System.out.println(select);
+}
+
+```
+
+## insert
+```java
+
+@Test
+public void test11() throws Exception {
+    List<Object[]> list = new ArrayList<>();
+    list.add(new Object[]{23, "zhang_san", "123456", "zhang_san@163.com", "zhang", "san", new Date(), new Date()});
+    list.add(new Object[]{21, "zhang_san", "123456", "zhang_san@163.com", "zhang", "san", new Date(), new Date()});
+    list.add(new Object[]{22, "zhang_san", "123456", "zhang_san@163.com", "zhang", "san", new Date(), new Date()});
+    SqlRes sr = Sql
+            .insert("users")
+            .into("id", "username", "password", "email", "first_name", "last_name", "created_at", "updated_at")
+            .value("?", "?", "?", "?", "?", "?", "?", "?")
+            .ok();
+
+    assertEquals("INSERT  INTO users  (id, username, password, email, first_name, last_name, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?)", sr.sql());
+
+    int[] execute = run.executeBatch(sr.sql(), list);
+    System.out.println(Arrays.toString(execute));
+}
+
+@Test
+public void test10() throws Exception {
+    List<Object[]> list = new ArrayList<>();
+    list.add(new Object[]{15, "zhang_san", "123456", "zhang_san@163.com", "zhang", "san", new Date(), new Date()});
+    list.add(new Object[]{16, "zhang_san", "123456", "zhang_san@163.com", "zhang", "san", new Date(), new Date()});
+    SqlRes sr = Sql
+            .insert("users")
+            .into("id", "username", "password", "email", "first_name", "last_name", "created_at", "updated_at")
+            .values(list)
+            .ok();
+
+    assertEquals("INSERT  INTO users  (id, username, password, email, first_name, last_name, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?),(?,?,?,?,?,?,?,?)", sr.sql());
+
+    int execute = run.execute(sr.sql(), sr.params());
+    System.out.println(execute);
+}
+
+@Test
+public void test9() throws Exception {
+    SqlRes sr = Sql
+            .insert("users")
+            .into("id", "username", "password", "email", "first_name", "last_name", "created_at", "updated_at")
+            .value(11, "zhang_san", "123456", "zhang_san@163.com", "zhang", "san", new Date(), new Date())
+            .value(12, "zhang_san", "123456", "zhang_san@163.com", "zhang", "san", new Date(), new Date())
+            .ok();
+    assertEquals("INSERT  INTO users  (id, username, password, email, first_name, last_name, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?),(?,?,?,?,?,?,?,?)", sr.sql());
+
+    int execute = run.execute(sr.sql(), sr.params());
+    System.out.println(execute);
+}
+
+@Test
+public void test8() throws Exception {
+    SqlRes sr = Sql
+            .insert("users")
+            .into("id", "username", "password", "email", "first_name", "last_name", "created_at", "updated_at")
+            .value(10, "zhang_san", "123456", "zhang_san@163.com", "zhang", "san", new Date(), new Date())
+            .ok();
+    assertEquals("INSERT  INTO users  (id, username, password, email, first_name, last_name, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?)", sr.sql());
+
+    int execute = run.execute(sr.sql(), sr.params());
+    System.out.println(execute);
+}
+
+```
+
+## update
+```java
+    @Test
+public void test12() throws Exception {
+    SqlRes sr = Sql
+            .update("users")
+            .set("password =? ,email = ? ", "111111", "11111@163.com")
+            .where("id = ?", 23)
+            .ok();
+    assertEquals("UPDATE users SET password =? ,email = ?  WHERE id = ? ", sr.sql());
+
+    int execute = run.execute(sr.sql(), sr.params());
+    System.out.println(execute);
+    }
+```
+## delete
+```java
+
+@Test
+public void test13() throws Exception {
+    SqlRes sr = Sql
+            .deleteFrom("users")
+            .where("id = ?", 23)
+            .ok();
+    assertEquals("DELETE FROM users WHERE id = ? ", sr.sql());
+
+    int execute = run.execute(sr.sql(), sr.params());
+    System.out.println(execute);
+
+}
+```
+
+## 连表查询
+```java
+
+@Test
+public void test6() throws Exception {
+    SqlRes rs = Sql
+            .select("*")
+            .from("users u")
+            .innerJoin("user_roles ur").on("u.id = ur.user_id and u.id = ?", 2)
+            .ok();
+    assertEquals("SELECT * FROM users u INNER JOIN user_roles ur ON u.id = ur.user_id and u.id = ? ", rs.sql());
+    
+    List<Map<String, Object>> maps = run.selectList(rs.sql(), rs.params());
+    System.out.println("maps = " + maps);
+}
+
+@Test
+public void test5() throws Exception {
+    SqlRes rs = Sql
+            .select("*")
+            .from("users u")
+            .innerJoin("user_roles ur").on("u.id = ur.user_id")
+            .where("u.id = ?", 1)
+            .ok();
+    assertEquals("SELECT * FROM users u INNER JOIN user_roles ur ON u.id = ur.user_id WHERE u.id = ? ", rs.sql());
+
+    List<Map<String, Object>> maps = run.selectList(rs.sql(), rs.params());
+    System.out.println("maps = " + maps);
 }
 ```

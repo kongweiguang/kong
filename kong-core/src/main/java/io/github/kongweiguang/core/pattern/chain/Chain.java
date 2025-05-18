@@ -16,12 +16,12 @@ import static java.util.Optional.ofNullable;
  * @param <C> 上下文
  * @author kongweiguang
  */
-public final class Chain<C> {
+public class Chain<C> {
     private final List<ChainHandler<C>> chain = new ArrayList<>();
     private final AtomicInteger index = new AtomicInteger();
     private final AtomicReference<C> context = new AtomicReference<>();
 
-    public Chain(final C c) {
+    public Chain(C c) {
         context.set(c);
     }
 
@@ -31,7 +31,7 @@ public final class Chain<C> {
      * @param <C> 上下文类型
      * @return {@link ChainHandler}
      */
-    public static <C> Chain<C> of(final C c) {
+    public static <C> Chain<C> of(C c) {
         return new Chain<>(c);
     }
 
@@ -49,7 +49,7 @@ public final class Chain<C> {
      *
      * @param c 上下文
      */
-    public void set(final C c) {
+    public void set(C c) {
         context.set(c);
     }
 
@@ -59,7 +59,7 @@ public final class Chain<C> {
      * @param handler 处理器
      * @return {@link ChainHandler}
      */
-    public Chain<C> add(final ChainHandler<C> handler) {
+    public Chain<C> add(ChainHandler<C> handler) {
         notNull(handler, "handler must not be null");
 
         chain.add(handler);
@@ -82,7 +82,7 @@ public final class Chain<C> {
      *
      * @param i 从后续的第几个
      */
-    public void indexProcess(final int i) {
+    public void indexProcess(int i) {
         int ix = i;
 
         if (ix < 0) {
@@ -98,7 +98,7 @@ public final class Chain<C> {
      *
      * @param i 从后续的第几个
      */
-    public void skip(final int i) {
+    public void skip(int i) {
         isTrue(i >= 0, "skip num must > 0");
 
         indexProcess(index.addAndGet(i + 1));

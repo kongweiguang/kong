@@ -8,22 +8,7 @@ import java.util.StringJoiner;
  *
  * @author kongweiguang
  */
-public class SqlRes {
-    private final String sql;
-    private final Object[] params;
-
-    public SqlRes(String sql, Object[] params) {
-        this.sql = sql;
-        this.params = params;
-    }
-
-    public String sql() {
-        return sql;
-    }
-
-    public Object[] params() {
-        return params;
-    }
+public record SqlRes(String sql, Object[] params) {
 
     @Override
     public String toString() {

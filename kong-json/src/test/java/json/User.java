@@ -2,7 +2,7 @@ package json;
 
 import java.util.Arrays;
 
-public final class User {
+public class User {
 
     private String name;
     private Integer age;
@@ -12,7 +12,7 @@ public final class User {
         return name;
     }
 
-    public User setName(final String name) {
+    public User setName(String name) {
         this.name = name;
         return this;
     }
@@ -21,7 +21,7 @@ public final class User {
         return age;
     }
 
-    public User setAge(final Integer age) {
+    public User setAge(Integer age) {
         this.age = age;
         return this;
     }
@@ -30,7 +30,7 @@ public final class User {
         return hobby;
     }
 
-    public User setHobby(final String[] hobby) {
+    public User setHobby(String[] hobby) {
         this.hobby = hobby;
         return this;
     }

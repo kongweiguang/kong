@@ -1,4 +1,4 @@
-package io.github.kongweiguang.core.util;
+package io.github.kongweiguang.core.file;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -42,7 +42,7 @@ public class Tomls {
         try (BufferedReader reader = new BufferedReader(new StringReader(content))) {
             return parseToml(reader);
         } catch (IOException e) {
-            throw new RuntimeException("解析TOML字符串时发生异常", e);
+            throw new RuntimeException("parse toml str fail", e);
         }
     }
 
@@ -74,7 +74,7 @@ public class Tomls {
             writer.flush();
             return stringWriter.toString();
         } catch (IOException e) {
-            throw new RuntimeException("将Map转换为TOML字符串时发生异常", e);
+            throw new RuntimeException("convert map to toml str fail ", e);
         }
     }
 
@@ -264,7 +264,7 @@ public class Tomls {
                 Map<String, Object> existingTable = (Map<String, Object>) existingObj;
                 current = existingTable;
             } else {
-                throw new IllegalArgumentException("键 '" + part + "' 已存在，但不是表");
+                throw new IllegalArgumentException("key '" + part + "' exists but is not a table");
             }
         }
 
@@ -307,7 +307,7 @@ public class Tomls {
         } else if (existing instanceof List) {
             return (List<Map<String, Object>>) existing;
         } else {
-            throw new IllegalArgumentException("键 '" + lastPart + "' 已存在，但不是表数组");
+            throw new IllegalArgumentException("key '" + lastPart + "' exists but is not a table array");
         }
     }
 

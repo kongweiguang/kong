@@ -13,21 +13,21 @@ import static io.github.kongweiguang.core.lang.Assert.notNull;
  *
  * @author kongweiguang
  */
-public final class IdGen {
+public class IdGen {
     public static final IdGen of = of(Duration.ofSeconds(1));
     private final AtomicLong add = new AtomicLong(System.currentTimeMillis() << 25);
 
-    private IdGen(final Duration period) {
+    private IdGen(Duration period) {
         scheduleTask(period);
     }
 
-    public static IdGen of(final Duration period) {
+    public static IdGen of(Duration period) {
         notNull(period, "period must not be null");
 
         return new IdGen(period);
     }
 
-    private void scheduleTask(final Duration period) {
+    private void scheduleTask(Duration period) {
         Executors.newSingleThreadScheduledExecutor(IdGen::newThread)
                 .scheduleAtFixedRate(this::updateBaseAndResetAdd, period.toMillis(), period.toMillis(), TimeUnit.MILLISECONDS);
     }
@@ -36,8 +36,8 @@ public final class IdGen {
         add.set(System.currentTimeMillis() << 25);
     }
 
-    private static Thread newThread(final Runnable r) {
-        final Thread t = new Thread(r, "idGen");
+    private static Thread newThread(Runnable r) {
+        Thread t = new Thread(r, "idGen");
         t.setDaemon(true);
         return t;
     }

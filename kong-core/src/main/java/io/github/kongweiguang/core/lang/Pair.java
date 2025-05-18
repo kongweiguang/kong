@@ -6,8 +6,9 @@ import java.util.StringJoiner;
 /**
  * 不可变二元组对象
  *
- * @param <K>
- * @param <V>
+ * @param <K> k
+ * @param <V> v
+ * @author kongweiguang
  */
 public class Pair<K, V> implements Serializable {
     private static final long serialVersionUID = 1L;

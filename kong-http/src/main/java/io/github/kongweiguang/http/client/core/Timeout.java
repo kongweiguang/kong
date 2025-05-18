@@ -7,7 +7,7 @@ import java.time.Duration;
  *
  * @author kongweiguang
  */
-public final class Timeout {
+public class Timeout {
 
     private final Duration connect;
     private final Duration write;

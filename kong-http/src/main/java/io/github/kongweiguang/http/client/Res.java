@@ -32,12 +32,12 @@ import static java.util.Optional.ofNullable;
  *
  * @author kongweiguang
  */
-public final class Res implements AutoCloseable {
+public class Res implements AutoCloseable {
 
     //原始res对象
     private final Response raw;
 
-    private Res(final Response resp) {
+    private Res(Response resp) {
         this.raw = resp;
     }
 
@@ -47,7 +47,7 @@ public final class Res implements AutoCloseable {
      * @param resp 原始响应对象
      * @return Res对象 {@link Res}
      */
-    public static Res of(final Response resp) {
+    public static Res of(Response resp) {
         return new Res(resp);
     }
 
@@ -102,7 +102,7 @@ public final class Res implements AutoCloseable {
      * @param name 响应头名称
      * @return 响应头值
      */
-    public String header(final String name) {
+    public String header(String name) {
         return raw().header(name);
     }
 
@@ -112,11 +112,11 @@ public final class Res implements AutoCloseable {
      * @return 响应头集合
      */
     public Map<String, List<String>> headers() {
-        final Headers headers = raw().headers();
+        Headers headers = raw().headers();
 
-        final Map<String, List<String>> fr = new HashMap<>(headers.size(), 1);
+        Map<String, List<String>> fr = new HashMap<>(headers.size(), 1);
 
-        for (final Pair<? extends String, ? extends String> hd : headers) {
+        for (Pair<? extends String, ? extends String> hd : headers) {
             fr.computeIfAbsent(hd.getFirst(), k -> new ArrayList<>()).add(hd.getSecond());
         }
 
@@ -218,7 +218,7 @@ public final class Res implements AutoCloseable {
      * @param charset 字符集
      * @return 消息体字符串
      */
-    public String str(final Charset charset) {
+    public String str(Charset charset) {
         return new String(bytes(), charset);
     }
 
@@ -247,7 +247,7 @@ public final class Res implements AutoCloseable {
      * @param <R>   目标类型
      * @return 响应对象
      */
-    public <R> R obj(final Class<R> clazz) {
+    public <R> R obj(Class<R> clazz) {
         return toObj(str(), clazz);
     }
 
@@ -259,7 +259,7 @@ public final class Res implements AutoCloseable {
      * @param <R>   目标类型
      * @return 响应对象
      */
-    public <R> R defaultObj(final Class<R> clazz, final R r) {
+    public <R> R defaultObj(Class<R> clazz, R r) {
         try {
             return toObj(str(), clazz);
         } catch (Exception e) {
@@ -274,7 +274,7 @@ public final class Res implements AutoCloseable {
      * @param <R>     目标类型
      * @return 响应对象
      */
-    public <R> R obj(final TypeReference<R> typeRef) {
+    public <R> R obj(TypeReference<R> typeRef) {
         return toObj(str(), typeRef);
     }
 
@@ -286,7 +286,7 @@ public final class Res implements AutoCloseable {
      * @param <R>     目标类型
      * @return 响应对象
      */
-    public <R> R defaultObj(final TypeReference<R> typeRef, R r) {
+    public <R> R defaultObj(TypeReference<R> typeRef, R r) {
         try {
             return toObj(str(), typeRef);
         } catch (Exception e) {

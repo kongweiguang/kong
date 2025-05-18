@@ -10,7 +10,7 @@
 		<img src="https://img.shields.io/:license-Apache2-blue.svg" alt="Apache 2" />
 	</a>
     <a target="_blank" href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">
-		<img src="https://img.shields.io/badge/JDK-8+-green.svg" alt="jdk-8+" />
+				<img src="https://img.shields.io/badge/JDK-21-green.svg" alt="jdk-21" />
 	</a>
     <br />
 </p>
@@ -107,6 +107,7 @@ public class AsyncTest {
 ```
 
 区分不同的hub
+
 ```java
 public class CustomTest {
     String branch = "branch.test1";
@@ -126,6 +127,7 @@ public class CustomTest {
 ```
 
 删除拉取
+
 ```java
 public class DelPullTest {
     String branch = "branch.test1";
@@ -159,8 +161,8 @@ public class DelPullTest {
 }
 ```
 
-
 多个拉取
+
 ```java
 public class MultiPullTest {
     String branch = "branch.test1";
@@ -178,6 +180,7 @@ public class MultiPullTest {
 ```
 
 注解方式
+
 ```java
 public class MyHandler {
     @Pull
@@ -243,6 +246,7 @@ public class PushObjMethodTest {
 ```
 
 排序拉取
+
 ```java
 public class SortPullTest {
     String branch = "branch.test1";
@@ -262,6 +266,7 @@ public class SortPullTest {
 ```
 
 使用springboot
+
 ```java
 
 @Component
@@ -291,7 +296,9 @@ public class MyHandler {
 
 }
 ```
+
 ```java
+
 @ContextConfiguration
 @RunWith(SpringRunner.class)
 @EnableAutoConfiguration

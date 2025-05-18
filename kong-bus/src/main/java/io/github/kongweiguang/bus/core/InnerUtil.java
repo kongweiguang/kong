@@ -19,7 +19,7 @@ final class InnerUtil {
      * @param m 方法
      * @return 参数泛型列表
      */
-    public static List<String> generics(final Method m) {
+    public static List<String> generics(Method m) {
         List<String> fr = new ArrayList<>(2);
         Type[] genericParameterTypes = m.getGenericParameterTypes();
 

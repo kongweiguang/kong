@@ -15,24 +15,24 @@ import static java.util.Objects.nonNull;
  * @param <R> 合并后返回的结果类型
  * @author kongweiguang
  */
-public final class Oper<C, R> {
+public class Oper<C, R> {
     private final long id;
     private final String branch;
     private final C content;
     private Consumer<R> call;
     private Map<Object, Object> tag;
 
-    private Oper(final long id, final String branch, final C c) {
+    private Oper(long id, String branch, C c) {
         this.id = id;
         this.branch = branch;
         this.content = c;
     }
 
-    public static <C, R> Oper<C, R> of(final String branch, final C c) {
+    public static <C, R> Oper<C, R> of(String branch, C c) {
         return of(IdGen.of.next(), branch, c);
     }
 
-    public static <C, R> Oper<C, R> of(final long id, final String branch, final C c) {
+    public static <C, R> Oper<C, R> of(long id, String branch, C c) {
         return new Oper<>(id, branch, c);
     }
 
@@ -91,7 +91,7 @@ public final class Oper<C, R> {
      * @return 值
      */
     @SuppressWarnings("unchecked")
-    public <T> T tag(final String k) {
+    public <T> T tag(String k) {
         if (isNull(tag)) {
             return null;
         }
@@ -106,7 +106,7 @@ public final class Oper<C, R> {
      * @param v 值
      * @return this
      */
-    public Oper<C, R> tag(final Object k, final Object v) {
+    public Oper<C, R> tag(Object k, Object v) {
         if (isNull(tag)) {
             this.tag = new HashMap<>();
         }
@@ -120,7 +120,7 @@ public final class Oper<C, R> {
      *
      * @param call 回调函数
      */
-    void callback(final Consumer<R> call) {
+    void callback(Consumer<R> call) {
         this.call = call;
     }
 

@@ -25,7 +25,7 @@ public class BeanUtil {
      * @param <T>    目标类型
      * @return 目标对象
      */
-    public static <T> T copy(final Object source, final Class<T> target) {
+    public static <T> T copy(Object source, Class<T> target) {
         try {
             return copy(source, target.newInstance(), null);
         } catch (Exception e) {
@@ -41,7 +41,7 @@ public class BeanUtil {
      * @param <T>    目标类型
      * @return 目标对象
      */
-    public static <T> T copy(final Object source, final Object target) {
+    public static <T> T copy(Object source, Object target) {
         return copy(source, target, null);
     }
 
@@ -55,8 +55,8 @@ public class BeanUtil {
      * @return 目标对象
      */
     @SuppressWarnings("unchecked")
-    public static <T> T copy(final Object source, final Object target, Converter converter) {
-        final boolean hasConverter = nonNull(converter);
+    public static <T> T copy(Object source, Object target, Converter converter) {
+        boolean hasConverter = nonNull(converter);
         cache.computeIfAbsent(key(source.getClass(), target.getClass(), hasConverter),
                         k -> BeanCopier.create(source.getClass(), target.getClass(), hasConverter))
                 .copy(source, target, converter);
@@ -71,7 +71,7 @@ public class BeanUtil {
      * @param hasConverter 是否有转换器
      * @return 健
      */
-    private static String key(final Class<?> source, final Class<?> target, boolean hasConverter) {
+    private static String key(Class<?> source, Class<?> target, boolean hasConverter) {
         return String.join("_", source.getName(), target.getName(), String.valueOf(hasConverter));
     }
 
@@ -81,7 +81,7 @@ public class BeanUtil {
      * @param obj 源对象
      * @return map
      */
-    public static BeanMap toMap(final Object obj) {
+    public static BeanMap toMap(Object obj) {
         return BeanMap.create(obj);
     }
 
@@ -94,7 +94,7 @@ public class BeanUtil {
      * @return 目标对象
      */
     @SuppressWarnings("rawtypes")
-    public static <T> T toObj(final Map map, final T bean) {
+    public static <T> T toObj(Map map, T bean) {
         BeanMap.create(bean).putAll(map);
         return bean;
     }
@@ -108,7 +108,7 @@ public class BeanUtil {
      * @return 目标对象
      */
     @SuppressWarnings("rawtypes")
-    public static <T> T toObj(final Map map, final Class<T> beanClass) {
+    public static <T> T toObj(Map map, Class<T> beanClass) {
         try {
             return toObj(map, beanClass.newInstance());
         } catch (Exception e) {

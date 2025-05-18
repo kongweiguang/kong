@@ -23,18 +23,18 @@ public class Test1 {
 
     @Test
     public void test1() throws Exception {
-        final BeanMap map = BeanUtil.toMap(u);
+        BeanMap map = BeanUtil.toMap(u);
         System.out.println("map = " + map);
     }
 
     @Test
     public void test2() throws Exception {
-        final List<String> list = Arrays.asList("ll", "fljd");
-        final Map<String, Object> map = new HashMap<>();
+        List<String> list = Arrays.asList("ll", "fljd");
+        Map<String, Object> map = new HashMap<>();
         map.put("name", "kk");
         map.put("age", 1);
         map.put("hobby",list.toArray());
-        final User user = BeanUtil.toObj(map, new User());
+        User user = BeanUtil.toObj(map, new User());
         System.out.println("user = " + user);
     }
 

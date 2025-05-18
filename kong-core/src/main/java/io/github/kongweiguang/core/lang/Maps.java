@@ -5,6 +5,8 @@ import java.util.Map;
 
 /**
  * map工具类
+ *
+ * @author kongweiguang
  */
 public class Maps {
 

@@ -15,13 +15,13 @@ import static java.util.Optional.ofNullable;
  *
  * @author kongweiguang
  */
-public final class JsonAry {
+public class JsonAry {
     private ArrayNode node = Json.mapper().createArrayNode();
 
     private JsonAry() {
     }
 
-    private JsonAry(final ArrayNode node) {
+    private JsonAry(ArrayNode node) {
         Assert.notNull(node, "node must not be null");
         this.node = node;
     }
@@ -41,7 +41,7 @@ public final class JsonAry {
      * @param node {@link ArrayNode}
      * @return {@link JsonAry}
      */
-    public static JsonAry of(final ArrayNode node) {
+    public static JsonAry of(ArrayNode node) {
         return new JsonAry(node);
     }
 
@@ -51,7 +51,7 @@ public final class JsonAry {
      * @param obj 内容
      * @return {@link JsonAry}
      */
-    public JsonAry add(final Object obj) {
+    public JsonAry add(Object obj) {
         node.add(Json.toStr(obj));
         return this;
     }
@@ -62,7 +62,7 @@ public final class JsonAry {
      * @param obj 内容
      * @return {@link JsonAry}
      */
-    public JsonAry addObj(final Object obj) {
+    public JsonAry addObj(Object obj) {
         if (obj instanceof String) {
             add(obj);
         } else {
@@ -77,7 +77,7 @@ public final class JsonAry {
      * @param n jsonNode
      * @return {@link JsonAry}
      */
-    public JsonAry addObj(final JsonNode n) {
+    public JsonAry addObj(JsonNode n) {
         node.add(n);
         return this;
     }
@@ -88,10 +88,10 @@ public final class JsonAry {
      * @param con 构建器
      * @return {@link JsonAry}
      */
-    public JsonAry addObj(final Consumer<JsonObj> con) {
+    public JsonAry addObj(Consumer<JsonObj> con) {
         Assert.notNull(con, "consumer must not be null");
 
-        final JsonObj obj = JsonObj.of(node.objectNode());
+        JsonObj obj = JsonObj.of(node.objectNode());
         con.accept(obj);
         return addObj(obj.toNode());
     }
@@ -102,10 +102,10 @@ public final class JsonAry {
      * @param con 构建器
      * @return {@link JsonAry}
      */
-    public JsonAry addAry(final Consumer<JsonAry> con) {
+    public JsonAry addAry(Consumer<JsonAry> con) {
         Assert.notNull(con, "consumer must not be null");
 
-        final JsonAry ary = JsonAry.of(node.arrayNode());
+        JsonAry ary = JsonAry.of(node.arrayNode());
         con.accept(ary);
         return addObj(ary.toNode());
     }
@@ -116,7 +116,7 @@ public final class JsonAry {
      * @param coll 集合
      * @return {@link JsonAry}
      */
-    public JsonAry addColl(final Collection<?> coll) {
+    public JsonAry addColl(Collection<?> coll) {
         ofNullable(coll).ifPresent(e -> e.forEach(this::add));
         return this;
     }
@@ -145,7 +145,7 @@ public final class JsonAry {
      * @param clazz 元素类型
      * @return {@link  List}
      */
-    public <T> List<T> toList(final Class<T> clazz) {
+    public <T> List<T> toList(Class<T> clazz) {
         return Json.toList(node, clazz);
     }
 

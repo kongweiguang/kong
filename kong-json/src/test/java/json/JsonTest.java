@@ -37,7 +37,7 @@ public class JsonTest {
     @Test
     void testJsonObj() throws Exception {
 
-        final String str = JsonObj.of()
+        String str = JsonObj.of()
                 .put("a", "b")
                 .putAry("c", o -> o.add("d1").add("d2"))
                 .put("e", "f")
@@ -61,7 +61,7 @@ public class JsonTest {
     @Test
     void testJsonAry() throws Exception {
 
-        final String ary = JsonAry.of()
+        String ary = JsonAry.of()
                 .add(1)
                 .add(2)
                 .add(3)
@@ -73,7 +73,7 @@ public class JsonTest {
 
         System.out.println(ary);
 
-        final List<Object> list = Json.toList(ary, Object.class);
+        List<Object> list = Json.toList(ary, Object.class);
 
         System.out.println(list);
     }
@@ -86,7 +86,7 @@ public class JsonTest {
      */
     @Test
     void test1() throws Exception {
-        final JsonObj jsonObj = Json.obj().put("1", "true");
+        JsonObj jsonObj = Json.obj().put("1", "true");
         System.out.println(jsonObj.toMap(Object.class, Object.class));
         System.out.println(jsonObj.toJson());
     }
@@ -98,7 +98,7 @@ public class JsonTest {
      */
     @Test
     void test2() throws Exception {
-        final String json = Json.ary().add(1).add(new BigDecimal(2)).addAry(e -> e.add(66).add(888)).addObj(u).toJson();
+        String json = Json.ary().add(1).add(new BigDecimal(2)).addAry(e -> e.add(66).add(888)).addObj(u).toJson();
         System.out.println(json);
     }
 

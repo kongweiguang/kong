@@ -46,7 +46,7 @@ public class If {
      * @param <T>  返回类型
      * @return 返回值
      */
-    public static <T> T trueSupF1(final boolean bool, Supplier<T> f1, Supplier<T> f2) {
+    public static <T> T trueSupF1(boolean bool, Supplier<T> f1, Supplier<T> f2) {
         if (bool) {
             return f1.get();
         }
@@ -61,7 +61,7 @@ public class If {
      * @param f1   方法1
      * @param f2   方法2
      */
-    public static void trueRunF1(final boolean bool, Runnable f1, Runnable f2) {
+    public static void trueRunF1(boolean bool, Runnable f1, Runnable f2) {
         if (bool) {
             f1.run();
         }

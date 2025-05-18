@@ -22,7 +22,7 @@ public final class InnerUtil {
     }
 
     //移除第一个斜杠
-    public static String removeFirstSlash(final String path) {
+    public static String removeFirstSlash(String path) {
         String p = path;
 
         if (isNull(p)) {
@@ -37,7 +37,7 @@ public final class InnerUtil {
     }
 
     //url校验
-    public static String fixUrl(final String url, final boolean isWs) {
+    public static String fixUrl(String url, boolean isWs) {
         String u = url;
 
         if (isNull(u) || Objects.equals("", u)) {
@@ -74,7 +74,7 @@ public final class InnerUtil {
         return u;
     }
 
-    public static boolean isHttp(final String url) {
+    public static boolean isHttp(String url) {
         if (nonNull(url)) {
             return url.toLowerCase().startsWith(Const._http);
         }
@@ -82,7 +82,7 @@ public final class InnerUtil {
         return false;
     }
 
-    public static boolean isHttps(final String url) {
+    public static boolean isHttps(String url) {
         if (nonNull(url)) {
             return url.toLowerCase().startsWith(Const._https);
         }
@@ -90,7 +90,7 @@ public final class InnerUtil {
         return false;
     }
 
-    public static boolean isWs(final String url) {
+    public static boolean isWs(String url) {
         if (nonNull(url)) {
             return url.toLowerCase().startsWith(Const._ws);
         }
@@ -98,7 +98,7 @@ public final class InnerUtil {
         return false;
     }
 
-    public static boolean isWss(final String url) {
+    public static boolean isWss(String url) {
         if (nonNull(url)) {
             return url.toLowerCase().startsWith(Const._wss);
         }
@@ -108,7 +108,7 @@ public final class InnerUtil {
 
 
     //cookie转字符串
-    public static String cookie2Str(final Map<String, String> cookies) {
+    public static String cookie2Str(Map<String, String> cookies) {
         StringBuilder sb = new StringBuilder();
 
         cookies.forEach((k, v) -> sb.append(k).append('=').append(v).append("; "));
@@ -116,7 +116,7 @@ public final class InnerUtil {
         return sb.toString();
     }
 
-    public static HttpLoggingInterceptor httpLoggingInterceptor(final ReqLog logger, final HttpLoggingInterceptor.Level level) {
+    public static HttpLoggingInterceptor httpLoggingInterceptor(ReqLog logger, HttpLoggingInterceptor.Level level) {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(logger);
         loggingInterceptor.setLevel(level);
         return loggingInterceptor;

@@ -1,6 +1,8 @@
 package io.github.kongweiguang.socket.nio.server;
 
 import io.github.kongweiguang.core.lang.IOs;
+import io.github.kongweiguang.core.lang.Strs;
+import io.github.kongweiguang.socket.nio.common.SocketHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +34,7 @@ public class SelectorThreadGroup implements AutoCloseable {
     private int bufferSize;
 
     // 请求处理器
-    private ServerSocketHandler requestHandler;
+    private SocketHandler requestHandler;
 
     /**
      * 创建选择器线程组
@@ -90,7 +92,7 @@ public class SelectorThreadGroup implements AutoCloseable {
      * @param requestHandler 请求处理器实例
      * @return 当前选择器线程组
      */
-    public SelectorThreadGroup socketHandler(ServerSocketHandler requestHandler) {
+    public SelectorThreadGroup socketHandler(SocketHandler requestHandler) {
         this.requestHandler = requestHandler;
         return this;
     }
@@ -100,7 +102,7 @@ public class SelectorThreadGroup implements AutoCloseable {
      *
      * @return 当前配置的请求处理器
      */
-    public ServerSocketHandler requestHandler() {
+    public SocketHandler requestHandler() {
         return this.requestHandler;
     }
 
@@ -140,8 +142,9 @@ public class SelectorThreadGroup implements AutoCloseable {
             log.info("server started at port: {}:{} with {} threads.", address.getHostName(), address.getPort(), selectorThreads.length);
 
         } catch (IOException e) {
-            throw new RuntimeException("bind  fail to " + address.getHostName() + ":" + address.getPort(), e);
+            throw new RuntimeException(Strs.fmt("bind  fail to {}:{}",address.getHostName(),address.getPort()) , e);
         }
+
         return this;
     }
 

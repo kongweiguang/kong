@@ -55,7 +55,7 @@ public class Where {
     }
 
     public static Where ne(String field, Object value) {
-        return of(field, "<>?", value);
+        return of(field, "!=?", value);
     }
 
     public static Where gt(String field, Object value) {
@@ -79,15 +79,15 @@ public class Where {
     // region ---- like
 
     public static Where like(String field, String value) {
-        return of(field, "LIKE %?%", value);
+        return of(field, "LIKE '%?%'", value);
     }
 
     public static Where likeStart(String field, String value) {
-        return of(field, "LIKE %?", value);
+        return of(field, "LIKE '%?'", value);
     }
 
     public static Where likeEnd(String field, String value) {
-        return of(field, "LIKE ?%", value);
+        return of(field, "LIKE '?%'", value);
     }
 
     public static Where notLike(String field, String value) {

@@ -13,7 +13,7 @@ public class Assert {
      * @param obj 需要判空的对象
      * @param msg 异常信息
      */
-    public static void notNull(final Object obj, final String msg) {
+    public static void notNull(Object obj, String msg) {
         if (obj == null) {
             throw new IllegalArgumentException(msg);
         }
@@ -25,7 +25,7 @@ public class Assert {
      * @param bool 需要判断的结果
      * @param msg  异常信息
      */
-    public static void isTrue(final boolean bool, final String msg) {
+    public static void isTrue(boolean bool, String msg) {
         if (!bool) {
             throw new IllegalArgumentException(msg);
         }

@@ -4,7 +4,7 @@ package io.github.kongweiguang.db.ds;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import io.github.kongweiguang.core.resource.ClassPathResource;
-import io.github.kongweiguang.core.util.Tomls;
+import io.github.kongweiguang.core.file.Tomls;
 import io.github.kongweiguang.db.DB;
 
 import javax.sql.DataSource;

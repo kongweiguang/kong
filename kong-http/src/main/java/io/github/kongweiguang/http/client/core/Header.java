@@ -136,7 +136,7 @@ public enum Header {
 
     private final String v;
 
-    Header(final String v) {
+    Header(String v) {
         this.v = v;
     }
 

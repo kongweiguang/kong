@@ -14,13 +14,13 @@ import static java.util.Optional.ofNullable;
  *
  * @author kongweiguang
  */
-public final class JsonObj {
+public class JsonObj {
     private ObjectNode node = Json.mapper().createObjectNode();
 
     private JsonObj() {
     }
 
-    private JsonObj(final ObjectNode node) {
+    private JsonObj(ObjectNode node) {
         Assert.notNull(node, "node must not be null");
 
         this.node = node;
@@ -41,7 +41,7 @@ public final class JsonObj {
      * @param node {@link  ObjectNode}
      * @return {@link  JsonObj}
      */
-    public static JsonObj of(final ObjectNode node) {
+    public static JsonObj of(ObjectNode node) {
         return new JsonObj(node);
     }
 
@@ -53,7 +53,7 @@ public final class JsonObj {
      * @param v 值
      * @return {@link  JsonObj}
      */
-    public JsonObj put(final String k, final Object v) {
+    public JsonObj put(String k, Object v) {
         Assert.notNull(k, "k must not be null");
 
         node.put(k, Json.toStr(v));
@@ -68,7 +68,7 @@ public final class JsonObj {
      * @param v 值
      * @return {@link  JsonObj}
      */
-    public JsonObj putObj(final String k, final Object v) {
+    public JsonObj putObj(String k, Object v) {
         Assert.notNull(k, "k must not be null");
         if (v instanceof String) {
             put(k, v);
@@ -86,7 +86,7 @@ public final class JsonObj {
      * @param con {@link  JsonObj} 的构建器
      * @return {@link  JsonObj}
      */
-    public JsonObj putObj(final String k, final Consumer<JsonObj> con) {
+    public JsonObj putObj(String k, Consumer<JsonObj> con) {
         Assert.notNull(k, "k must not be null");
         Assert.notNull(con, "consumer must not be null");
 
@@ -102,7 +102,7 @@ public final class JsonObj {
      * @param con {@link  JsonAry} 的构建器
      * @return {@link  JsonObj}
      */
-    public JsonObj putAry(final String k, final Consumer<JsonAry> con) {
+    public JsonObj putAry(String k, Consumer<JsonAry> con) {
         Assert.notNull(k, "k must not be null");
         Assert.notNull(con, "consumer must not be null");
 
@@ -117,7 +117,7 @@ public final class JsonObj {
      * @param map 数据
      * @return {@link  JsonObj}
      */
-    public JsonObj putMap(final Map<String, Object> map) {
+    public JsonObj putMap(Map<String, Object> map) {
 
         ofNullable(map).ifPresent(m -> m.forEach(this::putObj));
 
@@ -149,7 +149,7 @@ public final class JsonObj {
      * @param v 值的类型
      * @return map
      */
-    public <K, V> Map<K, V> toMap(final Class<K> k, final Class<V> v) {
+    public <K, V> Map<K, V> toMap(Class<K> k, Class<V> v) {
         return Json.toMap(node, k, v);
     }
 

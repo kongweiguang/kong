@@ -1,6 +1,7 @@
 package io.github.kongweiguang.socket.nio.server;
 
 import io.github.kongweiguang.core.lang.IOs;
+import io.github.kongweiguang.socket.nio.common.SocketHandler;
 
 import java.net.InetSocketAddress;
 import java.util.function.Consumer;
@@ -70,7 +71,7 @@ public class NioServer implements AutoCloseable {
      * @param handler 通道处理器
      * @return 当前服务器实例
      */
-    public NioServer socketHandler(ServerSocketHandler handler) {
+    public NioServer socketHandler(SocketHandler handler) {
         workerGroup.socketHandler(handler);
         return this;
     }
@@ -97,7 +98,6 @@ public class NioServer implements AutoCloseable {
         bossGroup.bind(new InetSocketAddress(host, port));
         return this;
     }
-
 
     /**
      * 获取Boss线程组

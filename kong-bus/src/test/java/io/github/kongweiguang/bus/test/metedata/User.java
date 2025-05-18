@@ -8,7 +8,7 @@ public class User {
     private String name;
     private String[] hobby;
 
-    public User(final int id, final String name, final String[] hobby) {
+    public User(int id, String name, String[] hobby) {
         this.id = id;
         this.name = name;
         this.hobby = hobby;
@@ -18,7 +18,7 @@ public class User {
         return id;
     }
 
-    public void setId(final int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -26,7 +26,7 @@ public class User {
         return name;
     }
 
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -34,7 +34,7 @@ public class User {
         return hobby;
     }
 
-    public void setHobby(final String[] hobby) {
+    public void setHobby(String[] hobby) {
         this.hobby = hobby;
     }
 

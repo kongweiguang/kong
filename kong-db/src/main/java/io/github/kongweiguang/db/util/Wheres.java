@@ -36,7 +36,7 @@ public class Wheres {
      * 构建Where条件组
      *
      * @param groups 条件组列表
-     * @return  Pair
+     * @return Pair
      */
     public static Pair<String, List<Object>> buildGroup(WhereGroup... groups) {
         StringBuilder sb = new StringBuilder();
@@ -48,7 +48,9 @@ public class Wheres {
                 sb.append(type.getName()).append(" ");
             }
             sb.append("(");
-            buildWhere(wheres.toArray(new Where[0]));
+            Pair<String, List<Object>> p = buildWhere(wheres.toArray(new Where[0]));
+            sb.append(p.k());
+            paramsList.addAll(p.v());
             sb.append(") ");
         }
 

@@ -19,25 +19,25 @@ public abstract class SSEListener extends EventSourceListener {
     public EventSource es;
 
     @Override
-    public void onOpen(final EventSource eventSource, final Response response) {
+    public void onOpen(EventSource eventSource, Response response) {
         this.es = eventSource;
         open(eventSource.request().tag(ReqBuilder.class), Res.of(response));
     }
 
     @Override
-    public void onEvent(final EventSource eventSource, final String id, final String type, final String data) {
+    public void onEvent(EventSource eventSource, String id, String type, String data) {
         this.es = eventSource;
         event(eventSource.request().tag(ReqBuilder.class), SseEvent.of().id(id).type(type).data(data));
     }
 
     @Override
-    public void onFailure(final EventSource eventSource, final Throwable t, final Response response) {
+    public void onFailure(EventSource eventSource, Throwable t, Response response) {
         this.es = eventSource;
         fail(eventSource.request().tag(ReqBuilder.class), Res.of(response), t);
     }
 
     @Override
-    public void onClosed(final EventSource eventSource) {
+    public void onClosed(EventSource eventSource) {
         this.es = eventSource;
         closed(eventSource.request().tag(ReqBuilder.class));
     }
@@ -57,7 +57,7 @@ public abstract class SSEListener extends EventSourceListener {
      * @param req 请求信息 {@link Req}
      * @param res 响应信息 {@link Res}
      */
-    public void open(final ReqBuilder req, final Res res) {
+    public void open(ReqBuilder req, final Res res) {
     }
 
     /**

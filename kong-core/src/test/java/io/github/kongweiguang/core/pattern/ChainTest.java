@@ -10,7 +10,7 @@ import java.util.Map;
 public class ChainTest {
     @Test
     public void test1() throws Exception {
-        final HashMap<String, Object> map = new HashMap<>();
+        HashMap<String, Object> map = new HashMap<>();
 
         Chain.<Map<String, Object>>of(map)
                 .add(new ChainHandler<Map<String, Object>>() {

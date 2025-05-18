@@ -14,12 +14,12 @@ import static io.github.kongweiguang.bus.Bus.hub;
 public class BusBeanPostProcessor implements DestructionAwareBeanPostProcessor {
 
     @Override
-    public void postProcessBeforeDestruction(final Object bean, final String beanName) throws BeansException {
+    public void postProcessBeforeDestruction(Object bean, String beanName) throws BeansException {
         hub().removeClass(bean);
     }
 
     @Override
-    public Object postProcessAfterInitialization(final Object bean, final String beanName) throws BeansException {
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         hub().pullClass(bean);
         return bean;
     }

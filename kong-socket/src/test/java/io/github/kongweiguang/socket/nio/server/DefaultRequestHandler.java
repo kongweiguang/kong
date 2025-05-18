@@ -1,5 +1,7 @@
 package io.github.kongweiguang.socket.nio.server;
 
+import io.github.kongweiguang.socket.nio.common.SocketHandler;
+
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
@@ -8,7 +10,7 @@ import java.nio.charset.StandardCharsets;
  * 默认请求处理器实现
  * 提供基本的HTTP响应
  */
-public class DefaultRequestHandler implements ServerSocketHandler {
+public class DefaultRequestHandler implements SocketHandler {
 
     /**
      * HTTP响应内容
@@ -39,6 +41,7 @@ public class DefaultRequestHandler implements ServerSocketHandler {
                           "Content-Type: text/plain\r\n" +
                           "\r\n" +
                           responseContent;
+
         System.out.println("response = " + response);
         return ByteBuffer.wrap(response.getBytes(StandardCharsets.UTF_8));
     }

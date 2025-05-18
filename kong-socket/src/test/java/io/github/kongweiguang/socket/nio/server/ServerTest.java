@@ -1,6 +1,6 @@
 package io.github.kongweiguang.socket.nio.server;
 
-import java.time.Duration;
+import java.util.concurrent.locks.LockSupport;
 
 /**
  * NIO服务器示例类
@@ -23,11 +23,7 @@ public class ServerTest {
                 .bind("localhost", 8887);
 
         System.out.println("服务器已启动，监听端口: 8888, 8887");
-        try {
-            Thread.sleep(Duration.ofDays(1).toMillis());
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        LockSupport.park();
     }
 
 }

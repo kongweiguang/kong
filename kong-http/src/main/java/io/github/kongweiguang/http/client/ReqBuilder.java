@@ -53,7 +53,7 @@ import static okhttp3.internal.http.HttpMethod.permitsRequestBody;
  *
  * @author kongweiguang
  */
-public final class ReqBuilder {
+public class ReqBuilder {
 
     private ReqTypeEnum reqType;
     private final Conf conf;
@@ -105,7 +105,7 @@ public final class ReqBuilder {
      * @param conf 配置 {@link Conf}
      * @return ReqBuilder {@link ReqBuilder}
      */
-    public ReqBuilder config(final Consumer<Conf> conf) {
+    public ReqBuilder config(Consumer<Conf> conf) {
         notNull(conf, "conf consumer must not be null");
 
         conf.accept(this.conf);
@@ -148,7 +148,7 @@ public final class ReqBuilder {
      * @param reqType 请求类型 {@link ReqTypeEnum}
      * @return ReqBuilder {@link ReqBuilder}
      */
-    public ReqBuilder reqType(final ReqTypeEnum reqType) {
+    public ReqBuilder reqType(ReqTypeEnum reqType) {
         this.reqType = reqType;
         return this;
     }
@@ -186,7 +186,7 @@ public final class ReqBuilder {
      * @param client {@link OkHttpClient}
      * @return Res {@link Res}
      */
-    public Res ok(final OkHttpClient client) {
+    public Res ok(OkHttpClient client) {
         before();
         return OK.ok(this, client);
     }
@@ -206,7 +206,7 @@ public final class ReqBuilder {
      * @param client {@link OkHttpClient}
      * @return Res {@link ReqBuilder}
      */
-    public CompletableFuture<Res> okAsync(final OkHttpClient client) {
+    public CompletableFuture<Res> okAsync(OkHttpClient client) {
         before();
         return OK.okAsync(this, client);
     }
@@ -248,7 +248,7 @@ public final class ReqBuilder {
             //form_urlencoded 格式提交
             else if (isFormUrl()) {
 
-                final FormBody.Builder formBuilder = new FormBody.Builder(charset());
+                FormBody.Builder formBuilder = new FormBody.Builder(charset());
 
                 ofNullable(formMap).ifPresent(ignore -> form().forEach(formBuilder::addEncoded));
 
@@ -275,7 +275,7 @@ public final class ReqBuilder {
      * @param timeout 超时时间
      * @return ReqBuilder {@link ReqBuilder}
      */
-    public ReqBuilder timeout(final Duration timeout) {
+    public ReqBuilder timeout(Duration timeout) {
         return timeout(timeout, timeout, timeout);
     }
 
@@ -287,7 +287,7 @@ public final class ReqBuilder {
      * @param read    读取超时时间
      * @return ReqBuilder {@link ReqBuilder}
      */
-    public ReqBuilder timeout(final Duration connect, final Duration write, final Duration read) {
+    public ReqBuilder timeout(Duration connect, Duration write, final Duration read) {
         notNull(connect, "connect must not be null");
         notNull(write, "write must not be null");
         notNull(read, "read must not be null");

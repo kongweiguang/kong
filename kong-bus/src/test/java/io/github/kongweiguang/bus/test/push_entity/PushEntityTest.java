@@ -11,7 +11,7 @@ public class PushEntityTest {
 
     @Test
     void test1() throws Exception {
-        final User user = new User(99, "kpp", new String[]{"1", "2"});
+        User user = new User(99, "kpp", new String[]{"1", "2"});
 
         hub().pull(User.class, h -> {
             System.out.println(h);

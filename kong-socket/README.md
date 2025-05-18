@@ -10,7 +10,7 @@
 		<img src="https://img.shields.io/:license-Apache2-blue.svg" alt="Apache 2" />
 	</a>
     <a target="_blank" href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">
-		<img src="https://img.shields.io/badge/JDK-8+-green.svg" alt="jdk-8+" />
+		<img src="https://img.shields.io/badge/JDK-21-green.svg" alt="jdk-21" />
 	</a>
     <br />
 </p>
@@ -59,12 +59,79 @@ implementation("io.github.kongweiguang:kong-socket:0.5")
 
 # 快速开始
 
-## 创建简单的HTTP服务器
+## server
 
 ```java
-// 创建并启动一个HTTP服务器
-new NioServer()
-    .setRequestHandler(new DefaultRequestHandler("Hello World!"))
-    .bind(8080);
+/**
+ * NIO服务器示例类
+ * 展示如何使用NioServer工具类创建和配置NIO服务器
+ */
+public class ServerTest {
 
-System.out.println("HTTP服务器已启动，监听端口: 8080");
+    public static void main(String[] args) {
+        // 创建自定义配置
+        NioServerConfig config = NioServerConfig.of()
+                .bossThreads(1)
+                .workerThreads(4)
+                .bufferSize(8192);
+
+        // 创建服务器实例
+        NioServer.of(config)
+//                .socketHandler(new DefaultRequestHandler())
+                .socketHandler(new EchoSocketHandler())
+                .bind(8888)
+                .bind("localhost", 8887);
+
+        System.out.println("服务器已启动，监听端口: 8888, 8887");
+        LockSupport.park();
+    }
+
+}
+```
+
+## client
+
+```java
+
+/**
+ * NIO客户端示例类
+ * 展示如何使用NioClient工具类创建和配置NIO客户端
+ */
+public class ClientTest {
+
+    public static void main(String[] args) {
+        // 创建客户端实例并连接
+        NioClient client = NioClient.of(c -> c.bufferSize(100))
+                .socketHandler((response, channel) -> {
+                    //打印响应
+                    byte[] data = new byte[response.remaining()];
+                    response.get(data);
+                    System.out.println("收到响应: " + new String(data, StandardCharsets.UTF_8));
+                    return null;
+                })
+                .connect("localhost", 8888);
+
+        System.out.println("客户端已启动，连接到服务器: localhost:8888");
+
+
+        // 等待连接建立
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("请输入要发送的消息:");
+        while (scanner.hasNextLine()) {
+            String request = scanner.nextLine();
+            if (request != null && !request.trim().isEmpty()) {
+                System.out.println("request = " + request);
+                client.send(request);
+            }
+        }
+    }
+
+}
+```

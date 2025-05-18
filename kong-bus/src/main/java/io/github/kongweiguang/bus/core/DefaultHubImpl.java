@@ -23,12 +23,12 @@ import static io.github.kongweiguang.core.lang.Strs.isEmpty;
 public class DefaultHubImpl<C, R> extends AbstractHubImpl<C, R> {
 
     @Override
-    public Hub<C, R> pullClass(final Object obj) {
+    public Hub<C, R> pullClass(Object obj) {
         return exc(Type.pull, obj);
     }
 
     @Override
-    public Hub<C, R> removeClass(final Object obj) {
+    public Hub<C, R> removeClass(Object obj) {
         return exc(Type.remove, obj);
     }
 
@@ -37,7 +37,7 @@ public class DefaultHubImpl<C, R> extends AbstractHubImpl<C, R> {
         remove
     }
 
-    private Hub<C, R> exc(final Type type, final Object obj) {
+    private Hub<C, R> exc(Type type, Object obj) {
         notNull(obj, "class must not be null");
 
         for (Method m : obj.getClass().getDeclaredMethods()) {
@@ -47,7 +47,7 @@ public class DefaultHubImpl<C, R> extends AbstractHubImpl<C, R> {
         return this;
     }
 
-    private static void bind(final Type type, final Object obj, final Method m) {
+    private static void bind(Type type, Object obj, Method m) {
         Pull pull = m.getAnnotation(Pull.class);
 
         if (pull != null) {
@@ -59,8 +59,8 @@ public class DefaultHubImpl<C, R> extends AbstractHubImpl<C, R> {
 
             m.setAccessible(true);
 
-            final Hub<?, ?> condition = trueSupF1(isEmpty(pull.hub()), Bus::hub, () -> hub(pull.name()));
-            final String branch = branch(m, pull, params);
+            Hub<?, ?> condition = trueSupF1(isEmpty(pull.hub()), Bus::hub, () -> hub(pull.name()));
+            String branch = branch(m, pull, params);
 
             switch (type) {
                 case pull: {
@@ -76,14 +76,14 @@ public class DefaultHubImpl<C, R> extends AbstractHubImpl<C, R> {
         }
     }
 
-    private static String branch(final Method m, final Pull pull, final Class<?>[] params) {
+    private static String branch(Method m, Pull pull, Class<?>[] params) {
         String branch;
 
         if (pull.value().isEmpty()) {
 
             if (Oper.class.isAssignableFrom(params[0])) {
 
-                final List<String> generics = generics(m);
+                List<String> generics = generics(m);
 
                 isTrue(!generics.isEmpty(), "action generics must not be null");
 
@@ -100,7 +100,7 @@ public class DefaultHubImpl<C, R> extends AbstractHubImpl<C, R> {
     }
 
     @SuppressWarnings("unchecked")
-    private static <C, R> Merge<Oper<C, R>> mr(final Object obj, final Method m, final Class<?>[] params, final String name) {
+    private static <C, R> Merge<Oper<C, R>> mr(Object obj, Method m, Class<?>[] params, String name) {
         return new Merge<Oper<C, R>>() {
             @Override
             public String name() {
@@ -108,8 +108,8 @@ public class DefaultHubImpl<C, R> extends AbstractHubImpl<C, R> {
             }
 
             @Override
-            public void mr(final Oper<C, R> oper) throws Exception {
-                final Object[] args = new Object[params.length];
+            public void mr(Oper<C, R> oper) throws Exception {
+                Object[] args = new Object[params.length];
 
                 if (params.length == 1) {
 
@@ -121,7 +121,7 @@ public class DefaultHubImpl<C, R> extends AbstractHubImpl<C, R> {
 
                 }
 
-                final Object fr = m.invoke(obj, args);
+                Object fr = m.invoke(obj, args);
 
                 if (oper.hasCallBack()) {
                     oper.res((R) fr);

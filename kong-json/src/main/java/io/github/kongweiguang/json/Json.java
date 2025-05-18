@@ -27,7 +27,7 @@ import static java.util.TimeZone.getTimeZone;
  *
  * @author kongweiguang
  */
-public final class Json {
+public class Json {
 
     private static JsonMapper mapper = JsonMapper.builder()
             //忽略在json字符串中存在，但是在java对象中不存在对应属性的情况
@@ -60,7 +60,7 @@ public final class Json {
      *
      * @param jsonMapper jsonMapper
      */
-    public static void mapper(final JsonMapper jsonMapper) {
+    public static void mapper(JsonMapper jsonMapper) {
         Json.mapper = jsonMapper;
     }
 
@@ -79,7 +79,7 @@ public final class Json {
      * @param obj 要转换的对象
      * @return json字符串
      */
-    public static <T> String toStr(final T obj) {
+    public static <T> String toStr(T obj) {
         return toStr(obj, false);
     }
 
@@ -90,7 +90,7 @@ public final class Json {
      * @param format 是否格式化json
      * @return json字符串
      */
-    public static <T> String toStr(final T obj, final boolean format) {
+    public static <T> String toStr(T obj, boolean format) {
         try {
             if (isNull(obj)) {
                 return null;
@@ -122,7 +122,7 @@ public final class Json {
      * @return 对象
      */
     @SuppressWarnings("all")
-    public static <T> T toObj(final Object json, final Class<T> clazz) {
+    public static <T> T toObj(Object json, Class<T> clazz) {
         if (isNull(clazz)) {
             return null;
         }
@@ -153,7 +153,7 @@ public final class Json {
      * @param json          json字符串
      * @param typeReference 目标对象类型
      */
-    public static <T> T toObj(final Object json, final TypeReference<T> typeReference) {
+    public static <T> T toObj(Object json, TypeReference<T> typeReference) {
         if (isNull(typeReference)) {
             return null;
         }
@@ -181,7 +181,7 @@ public final class Json {
      * @param javaType 目标对象类型
      * @return 对象
      */
-    public static <T> T toObj(final Object json, final JavaType javaType) {
+    public static <T> T toObj(Object json, JavaType javaType) {
         if (isNull(javaType)) {
             return null;
         }
@@ -206,7 +206,7 @@ public final class Json {
      * @param obj 对象
      * @return jsonNode
      */
-    public static JsonNode toNode(final Object obj) {
+    public static JsonNode toNode(Object obj) {
         if (isNull(obj)) {
             return null;
         }
@@ -245,7 +245,7 @@ public final class Json {
      * @param <V> 值的类型
      * @return map
      */
-    public static <K, V> Map<K, V> toMap(final Object obj, final Class<K> k, final Class<V> v) {
+    public static <K, V> Map<K, V> toMap(Object obj, Class<K> k, Class<V> v) {
         if (isNull(obj)) {
             return null;
         }
@@ -266,7 +266,7 @@ public final class Json {
      * @param <V>           值的类型
      * @return 对象
      */
-    public static <K, V> Map<K, V> toMap(final Object obj, TypeReference<Map<K, V>> typeReference) {
+    public static <K, V> Map<K, V> toMap(Object obj, TypeReference<Map<K, V>> typeReference) {
         if (isNull(obj)) {
             return null;
         }
@@ -287,7 +287,7 @@ public final class Json {
      * @param <T>   元素类型
      * @return 对象
      */
-    public static <T> List<T> toList(final Object obj, final Class<T> clazz) {
+    public static <T> List<T> toList(Object obj, Class<T> clazz) {
         if (isNull(obj)) {
             return null;
         }
@@ -307,7 +307,7 @@ public final class Json {
      * @param <T>     元素类型
      * @return 对象
      */
-    public static <T> List<T> toList(final Object obj, final TypeReference<List<T>> typeRef) {
+    public static <T> List<T> toList(Object obj, TypeReference<List<T>> typeRef) {
         if (isNull(obj)) {
             return null;
         }

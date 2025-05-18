@@ -12,7 +12,7 @@ public class Threads {
      *
      * @param millis 睡眠时间 单位毫秒
      */
-    public static void sleep(final long millis) {
+    public static void sleep(long millis) {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException ignored) {
@@ -27,7 +27,7 @@ public class Threads {
      */
 
     @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
-    public static void sync(final Object obj) {
+    public static void sync(Object obj) {
         synchronized (obj) {
             try {
                 obj.wait();

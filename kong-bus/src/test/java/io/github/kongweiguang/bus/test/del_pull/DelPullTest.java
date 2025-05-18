@@ -20,7 +20,7 @@ public class DelPullTest {
             }
 
             @Override
-            public void mr(final Oper<Object, Object> a) throws Exception {
+            public void mr(Oper<Object, Object> a) throws Exception {
                 System.out.println(a);
             }
         });

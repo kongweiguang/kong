@@ -19,7 +19,6 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class SelectorThread extends ThreadLocal<LinkedBlockingQueue<Channel>> implements Runnable, AutoCloseable {
 
-
     private static final Logger log = LoggerFactory.getLogger(SelectorThread.class);
     // 选择器实例
     private final Selector selector;
@@ -42,7 +41,7 @@ public class SelectorThread extends ThreadLocal<LinkedBlockingQueue<Channel>> im
             this.selector = Selector.open();
 
             if (!running) {
-                this.running= true;
+                this.running = true;
             }
         } catch (IOException e) {
             throw new RuntimeException("create selector fail ", e);

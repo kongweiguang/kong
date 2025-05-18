@@ -1,7 +1,8 @@
 package io.github.kongweiguang.socket.nio.client;
 
-import io.github.kongweiguang.core.threads.ThreadPools;
 import io.github.kongweiguang.core.lang.IOs;
+import io.github.kongweiguang.core.threads.ThreadPools;
+import io.github.kongweiguang.socket.nio.common.SocketHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +28,7 @@ public class NioClient implements AutoCloseable {
     private final NioClientConfig config;
 
     //客户端Socket处理器
-    private ClientSocketHandler socketHandler;
+    private SocketHandler socketHandler;
 
     //选择器
     private final Selector selector;
@@ -88,7 +89,7 @@ public class NioClient implements AutoCloseable {
      * @param socketHandler 处理器
      * @return 客户端实例
      */
-    public NioClient socketHandler(ClientSocketHandler socketHandler) {
+    public NioClient socketHandler(SocketHandler socketHandler) {
         this.socketHandler = socketHandler;
         return this;
     }
@@ -143,7 +144,7 @@ public class NioClient implements AutoCloseable {
      * @param msg 请求字符串
      * @return 异步响应结果
      */
-    public NioClient send(final String msg) {
+    public NioClient send(String msg) {
         return send(ByteBuffer.wrap(msg.getBytes()));
     }
 
@@ -179,7 +180,7 @@ public class NioClient implements AutoCloseable {
      * @param key 选择键
      * @throws IOException IO异常
      */
-    private void handleRead(final SelectionKey key) throws IOException {
+    private void handleRead(SelectionKey key) throws IOException {
         SocketChannel channel = (SocketChannel) key.channel();
         ByteBuffer buffer = ByteBuffer.allocate(config.bufferSize());
 

@@ -1,5 +1,7 @@
 package io.github.kongweiguang.socket.nio.server;
 
+import io.github.kongweiguang.socket.nio.common.SocketHandler;
+
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
@@ -9,13 +11,10 @@ import java.nio.channels.SocketChannel;
  *
  * @author kongweiguang
  */
-public class EchoSocketHandler implements ServerSocketHandler {
+public class EchoSocketHandler implements SocketHandler {
 
     @Override
     public ByteBuffer handler(ByteBuffer buffer, SocketChannel channel) {
-        ByteBuffer response = ByteBuffer.allocate(buffer.remaining());
-        response.put(buffer);
-        response.flip();
-        return response;
+        return buffer;
     }
 }

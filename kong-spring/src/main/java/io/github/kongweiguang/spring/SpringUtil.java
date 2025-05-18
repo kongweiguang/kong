@@ -17,7 +17,7 @@ public class SpringUtil implements ApplicationContextAware {
     private static ApplicationContext context;
 
     @Override
-    public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         context(applicationContext);
     }
 
@@ -46,7 +46,7 @@ public class SpringUtil implements ApplicationContextAware {
      * @param <T>
      * @return bean
      */
-    public static <T> T getBean(final Class<T> clazz) {
+    public static <T> T getBean(Class<T> clazz) {
         return ofNullable(context()).map(c -> c.getBean(clazz)).orElse(null);
     }
 
@@ -58,7 +58,7 @@ public class SpringUtil implements ApplicationContextAware {
      * @param <T>
      * @return
      */
-    public static <T> T getBean(final String name, final Class<T> clazz) {
+    public static <T> T getBean(String name, Class<T> clazz) {
         return ofNullable(context()).map(c -> c.getBean(name, clazz)).orElse(null);
     }
 
@@ -69,7 +69,7 @@ public class SpringUtil implements ApplicationContextAware {
      * @param <T>
      * @return bean
      */
-    public static <T> T getBean(final String name) {
+    public static <T> T getBean(String name) {
         return (T) ofNullable(context()).map(c -> c.getBean(name)).orElse(null);
     }
 
@@ -79,7 +79,7 @@ public class SpringUtil implements ApplicationContextAware {
      * @return 环境
      */
     public static String env() {
-        final String[] envs = envs();
+        String[] envs = envs();
 
         return nonNull(envs) ? envs[0] : null;
     }
@@ -108,7 +108,7 @@ public class SpringUtil implements ApplicationContextAware {
      * @param name
      * @return
      */
-    public static String getProperty(final String name) {
+    public static String getProperty(String name) {
         return ofNullable(context()).map(c -> c.getEnvironment()).map(e -> e.getProperty(name)).orElse(null);
     }
 
@@ -117,7 +117,7 @@ public class SpringUtil implements ApplicationContextAware {
      *
      * @param evnet 事件对象
      */
-    public static void publish(final Object evnet) {
+    public static void publish(Object evnet) {
         ofNullable(context()).ifPresent(c -> c.publishEvent(evnet));
     }
 

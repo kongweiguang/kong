@@ -27,13 +27,13 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
  *
  * @author kongweiguang
  */
-public final class OK {
+public class OK {
     private final OkHttpClient client;
     private final ReqBuilder reqBuilder;
     private boolean async;
     private final boolean retry;
 
-    private OK(final ReqBuilder reqBuilder, final OkHttpClient client, final boolean async) {
+    private OK(ReqBuilder reqBuilder, OkHttpClient client, boolean async) {
         this.client = client;
         this.reqBuilder = reqBuilder;
         this.async = async;
@@ -49,7 +49,7 @@ public final class OK {
      * @param client     OkHttpClient {@link OkHttpClient}
      * @return Res {@link Res}
      */
-    public static Res ok(final ReqBuilder reqBuilder, final OkHttpClient client) {
+    public static Res ok(ReqBuilder reqBuilder, OkHttpClient client) {
         return new OK(reqBuilder, client, false).ojbk().join();
     }
 
@@ -61,7 +61,7 @@ public final class OK {
      * @param client     OkHttpClient {@link OkHttpClient}
      * @return Res {@link Res}
      */
-    public static CompletableFuture<Res> okAsync(final ReqBuilder reqBuilder, final OkHttpClient client) {
+    public static CompletableFuture<Res> okAsync(ReqBuilder reqBuilder, OkHttpClient client) {
         return new OK(reqBuilder, client, true).ojbk();
     }
 
@@ -94,7 +94,7 @@ public final class OK {
      * @param max 重试次数
      * @return 响应结果
      */
-    private CompletableFuture<Res> http0(final AtomicInteger max) {
+    private CompletableFuture<Res> http0(AtomicInteger max) {
 
         if (async()) {
             return supplyAsync(this::execute, exec())
@@ -114,7 +114,7 @@ public final class OK {
      * @param throwable 异常
      * @return 结果对象
      */
-    private Res syncHandle(final AtomicInteger max, final Res r, final Throwable throwable) {
+    private Res syncHandle(AtomicInteger max, final Res r, final Throwable throwable) {
         if (handleRetry(max, r, throwable)) {
             return http0(max).join();
         }

@@ -22,7 +22,7 @@ public abstract class AbstractHubImpl<C, R> implements Hub<C, R> {
     private final Map<String, List<MergeWarp<C, R>>> repo = new ConcurrentHashMap<>();
 
     @Override
-    public Hub<C, R> push(final Oper<C, R> oper, final Consumer<R> call) {
+    public Hub<C, R> push(Oper<C, R> oper, Consumer<R> call) {
         notNull(oper, "action must not be null");
 
         oper.callback(call);
@@ -33,11 +33,11 @@ public abstract class AbstractHubImpl<C, R> implements Hub<C, R> {
     }
 
     @Override
-    public Hub<C, R> pull(final String branch, final int index, final Merge<Oper<C, R>> merge) {
+    public Hub<C, R> pull(String branch, int index, Merge<Oper<C, R>> merge) {
         notNull(branch, "branch must not be null");
         notNull(merge, "merge must not be null");
 
-        final List<MergeWarp<C, R>> merges = repo.computeIfAbsent(branch, k -> new CopyOnWriteArrayList<>());
+        List<MergeWarp<C, R>> merges = repo.computeIfAbsent(branch, k -> new CopyOnWriteArrayList<>());
 
         merges.add(new MergeWarp<>(index, merge));
 
@@ -49,7 +49,7 @@ public abstract class AbstractHubImpl<C, R> implements Hub<C, R> {
     }
 
     @Override
-    public Hub<C, R> remove(final String branch, final String name) {
+    public Hub<C, R> remove(String branch, String name) {
         notNull(branch, "branch must not be null");
         notNull(name, "name must not be null");
 

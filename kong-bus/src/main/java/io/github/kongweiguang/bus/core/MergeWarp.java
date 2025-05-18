@@ -6,11 +6,11 @@ package io.github.kongweiguang.bus.core;
  * @param <C> 操作内容类型
  * @param <R> 返回结果类型
  */
-final class MergeWarp<C, R> {
+class MergeWarp<C, R> {
     private final int index;
     private final Merge<Oper<C, R>> merge;
 
-    public MergeWarp(final int index, final Merge<Oper<C, R>> merge) {
+    public MergeWarp(int index, Merge<Oper<C, R>> merge) {
         this.index = index;
         this.merge = merge;
     }
@@ -38,7 +38,7 @@ final class MergeWarp<C, R> {
      *
      * @param oper 操作
      */
-    void merge(final Oper<C, R> oper) {
+    void merge(Oper<C, R> oper) {
         try {
             merge.mr(oper);
         } catch (Exception e) {

@@ -33,12 +33,12 @@ public class StrsTest {
         }
         String fmt1 = "this is {} for {}this is {} for {}this is {} for {}this is {} for {}this is {} for {}this is {} for {}this is {} for {}this is {} for {}this is {} for {}this is {} for {}this is {} for {}";
 
-        final long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
         for (int i = 0; i < 100_000_000; i++) {
             Strs.fmt(fmt1, "a", "b", "a", "b", "a", "b", "a", "b", "a", "b", "a", "b", "a", "b", "a", "b", "a", "b", "a", "b", "a", "b");
         }
 
-        final long end = System.currentTimeMillis();
+        long end = System.currentTimeMillis();
         System.out.println("use time -> " + (end - start) + "ms");
     }
 
@@ -52,14 +52,14 @@ public class StrsTest {
         map.put("name", "Alice");
         map.put("age", "30");
         String template2 = "User {name} is {age} years old \\{meta\\}  \\123 {demo} User {name} is {age} years old \\{meta\\}  \\123 {demo} User {name} is {age} years old \\{meta\\}  \\123 {demo} User {name} is {age} years old \\{meta\\}  \\123 {demo} User {name} is {age} years old \\{meta\\}  \\123 {demo} User {name} is {age} years old \\{meta\\}  \\123 {demo} ";
-        final long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
 
 
         for (int i = 0; i < 100_000_000; i++) {
             Strs.fmt(template2, map);
         }
 
-        final long end = System.currentTimeMillis();
+        long end = System.currentTimeMillis();
         System.out.println("use time -> " + (end - start) + "ms");
     }
 }

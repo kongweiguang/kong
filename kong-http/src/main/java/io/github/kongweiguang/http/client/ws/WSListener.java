@@ -20,31 +20,31 @@ public abstract class WSListener extends WebSocketListener {
     private WebSocket ws;
 
     @Override
-    public void onOpen(final WebSocket webSocket, final Response response) {
+    public void onOpen(WebSocket webSocket, Response response) {
         this.ws = webSocket;
         open(webSocket.request().tag(ReqBuilder.class), Res.of(response));
     }
 
     @Override
-    public void onMessage(final WebSocket webSocket, final String text) {
+    public void onMessage(WebSocket webSocket, String text) {
         this.ws = webSocket;
         msg(webSocket.request().tag(ReqBuilder.class), text);
     }
 
     @Override
-    public void onMessage(final WebSocket webSocket, final ByteString bytes) {
+    public void onMessage(WebSocket webSocket, ByteString bytes) {
         this.ws = webSocket;
         msg(webSocket.request().tag(ReqBuilder.class), bytes.toByteArray());
     }
 
     @Override
-    public void onFailure(final WebSocket webSocket, final Throwable t, final Response response) {
+    public void onFailure(WebSocket webSocket, Throwable t, Response response) {
         this.ws = webSocket;
         fail(webSocket.request().tag(ReqBuilder.class), Res.of(response), t);
     }
 
     @Override
-    public void onClosing(final WebSocket webSocket, final int code, final String reason) {
+    public void onClosing(WebSocket webSocket, int code, String reason) {
         this.ws = webSocket;
         closing(webSocket.request().tag(ReqBuilder.class), code, reason);
     }

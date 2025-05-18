@@ -2,6 +2,7 @@ package io.github.kongweiguang.core.retry;
 
 
 import io.github.kongweiguang.core.lang.Assert;
+import io.github.kongweiguang.core.lang.Pair;
 import io.github.kongweiguang.core.threads.Threads;
 
 import java.time.Duration;
@@ -32,7 +33,7 @@ public class RetryableTask<T> {
      * @return 当前对象
      */
     @SafeVarargs
-    public static <T> RetryableTask<T> retryForExceptions(final Runnable run, final Class<? extends Throwable>... ths) {
+    public static <T> RetryableTask<T> retryForExceptions(Runnable run, Class<? extends Throwable>... ths) {
         return retryForExceptions(() -> {
             run.run();
             return null;
@@ -48,14 +49,15 @@ public class RetryableTask<T> {
      * @return 当前对象
      */
     @SafeVarargs
-    public static <T> RetryableTask<T> retryForExceptions(final Supplier<T> sup, final Class<? extends Throwable>... ths) {
+    public static <T> RetryableTask<T> retryForExceptions(Supplier<T> sup, Class<? extends Throwable>... ths) {
         Assert.isTrue(ths.length != 0, "exs cannot be empty");
 
-        final BiPredicate<T, Throwable> strategy = (t, e) -> {
+        RetryPre<T> strategy = (t, e) -> {
             if (nonNull(e)) {
-                return Arrays.stream(ths).anyMatch(ex -> ex.isAssignableFrom(e.getClass()));
+                boolean bool = Arrays.stream(ths).anyMatch(ex -> ex.isAssignableFrom(e.getClass()));
+                return Pair.of(bool, t);
             }
-            return false;
+            return Pair.of(false, t);
         };
 
         return new RetryableTask<>(sup, strategy);
@@ -69,7 +71,7 @@ public class RetryableTask<T> {
      * @param predicate 策略 {@link BiPredicate}，返回{@code true}时表示重试
      * @return 当前对象
      */
-    public static <T> RetryableTask<T> retryForPredicate(final Runnable run, final BiPredicate<T, Throwable> predicate) {
+    public static <T> RetryableTask<T> retryForPredicate(Runnable run, RetryPre<T> predicate) {
         return retryForPredicate(() -> {
             run.run();
             return null;
@@ -84,7 +86,7 @@ public class RetryableTask<T> {
      * @param predicate 策略 {@link BiPredicate}，返回{@code true}时表示重试
      * @return 当前对象
      */
-    public static <T> RetryableTask<T> retryForPredicate(final Supplier<T> sup, final BiPredicate<T, Throwable> predicate) {
+    public static <T> RetryableTask<T> retryForPredicate(Supplier<T> sup, RetryPre<T> predicate) {
         return new RetryableTask<>(sup, predicate);
     }
     // endregion
@@ -100,7 +102,7 @@ public class RetryableTask<T> {
     /**
      * 重试策略
      */
-    private final BiPredicate<T, Throwable> predicate;
+    private final RetryPre<T> predicate;
     /**
      * 重试次数，默认3次
      */
@@ -120,7 +122,7 @@ public class RetryableTask<T> {
      * @param sup       执行的方法
      * @param predicate 策略 {@link BiPredicate}，返回{@code true}时表示重试
      */
-    private RetryableTask(final Supplier<T> sup, final BiPredicate<T, Throwable> predicate) {
+    private RetryableTask(Supplier<T> sup, RetryPre<T> predicate) {
         Assert.notNull(sup, "task parameter cannot be null");
         Assert.notNull(predicate, "predicate parameter cannot be null");
 
@@ -134,8 +136,8 @@ public class RetryableTask<T> {
      * @param maxAttempts 次数
      * @return 当前对象
      */
-    public RetryableTask<T> maxAttempts(final long maxAttempts) {
-        Assert.isTrue(this.maxAttempts > 0, "maxAttempts must be greater than 0");
+    public RetryableTask<T> maxAttempts(long maxAttempts) {
+        Assert.isTrue(maxAttempts > 0, "maxAttempts must be greater than 0");
 
         this.maxAttempts = maxAttempts;
         return this;
@@ -147,8 +149,8 @@ public class RetryableTask<T> {
      * @param delay 间隔时间
      * @return 当前对象
      */
-    public RetryableTask<T> delay(final Duration delay) {
-        Assert.notNull(this.delay, "delay parameter cannot be null");
+    public RetryableTask<T> delay(Duration delay) {
+        Assert.notNull(delay, "delay parameter cannot be null");
 
         this.delay = delay;
         return this;
@@ -160,7 +162,7 @@ public class RetryableTask<T> {
      * @return 返回包装了结果的 {@link Optional}对象
      */
     public Optional<T> get() {
-        return Optional.ofNullable(this.result);
+        return Optional.ofNullable(result);
     }
 
     /**
@@ -170,7 +172,7 @@ public class RetryableTask<T> {
      * @throws Throwable 获取结果时, 如果无法获取结果, 则抛出最后一次执行时的异常
      */
     public T orElseThrow() throws Throwable {
-        return Optional.ofNullable(this.result).orElseThrow(() -> this.throwable().orElse(new RuntimeException()));
+        return Optional.ofNullable(result).orElseThrow(() -> throwable().orElse(new RuntimeException()));
     }
 
     /**
@@ -179,7 +181,7 @@ public class RetryableTask<T> {
      * @return 返回包装了异常的 {@link Optional}对象
      */
     public Optional<Throwable> throwable() {
-        return Optional.ofNullable(this.throwable);
+        return Optional.ofNullable(throwable);
     }
 
     /**
@@ -210,13 +212,15 @@ public class RetryableTask<T> {
 
         while (--this.maxAttempts >= 0) {
             try {
-                this.result = this.sup.get();
-            } catch (final Throwable t) {
+                this.result = sup.get();
+            } catch (Throwable t) {
                 th = t;
             }
 
             //判断重试
-            if (!this.predicate.test(this.result, th)) {
+            Pair<Boolean, T> test = predicate.test(result, th);
+            if (!test.k()) {
+                this.result = test.v();
                 // 条件不满足时，跳出
                 break;
             }

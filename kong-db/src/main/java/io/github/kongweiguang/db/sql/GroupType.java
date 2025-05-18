@@ -1,5 +1,9 @@
 package io.github.kongweiguang.db.sql;
 
+/**
+ * 分组的类型
+ * author: kongweiguang
+ */
 public enum GroupType {
     AND,
     OR,

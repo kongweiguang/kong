@@ -5,7 +5,7 @@ package io.github.kongweiguang.http.client.sse;
  *
  * @author kongweiguang
  */
-public final class SseEvent {
+public class SseEvent {
 
     private final StringBuilder sb = new StringBuilder();
 
@@ -22,7 +22,7 @@ public final class SseEvent {
     /**
      * 添加 SSE "id" 行.
      */
-    public SseEvent id(final String id) {
+    public SseEvent id(String id) {
         this.id = id;
         append("id:").append(this.id).append("\n");
         return this;
@@ -31,7 +31,7 @@ public final class SseEvent {
     /**
      * 添加 SSE "event" 行.
      */
-    public SseEvent type(final String type) {
+    public SseEvent type(String type) {
         this.type = type;
         append("event:").append(this.type).append("\n");
         return this;
@@ -40,7 +40,7 @@ public final class SseEvent {
     /**
      * 添加 SSE "retry" 行.
      */
-    public SseEvent reconnectTime(final long reconnectTimeMillis) {
+    public SseEvent reconnectTime(long reconnectTimeMillis) {
         this.retry = String.valueOf(reconnectTimeMillis);
         append("retry:").append(this.retry).append("\n");
         return this;
@@ -49,13 +49,13 @@ public final class SseEvent {
     /**
      * 添加 SSE "data" 行.
      */
-    public SseEvent data(final String data) {
+    public SseEvent data(String data) {
         this.data = data;
         append("data:").append(this.data).append("\n");
         return this;
     }
 
-    private SseEvent append(final String text) {
+    private SseEvent append(String text) {
         this.sb.append(text);
         return this;
     }

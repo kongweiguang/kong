@@ -14,17 +14,12 @@ import java.util.List;
  * @author kongweiguang
  */
 public class Sql {
-    private final StringBuilder sql = new StringBuilder();
+    private final StringBuilder sql;
     private final List<Object> paramsList = new ArrayList<>();
     private boolean insertFlag = false;
 
-    /**
-     * 创建Sql对象
-     *
-     * @return Sql对象
-     */
-    public static Sql of() {
-        return new Sql();
+    private Sql(StringBuilder sql) {
+        this.sql = sql;
     }
 
     /**
@@ -33,7 +28,8 @@ public class Sql {
      * @param columns 列名
      * @return Sql对象
      */
-    public Sql select(String... columns) {
+    public static Sql select(String... columns) {
+        StringBuilder sql = new StringBuilder();
         sql.append("SELECT ");
         StringBuilder sb = new StringBuilder();
         for (String c : columns) {
@@ -41,7 +37,7 @@ public class Sql {
         }
         sb.deleteCharAt(sb.length() - 1);
         sql.append(sb).append(" ");
-        return this;
+        return new Sql(sql);
     }
 
     /**
@@ -73,7 +69,7 @@ public class Sql {
      * @return Sql对象
      */
     public Sql leftJoin(String table) {
-        sql.append("INNER JOIN ").append(table).append(" ");
+        sql.append("LEFT JOIN ").append(table).append(" ");
         return this;
     }
 
@@ -84,7 +80,7 @@ public class Sql {
      * @return Sql对象
      */
     public Sql rightJoin(String table) {
-        sql.append("INNER JOIN ").append(table).append(" ");
+        sql.append("RIGHT JOIN ").append(table).append(" ");
         return this;
     }
 
@@ -95,7 +91,7 @@ public class Sql {
      * @return Sql对象
      */
     public Sql fullJoin(String table) {
-        sql.append("INNER JOIN ").append(table).append(" ");
+        sql.append("FULL JOIN ").append(table).append(" ");
         return this;
     }
 
@@ -254,6 +250,37 @@ public class Sql {
     }
 
     /**
+     * 分页
+     *
+     * @param limit 条数
+     * @return Sql对象
+     */
+    public Sql limit(int limit) {
+        sql.append("LIMIT ").append(limit).append(" ");
+        return this;
+    }
+
+    /**
+     * 连接两个sql
+     *
+     * @return Sql对象
+     */
+    public Sql union() {
+        sql.append("UNION ");
+        return this;
+    }
+
+    /**
+     * 连接两个sql
+     *
+     * @return Sql对象
+     */
+    public Sql unionAll() {
+        sql.append("UNION ALL ");
+        return this;
+    }
+
+    /**
      * 首行
      *
      * @param str 字段
@@ -283,9 +310,10 @@ public class Sql {
      * @param table 表名
      * @return Sql对象
      */
-    public Sql update(String table) {
+    public static Sql update(String table) {
+        StringBuilder sql = new StringBuilder();
         sql.append("UPDATE ").append(table).append(" ").append("SET ");
-        return this;
+        return new Sql(sql);
     }
 
     /**
@@ -323,9 +351,10 @@ public class Sql {
      * @param table 表名
      * @return Sql对象
      */
-    public Sql insert(String table) {
+    public static Sql insert(String table) {
+        StringBuilder sql = new StringBuilder();
         sql.append("INSERT  INTO ").append(table).append(" ");
-        return this;
+        return new Sql(sql);
     }
 
     /**
@@ -387,9 +416,10 @@ public class Sql {
      * @param table 表名
      * @return Sql对象
      */
-    public Sql deleteFrom(String table) {
+    public static Sql deleteFrom(String table) {
+        StringBuilder sql = new StringBuilder();
         sql.append("DELETE FROM ").append(table).append(" ");
-        return this;
+        return new Sql(sql);
     }
 
     // 生成最终 SQL

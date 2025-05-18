@@ -14,7 +14,7 @@ public class GenericsTest {
     void test() throws Exception {
         //拉取消息
         Bus.<User, List<String>>hub().pull(branch, h -> {
-            final User user = h.content();
+            User user = h.content();
             System.out.println("user = " + user);
             h.res(Collections.singletonList(user.hobby()[0]));
         });

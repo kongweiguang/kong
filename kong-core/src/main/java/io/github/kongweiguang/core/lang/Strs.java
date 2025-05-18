@@ -17,7 +17,7 @@ public class Strs {
      * @param str 字符串
      * @return 是否为空
      */
-    public static boolean isEmpty(final String str) {
+    public static boolean isEmpty(String str) {
         if (isNull(str)) {
             return true;
         }
@@ -32,7 +32,7 @@ public class Strs {
      * @param d   默认值
      * @return 字符串
      */
-    public static String defaultIfEmpty(final String str, final String d) {
+    public static String defaultIfEmpty(String str, String d) {
         if (isEmpty(str)) {
             return d;
         }
@@ -96,13 +96,13 @@ public class Strs {
      * @param args 参数列表
      * @return 格式化后的字符串
      */
-    public static String fmt(final String str, final Object... args) {
+    public static String fmt(String str, Object... args) {
         if (str == null || args == null || args.length == 0) {
             return str;
         }
 
-        final char[] chars = str.toCharArray();
-        final int len = chars.length;
+        char[] chars = str.toCharArray();
+        int len = chars.length;
         StringBuilder sb = new StringBuilder(len * 2);
         int argIndex = 0;
 
@@ -151,7 +151,7 @@ public class Strs {
      * @param map 参数映射
      * @return 格式化后的字符串
      */
-    public static String fmt(final String str, final Map<String, String> map) {
+    public static String fmt(String str, Map<String, String> map) {
         if (str == null || map == null) {
             return str;
         }

@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 public class PipeTest {
     @Test
     public void test1() throws Exception {
-        final BigDecimal exec = Pipe.of(new PipeHandler<String, Integer>() {
+        BigDecimal exec = Pipe.of(new PipeHandler<String, Integer>() {
                     @Override
                     public Integer handle(String input) {
                         return null;
