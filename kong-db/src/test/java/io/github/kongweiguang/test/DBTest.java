@@ -1,8 +1,8 @@
 package io.github.kongweiguang.test;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import io.github.kongweiguang.core.lang.Maps;
 import io.github.kongweiguang.core.lang.Pair;
+import io.github.kongweiguang.core.map.Maps;
 import io.github.kongweiguang.db.DB;
 import io.github.kongweiguang.db.DbRun;
 import io.github.kongweiguang.db.page.Page;
@@ -18,8 +18,8 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DBTest {
-    //    private static final DbRun run = DB.ofHikari("mysql");
-    private static final DbRun run = null;
+    private static final DbRun run = DB.ofHikari("mysql");
+//    private static final DbRun run = null;
 
     @Test
     public void test16() throws Exception {
@@ -270,10 +270,11 @@ public class DBTest {
                 .select("*")
                 .from("users")
                 .ok();
-        assertEquals("SELECT * FROM users", sr.sql());
+        assertEquals("SELECT * FROM users ", sr.sql());
 
-        PageRes<Map<String, Object>> pages = run.page(sr.sql(), Page.of(1, 1), sr.params());
-
+        PageRes<Map<String, Object>> pages = run.page(sr.sql(), Page.of(1, 5), sr.params());
+        List<User> list = pages.data().stream().map(e -> Maps.toBean(e, User.class)).toList();
+        System.out.println(list);
         System.out.println("pages = " + pages);
     }
 

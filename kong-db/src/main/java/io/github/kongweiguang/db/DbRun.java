@@ -1,10 +1,12 @@
 package io.github.kongweiguang.db;
 
 import io.github.kongweiguang.core.lang.IOs;
+import io.github.kongweiguang.db.dialect.Dialect;
 import io.github.kongweiguang.db.func.RsFn;
 import io.github.kongweiguang.db.func.SqlRun;
 import io.github.kongweiguang.db.page.Page;
 import io.github.kongweiguang.db.page.PageRes;
+import io.github.kongweiguang.db.sql.SqlRes;
 import io.github.kongweiguang.db.util.RS;
 
 import javax.sql.DataSource;
@@ -179,18 +181,12 @@ public class DbRun {
      */
     public PageRes<Map<String, Object>> page(String sql, Page page, Object... params) throws SQLException {
         long totalCount = count(sql, params);
-        String pageSql = sql + " LIMIT ? OFFSET ?";
 
-        Object[] allParams = new Object[params.length + 2];
-        System.arraycopy(params, 0, allParams, 0, params.length);
+        // 获取数据库类型并生成对应的分页SQL和参数
+        Dialect dialect = Dialect.getDatabaseDialect(con());
+        SqlRes sr = dialect.genPageSql(sql, page, params);
 
-        int limit = page.pageSize();
-        int offset = (page.pageNumber() - 1) * limit;
-
-        allParams[params.length] = limit;
-        allParams[params.length + 1] = offset;
-
-        return PageRes.of(totalCount, executeQuery(pageSql, RS::toList, allParams));
+        return PageRes.of(totalCount, executeQuery(sr.sql(), RS::toList, sr.params()));
     }
 
     /**

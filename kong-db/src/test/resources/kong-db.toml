@@ -1,5 +1,5 @@
 [mysql]
-url = "jdbc:mysql://192.168.30.100:3306/demo1?useUnicode=true&characterEncoding=utf8&useSSL=true&autoReconnect=true&reWriteBatchedInserts=true"
+url = "jdbc:mysql://192.168.30.100:3306/demo1"
 username = "demo1"
 password = "watsEpkS6P8fwcAw"
 driver = "com.mysql.cj.jdbc.Driver"

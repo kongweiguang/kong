@@ -11,7 +11,7 @@ import javax.sql.DataSource;
  * @author kongweiguang
  */
 public class DB {
-    public static final String config = "config.toml";
+    public static final String config = "kong-db.toml";
 
     /**
      * 获取数据库执行,采用默认数据源
