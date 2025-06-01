@@ -200,7 +200,7 @@ public void test8() throws Exception {
 
 ## update
 ```java
-    @Test
+@Test
 public void test12() throws Exception {
     SqlRes sr = Sql
             .update("users")

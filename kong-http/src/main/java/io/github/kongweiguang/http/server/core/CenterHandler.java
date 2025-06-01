@@ -2,14 +2,15 @@ package io.github.kongweiguang.http.server.core;
 
 import com.sun.net.httpserver.HttpExchange;
 import io.github.kongweiguang.core.lang.IOs;
-import io.github.kongweiguang.http.client.core.Method;
+import io.github.kongweiguang.http.common.core.Method;
+import io.github.kongweiguang.http.common.exception.KongHttpRuntimeException;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static io.github.kongweiguang.http.server.core.InnerUtil._404;
-import static java.util.Optional.ofNullable;
+import static io.github.kongweiguang.http.common.utils.HttpServerUtil._404;
+import static io.github.kongweiguang.core.lang.Opt.ofNullable;
 
 /**
  * rest处理器
@@ -51,7 +52,7 @@ public class CenterHandler implements com.sun.net.httpserver.HttpHandler {
      * @param path    路径
      * @param handler 处理器
      */
-    public static void add(ReqType type, Method method, final String path, final HttpHandler handler) {
+    public static void add(ReqType type, Method method, String path, HttpHandler handler) {
         path_type.put(path, type);
         handlerMap(type).computeIfAbsent(path, k -> new ConcurrentHashMap<>()).put(method, handler);
     }
@@ -62,7 +63,7 @@ public class CenterHandler implements com.sun.net.httpserver.HttpHandler {
      * @param type 类型
      * @return 处理器
      */
-    private static Map<String, Map<Method, HttpHandler>> handlerMap(final ReqType type) {
+    private static Map<String, Map<Method, HttpHandler>> handlerMap(ReqType type) {
         return switch (type) {
             case REST -> rest_map;
             case SSE -> sse_map;
@@ -77,7 +78,7 @@ public class CenterHandler implements com.sun.net.httpserver.HttpHandler {
      * @param handler 处理器
      * @throws IOException 异常
      */
-    private static void handler0(final HttpExchange he, final HttpHandler handler) throws IOException {
+    private static void handler0(HttpExchange he, HttpHandler handler) throws IOException {
         if (_404(he, handler)) {
             return;
         }
@@ -91,15 +92,15 @@ public class CenterHandler implements com.sun.net.httpserver.HttpHandler {
      * @param he HttpExchange
      */
     @Override
-    public void handle(final HttpExchange he) throws IOException {
-        final String path = he.getRequestURI().getPath();
-        final ReqType type = ofNullable(path_type.get(path)).orElse(ReqType.REST);
+    public void handle(HttpExchange he) throws IOException {
+        String path = he.getRequestURI().getPath();
+        ReqType type = ofNullable(path_type.get(path)).orElse(ReqType.REST);
         try {
             // 首先尝试精确路径匹配
             HttpHandler handler = ofNullable(handlerMap(type).get(path))
                     .map(e -> e.get(Method.valueOf(he.getRequestMethod())))
                     .orElse(null);
-            
+
             // 如果精确匹配未找到处理器，且不是静态资源请求类型，尝试静态资源前缀匹配
             if (handler == null && type != ReqType.STATIC) {
                 // 检查是否有静态资源路径前缀匹配
@@ -113,8 +114,10 @@ public class CenterHandler implements com.sun.net.httpserver.HttpHandler {
                     }
                 }
             }
-    
-         handler0(he, handler);
+
+            handler0(he, handler);
+        } catch (Exception e) {
+            throw new KongHttpRuntimeException(e);
         } finally {
             if (!ReqType.SSE.equals(type)) {
                 IOs.close(he);

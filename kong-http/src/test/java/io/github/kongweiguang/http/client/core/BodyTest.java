@@ -2,20 +2,36 @@ package io.github.kongweiguang.http.client.core;
 
 import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.Res;
+import io.github.kongweiguang.http.common.core.ContentType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class BodyTest {
 
-    final User kkk = new User().setAge(12).setHobby(new String[]{"a", "b", "c"}).setName("kkk");
+    User user = new User().setAge(12).setHobby(new String[]{"a", "b", "c"}).setName("kkk");
+    String json = """
+            {
+                "age": 12,
+                "name": "kkk",
+                "hobby": ["a", "b", "c"]
+            }
+            """;
 
     @Test
-    void test1() throws Exception {
-        final Res res = Req.post("http://localhost:8080/post_body")
-                //        .body("{}")
+    public void test1() throws Exception {
+        Res res = Req.post("http://localhost:8080/post_body")
                 //自动会将对象转成json字符串，使用jackson
-                .json(kkk)
-//                .body("text".getBytes(StandardCharsets.UTF_8),ContentType.text_plain)
-                .body("text", ContentType.text_plain)
+                .json(user)
+                .ok();
+
+        Assertions.assertEquals(json, res.body());
+    }
+
+    @Test
+    public void test2() throws Exception {
+        Res res = Req.post("http://localhost:8080/post_body")
+                //自动会将对象转成json字符串，使用jackson
+                .body("text", ContentType.TEXT_PLAIN.v())
                 .ok();
         System.out.println("res.str() = " + res.str());
     }

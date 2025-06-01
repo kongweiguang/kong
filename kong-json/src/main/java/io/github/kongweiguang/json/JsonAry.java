@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static java.util.Optional.ofNullable;
+import static io.github.kongweiguang.core.lang.Opt.ofNullable;
 
 /**
  * json数组

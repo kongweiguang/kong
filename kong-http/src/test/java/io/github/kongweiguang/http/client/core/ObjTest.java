@@ -1,6 +1,7 @@
 package io.github.kongweiguang.http.client.core;
 
 import io.github.kongweiguang.http.client.Req;
+import io.github.kongweiguang.http.common.core.Method;
 import org.junit.jupiter.api.Test;
 
 public class ObjTest {

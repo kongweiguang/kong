@@ -3,7 +3,8 @@ package io.github.kongweiguang.http.client;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.kongweiguang.core.lang.IOs;
-import io.github.kongweiguang.http.client.core.Header;
+import io.github.kongweiguang.http.common.core.Header;
+import io.github.kongweiguang.http.common.exception.KongHttpRuntimeException;
 import io.github.kongweiguang.json.Json;
 import kotlin.Pair;
 import okhttp3.Cookie;
@@ -23,9 +24,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import static io.github.kongweiguang.core.lang.Opt.ofNullable;
 import static io.github.kongweiguang.json.Json.*;
 import static java.nio.file.Files.copy;
-import static java.util.Optional.ofNullable;
 
 /**
  * http的响应
@@ -147,7 +148,7 @@ public class Res implements AutoCloseable {
      * @return contentEncoding
      */
     public String contentEncoding() {
-        return header(Header.content_encoding.v());
+        return header(Header.CONTENT_ENCODING.v());
     }
 
     /**
@@ -165,7 +166,7 @@ public class Res implements AutoCloseable {
      * @return cookie
      */
     public String cookieStr() {
-        return header(Header.cookie.v());
+        return header(Header.COOKIE.v());
     }
 
     /**
@@ -195,7 +196,7 @@ public class Res implements AutoCloseable {
         try {
             return body().bytes();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new KongHttpRuntimeException(e);
         }
     }
 
@@ -208,7 +209,7 @@ public class Res implements AutoCloseable {
         try {
             return body().string();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new KongHttpRuntimeException(e);
         }
     }
 
@@ -328,7 +329,7 @@ public class Res implements AutoCloseable {
      * @param clazz 元素的类型
      * @return 响应对象
      */
-    public <E> List<E> list(final Class<E> clazz) {
+    public <E> List<E> list(Class<E> clazz) {
         return toList(str(), clazz);
     }
 
@@ -338,7 +339,7 @@ public class Res implements AutoCloseable {
      * @param <E> 集合中的元素
      * @return 响应对象
      */
-    public <E> List<E> list(final TypeReference<List<E>> typeRef) {
+    public <E> List<E> list(TypeReference<List<E>> typeRef) {
         return toList(str(), typeRef);
     }
 
@@ -349,7 +350,7 @@ public class Res implements AutoCloseable {
      * @param v Map的Value
      * @return 当前对象 {@link Res}
      */
-    public <K, V> Map<K, V> map(final Class<K> k, final Class<V> v) {
+    public <K, V> Map<K, V> map(Class<K> k, Class<V> v) {
         return toMap(str(), k, v);
     }
 
@@ -360,7 +361,7 @@ public class Res implements AutoCloseable {
      * @param <V> Map的Value
      * @return 当前对象 {@link Res}
      */
-    public <K, V> Map<K, V> map(final TypeReference<Map<K, V>> typeRef) {
+    public <K, V> Map<K, V> map(TypeReference<Map<K, V>> typeRef) {
         return toMap(str(), typeRef);
     }
 
@@ -372,7 +373,7 @@ public class Res implements AutoCloseable {
      * @return 读取或写入的字节数
      * @throws IOException IOException
      */
-    public long file(final String path, final CopyOption... options) throws IOException {
+    public long file(String path, CopyOption... options) throws IOException {
         return copy(stream(), Paths.get(path), options);
     }
 
@@ -382,7 +383,7 @@ public class Res implements AutoCloseable {
      * @param con 操作
      * @return 当前对象 {@link Res}
      */
-    public Res then(final Consumer<Res> con) {
+    public Res then(Consumer<Res> con) {
         ofNullable(con).ifPresent(c -> c.accept(this));
         return this;
     }

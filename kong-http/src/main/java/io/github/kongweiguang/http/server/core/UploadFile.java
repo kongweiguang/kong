@@ -27,7 +27,7 @@ public class UploadFile {
      * @param fileName 文件名
      * @return {@link UploadFile}
      */
-    public UploadFile fileName(final String fileName) {
+    public UploadFile fileName(String fileName) {
         this.fileName = fileName;
         return this;
     }
@@ -47,7 +47,7 @@ public class UploadFile {
      * @param content 内容流
      * @return {@link UploadFile}
      */
-    public UploadFile content(final InputStream content) {
+    public UploadFile content(InputStream content) {
         this.content = content;
         return this;
     }

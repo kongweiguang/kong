@@ -5,7 +5,7 @@ package io.github.kongweiguang.http.client.core;
  *
  * @author kongweiguang
  */
-public enum ReqTypeEnum {
+public enum ReqType {
     http,
     ws,
     sse,

@@ -1,9 +1,9 @@
 package io.github.kongweiguang.http.server;
 
 
-import com.sun.net.httpserver.Headers;
+import io.github.kongweiguang.core.threads.Threads;
 import io.github.kongweiguang.http.client.sse.SseEvent;
-import io.github.kongweiguang.http.server.JavaServer;
+import io.github.kongweiguang.http.common.exception.KongHttpRuntimeException;
 import io.github.kongweiguang.http.server.core.HttpReq;
 import io.github.kongweiguang.http.server.core.HttpRes;
 import io.github.kongweiguang.http.server.core.UploadFile;
@@ -25,9 +25,9 @@ public class ServerTest {
         JavaServer.of()
                 .executor(Executors.newVirtualThreadPerTaskExecutor())
                 //设置静态web地址，默认寻找index.html
-                .web("static","C:\\dev\\js\\xm\\vite-dev\\dist","index.html")
+                .web("/static", "C:\\dev\\js\\xm\\vite-dev\\dist", "index.html")
+                .web("/assets", "C:\\dev\\js\\xm\\vite-dev\\dist\\assets", "")
                 .get("/get", (req, res) -> {
-//                    System.out.println("req = " + req.params());
                     res.send("ok");
                 })
                 .get("/get_string", (req, res) -> {
@@ -49,79 +49,65 @@ public class ServerTest {
                     res.send("ok");
                 })
                 .get("/header", (req, res) -> {
-                    Headers headers = req.headers();
-                    for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
-                        System.out.println("entry.getKey() = " + entry.getKey());
-                        System.out.println("entry = " + entry.getValue());
-                    }
+                    Map<String, List<String>> headers = req.headerMap();
+                    System.out.println("headers = " + headers);
                     res.send("ok");
                 })
                 //接受post请求
                 .post("/post_body", ((req, res) -> {
                     String str = req.str();
                     System.out.println("str = " + str);
-
-                    res.send("{\"key\":\"i am post res\"}");
+                    res.send(str);
                 }))
                 .post("/post_form", ((req, res) -> {
                     System.out.println(req.params());
                     res.send("ok");
                 }))
-                .get("/timeout", ((req, res) -> {
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    res.send("ok");
-                }))
-                .get("/error", ((req, res) -> {
-                    System.out.println("req.str() = " + req.str());
-                    res.write(500, "error_123456".getBytes());
-                }))
                 //上传
                 .post("/post_mul_form", (req, res) -> {
-
                     Map<String, List<String>> params = req.params();
                     System.out.println("params = " + params);
                     Map<String, List<UploadFile>> files = req.fileMap();
                     System.out.println("files = " + files);
                     res.send("ok");
                 })
+                .get("/error", ((req, res) -> {
+                    System.out.println("req.str() = " + req.str());
+
+                    throw new KongHttpRuntimeException("error");
+                }))
+                .get("/timeout", ((req, res) -> {
+                    Threads.sleep(5000);
+                    res.send("ok");
+                }))
                 //下载文件
                 .get("/xz", (req, res) ->
-                        res.file("k.txt", Files.readAllBytes(Paths.get("D:\\k\\k.txt"))))
+                        res.file("k.txt", Files.readAllBytes(Paths.get("C:\\test\\test.txt"))))
                 //sse响应
                 .sse("/sse", new SSEHandler() {
                     @Override
                     public void handler(HttpReq req, HttpRes res) {
-                        for (int i = 0; i < 3; i++) {
-                            try {
-                                Thread.sleep(500);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                            send(res,
-                                    SseEvent.of()
-                                            .id(UUID.randomUUID().toString())
-                                            .type("eventType")
-                                            .data(new Date().toString())
+                        for (int i = 0; i < 10; i++) {
+                            Threads.sleep(500);
+                            send(SseEvent.of()
+                                    .id(UUID.randomUUID().toString())
+                                    .type("eventType")
+                                    .data(new Date().toString())
                             );
                         }
 
                         //完成
-                        send(res,
-                                SseEvent.of()
-                                        .id(UUID.randomUUID().toString())
-                                        .type("eventType")
-                                        .data("done")
+                        send(SseEvent.of()
+                                .id(UUID.randomUUID().toString())
+                                .type("eventType")
+                                .data("done")
                         );
 
                         //关闭
                         close(res);
                     }
                 })
-                .ok(8082);
+                .ok(8080);
 
     }
 }

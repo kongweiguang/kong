@@ -7,7 +7,7 @@ import io.github.kongweiguang.core.lang.Assert;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static java.util.Optional.ofNullable;
+import static io.github.kongweiguang.core.lang.Opt.ofNullable;
 
 /**
  * json对象

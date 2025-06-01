@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static io.github.kongweiguang.core.lang.Assert.isTrue;
 import static io.github.kongweiguang.core.lang.Assert.notNull;
 import static io.github.kongweiguang.core.lang.If.trueRun;
-import static java.util.Optional.ofNullable;
+import static io.github.kongweiguang.core.lang.Opt.ofNullable;
 
 /**
  * 责任链流程器

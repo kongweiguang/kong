@@ -1,5 +1,6 @@
 package io.github.kongweiguang.http.client.core;
 
+import io.github.kongweiguang.core.lang.Pair;
 import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.Res;
 import org.junit.jupiter.api.Test;
@@ -10,37 +11,39 @@ import java.util.concurrent.CompletableFuture;
 public class RetryTest {
 
     @Test
-    void testRetry() {
-        final Res res = Req.get("http://localhost:8080/error")
+    public void testRetry() {
+        Res res = Req.get("http://localhost:8080/error")
                 .query("a", "1")
-                .retry(3)
+                .retry(retry -> retry.maxAttempts(3)
+                        .delay(Duration.ofSeconds(2)))
                 .ok();
         System.out.println("res = " + res.str());
     }
 
     @Test
-    void testRetry2() {
-        final Res res = Req.get("http://localhost:8080/error")
+    public void testRetry2() {
+        Res res = Req.get("http://localhost:8080/error")
                 .query("a", "1")
-                .retry(3, Duration.ofSeconds(2), (r, t) -> {
-                    final String str = r.str();
-                    if (str.length() > 10) {
-                        return true;
-                    }
-                    return false;
-                })
+                .retry(retry -> retry.maxAttempts(3)
+                        .delay(Duration.ofSeconds(2))
+                        .predicate((r, t) -> {
+                            String str = r.str();
+                            if (str.length() > 10) {
+                                return Pair.of(false, r);
+                            }
+                            return Pair.of(true, r);
+                        }))
                 .ok();
         System.out.println("res.str() = " + res.str());
     }
 
     @Test
-    void testRetry3() {
+    public void testRetry3() {
         //异步重试
-        final CompletableFuture<Res> res = Req.get("http://localhost:8080/error")
+        CompletableFuture<Res> res = Req.get("http://localhost:8080/error")
                 .query("a", "1")
-                .retry(3)
+                .retry(r -> r.maxAttempts(3))
                 .okAsync();
-        System.out.println(1);
         System.out.println("res.join().str() = " + res.join().str());
     }
 }

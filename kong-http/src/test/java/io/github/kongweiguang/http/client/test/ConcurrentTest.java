@@ -4,6 +4,7 @@ import io.github.kongweiguang.core.test.TestResult;
 import io.github.kongweiguang.core.test.Tests;
 import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.Res;
+import io.github.kongweiguang.http.common.exception.KongHttpRuntimeException;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -17,7 +18,7 @@ public class ConcurrentTest {
             Res res = Req.get("http://localhost:8888").ok();
             if (!res.isOk()) {
 
-                throw new RuntimeException("<UNK>");
+                throw new KongHttpRuntimeException("<UNK>");
             }
         });
 

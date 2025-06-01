@@ -3,14 +3,12 @@ package io.github.kongweiguang.http.server.core;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import io.github.kongweiguang.core.lang.IOs;
-import io.github.kongweiguang.http.client.core.ContentType;
-import io.github.kongweiguang.http.client.core.Header;
+import io.github.kongweiguang.http.common.core.ContentType;
+import io.github.kongweiguang.http.common.core.Header;
+import io.github.kongweiguang.http.common.exception.KongHttpRuntimeException;
+import io.github.kongweiguang.http.common.utils.HttpServerUtil;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -29,7 +27,7 @@ public class HttpRes {
 
     private final HttpExchange he;
     private Charset charset = StandardCharsets.UTF_8;
-    private String contentType = ContentType.text_plain.v();
+    private String contentType = ContentType.TEXT_PLAIN.v();
 
     /**
      * 构造器
@@ -116,7 +114,7 @@ public class HttpRes {
      */
     public HttpRes contentType(String contentType) {
         this.contentType = contentType;
-        header(Header.content_type.v(), String.join(";charset=", contentType, charset().name()));
+        header(Header.CONTENT_TYPE.v(), String.join(";charset=", contentType, charset().name()));
         return this;
     }
 
@@ -129,7 +127,7 @@ public class HttpRes {
         try {
             httpExchange().sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new KongHttpRuntimeException(e);
         }
         return this;
     }
@@ -165,15 +163,15 @@ public class HttpRes {
      * @param bytes    内容
      * @return {@link HttpRes}
      */
-    public HttpRes file(final String fileName, final byte[] bytes) {
+    public HttpRes file(String fileName, byte[] bytes) {
         try {
-            header(Header.content_disposition.v(),
+            header(Header.CONTENT_DISPOSITION.v(),
                     "attachment;filename=" + URLEncoder.encode(fileName, charset().name()));
-            contentType(InnerUtil.getMimeType(fileName));
+            contentType(HttpServerUtil.getMimeType(fileName));
 
             send(bytes);
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            throw new KongHttpRuntimeException(e);
         }
 
         return this;
@@ -186,16 +184,16 @@ public class HttpRes {
      * @param bytes 内容
      * @return {@link HttpRes}
      */
-    public HttpRes write(final int code, final byte[] bytes) {
+    public HttpRes write(int code, byte[] bytes) {
         try {
             httpExchange().sendResponseHeaders(code, bytes.length);
-            header(Header.content_type.v(), contentType);
+            header(Header.CONTENT_TYPE.v(), contentType);
 
-            final OutputStream out = out();
+            OutputStream out = out();
             out.write(bytes);
             out.flush();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new KongHttpRuntimeException(e);
         }
 
         return this;

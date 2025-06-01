@@ -166,8 +166,7 @@ public class DbRun {
      * @throws SQLException SQL异常
      */
     public long count(String sql, Object... params) throws SQLException {
-        String countSql = "SELECT COUNT(*) FROM (" + sql + ") AS count_table";
-        return executeQuery(countSql, rs -> RS.count(rs).longValue(), params);
+        return executeQuery(sql, rs -> RS.count(rs).longValue(), params);
     }
 
     /**
@@ -180,7 +179,8 @@ public class DbRun {
      * @throws SQLException SQL异常
      */
     public PageRes<Map<String, Object>> page(String sql, Page page, Object... params) throws SQLException {
-        long totalCount = count(sql, params);
+        String countSql = "SELECT COUNT(*) FROM (" + sql + ") AS count_table";
+        long totalCount = count(countSql, params);
 
         // 获取数据库类型并生成对应的分页SQL和参数
         Dialect dialect = Dialect.getDatabaseDialect(con());

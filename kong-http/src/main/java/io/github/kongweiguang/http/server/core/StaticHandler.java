@@ -1,11 +1,14 @@
 package io.github.kongweiguang.http.server.core;
 
+import io.github.kongweiguang.http.common.core.Header;
+import io.github.kongweiguang.http.common.utils.HttpServerUtil;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static io.github.kongweiguang.http.server.core.InnerUtil._404;
+import static io.github.kongweiguang.http.common.utils.HttpServerUtil._404;
 import static java.nio.file.Files.readAllBytes;
 import static java.util.Objects.nonNull;
 
@@ -28,30 +31,21 @@ public class StaticHandler implements HttpHandler {
     // 默认缓存1小时
     private int cacheMaxAge = 3600;
 
+
     /**
-     * 构造处理器
+     * 构造带缓存选项的处理器
      *
-     * @param path      路径
-     * @param indexName 默认文件名称
+     * @param path        路径
+     * @param indexName   默认文件名称
+     * @param enableCache 是否启用缓存
+     * @param cacheMaxAge 缓存时间(秒)
      */
-    public StaticHandler(String path, final String filePath, final String indexName) {
+    public StaticHandler(String path, String filePath, String indexName, boolean enableCache, int cacheMaxAge) {
         this.path = path;
         this.base_path = filePath;
         if (nonNull(indexName)) {
             this.index_file = indexName;
         }
-    }
-
-    /**
-     * 构造带缓存选项的处理器
-     *
-     * @param path       路径
-     * @param indexName  默认文件名称
-     * @param enableCache 是否启用缓存
-     * @param cacheMaxAge 缓存时间(秒)
-     */
-    public StaticHandler(final String path, final String filePath,final String indexName, boolean enableCache, int cacheMaxAge) {
-        this(path,filePath, indexName);
         this.enableCache = enableCache;
         if (cacheMaxAge > 0) {
             this.cacheMaxAge = cacheMaxAge;
@@ -60,7 +54,7 @@ public class StaticHandler implements HttpHandler {
 
     /**
      * 设置最大缓存大小
-     * 
+     *
      * @param maxCacheSize 最大缓存大小(字节)
      * @return 当前对象
      */
@@ -71,7 +65,7 @@ public class StaticHandler implements HttpHandler {
 
     /**
      * 设置是否启用ETag
-     * 
+     *
      * @param enableETag 是否启用ETag
      * @return 当前对象
      */
@@ -82,20 +76,20 @@ public class StaticHandler implements HttpHandler {
 
     /**
      * 增加自定义MIME类型
-     * 
+     *
      * @param extension 文件扩展名
-     * @param mimeType MIME类型
+     * @param mimeType  MIME类型
      * @return 当前对象
      */
     public StaticHandler addMimeType(String extension, String mimeType) {
-        InnerUtil.addMimeType(extension, mimeType);
+        HttpServerUtil.addMimeType(extension, mimeType);
         return this;
     }
 
     /**
      * 生成ETag
-     * 
-     * @param fileContent 文件内容
+     *
+     * @param fileContent  文件内容
      * @param lastModified 最后修改时间
      * @return ETag值
      */
@@ -111,7 +105,7 @@ public class StaticHandler implements HttpHandler {
      * @throws IOException 异常
      */
     @Override
-    public void doHandler(final HttpReq req, final HttpRes res) throws IOException {
+    public void doHandler(HttpReq req, HttpRes res) throws IOException {
         String requestPath = req.path();
         // 移除路径中的PATH前缀
         if (requestPath.startsWith(path)) {
@@ -128,7 +122,7 @@ public class StaticHandler implements HttpHandler {
                 }
             }
         }
-        
+
         File file = new File(base_path, requestPath);
 
         if (file.exists()) {
@@ -144,20 +138,20 @@ public class StaticHandler implements HttpHandler {
             String ifNoneMatch = req.headers().getFirst("If-None-Match");
             long lastModified = file.lastModified();
             String filePath = file.getAbsolutePath();
-            
+
             byte[] content;
             String etag = null;
-            
+
             // 尝试从缓存获取文件内容
             if (enableCache && fileCache.containsKey(filePath)) {
                 content = fileCache.get(filePath);
                 if (enableETag) {
                     etag = etagCache.get(filePath);
-                    
+
                     // 如果ETag匹配，返回304状态码
                     if (etag != null && etag.equals(ifNoneMatch)) {
-                        res.getHeaders().add("ETag", etag);
-                        res.getHeaders().add("Cache-Control", "max-age=" + cacheMaxAge);
+                        res.getHeaders().add(Header.ETAG.v(), etag);
+                        res.getHeaders().add(Header.CACHE_CONTROL.v(), "max-age=" + cacheMaxAge);
                         res.write(304, new byte[0]);
                         return;
                     }
@@ -165,35 +159,35 @@ public class StaticHandler implements HttpHandler {
             } else {
                 // 读取文件内容
                 content = readAllBytes(file.toPath());
-                
+
                 // 如果文件大小小于最大缓存大小，缓存文件内容
                 if (enableCache && content.length < maxCacheSize) {
                     fileCache.put(filePath, content);
-                    
+
                     if (enableETag) {
                         etag = generateETag(content, lastModified);
                         etagCache.put(filePath, etag);
                     }
                 }
             }
-            
+
             // 设置Content-Type
-            res.getHeaders().add("Content-Type", InnerUtil.getMimeType(file));
-            
+            res.getHeaders().add(Header.CONTENT_TYPE.v(), HttpServerUtil.getMimeType(file));
+
             // 设置缓存控制头
             if (enableCache) {
-                res.getHeaders().add("Cache-Control", "max-age=" + cacheMaxAge);
+                res.getHeaders().add(Header.CACHE_CONTROL.v(), "max-age=" + cacheMaxAge);
             } else {
-                res.getHeaders().add("Cache-Control", "no-cache, no-store, must-revalidate");
-                res.getHeaders().add("Pragma", "no-cache");
-                res.getHeaders().add("Expires", "0");
+                res.getHeaders().add(Header.CACHE_CONTROL.v(), "no-cache, no-store, must-revalidate");
+                res.getHeaders().add(Header.PRAGMA.v(), "no-cache");
+                res.getHeaders().add(Header.EXPIRES.v(), "0");
             }
-            
+
             // 设置ETag
             if (enableETag && etag != null) {
-                res.getHeaders().add("ETag", etag);
+                res.getHeaders().add(Header.ETAG.v(), etag);
             }
-            
+
             // 发送响应
             res.send(content);
         } else {

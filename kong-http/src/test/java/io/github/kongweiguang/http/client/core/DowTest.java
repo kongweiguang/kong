@@ -2,6 +2,7 @@ package io.github.kongweiguang.http.client.core;
 
 import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.Res;
+import io.github.kongweiguang.http.common.exception.KongHttpRuntimeException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -10,12 +11,12 @@ public class DowTest {
 
     @Test
     void testDow() {
-        final Res ok = Req.get("http://localhost:80/get_file").ok();
+        Res ok = Req.get("http://localhost:8080/xz").ok();
 
         try {
-            ok.file("d:\\k.txt");
+            ok.file("C:\\test\\k.txt");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new KongHttpRuntimeException(e);
         }
     }
 }

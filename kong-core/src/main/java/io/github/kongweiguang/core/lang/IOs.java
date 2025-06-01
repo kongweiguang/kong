@@ -3,6 +3,8 @@ package io.github.kongweiguang.core.lang;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.channels.Channels;
+import java.nio.file.Files;
 
 import static java.util.Objects.nonNull;
 

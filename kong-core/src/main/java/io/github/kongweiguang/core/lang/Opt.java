@@ -142,6 +142,13 @@ public class Opt<T, E> {
     }
 
     /**
+     * 不论状态直接返回值
+     */
+    public T value() {
+        return value;
+    }
+
+    /**
      * 获取错误，如果Opt不包含错误则抛出异常
      */
     public E getError() {

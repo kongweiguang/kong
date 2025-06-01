@@ -1,9 +1,10 @@
 package io.github.kongweiguang.http.server.sse;
 
 
-import io.github.kongweiguang.http.client.core.ContentType;
-import io.github.kongweiguang.http.client.core.Header;
+import io.github.kongweiguang.core.lang.Opt;
 import io.github.kongweiguang.http.client.sse.SseEvent;
+import io.github.kongweiguang.http.common.core.ContentType;
+import io.github.kongweiguang.http.common.core.Header;
 import io.github.kongweiguang.http.server.core.HttpHandler;
 import io.github.kongweiguang.http.server.core.HttpReq;
 import io.github.kongweiguang.http.server.core.HttpRes;
@@ -21,19 +22,22 @@ import static java.util.Objects.nonNull;
  */
 public abstract class SSEHandler implements HttpHandler {
 
+    public HttpRes httpRes;
+
     @Override
     public void doHandler(HttpReq req, HttpRes res) throws IOException {
-        res.contentType(ContentType.event_stream.v());
-        res.header(Header.cache_control.v(), "no-cache");
-        res.header(Header.connection.v(), "keep-alive");
+        res.contentType(ContentType.EVENT_STREAM.v());
+        res.header(Header.CACHE_CONTROL.v(), "no-cache");
+        res.header(Header.CONNECTION.v(), "keep-alive");
         res.sendOk();
+        this.httpRes = res;
         handler(req, res);
     }
 
     /**
      * 处理请求
      *
-     * @param req  请求对象
+     * @param req 请求对象
      * @param res 响应对象
      * @throws IOException IO异常
      */
@@ -42,16 +46,17 @@ public abstract class SSEHandler implements HttpHandler {
     /**
      * 发送数据给客户端
      *
-     * @param res   输出流 {@link HttpRes }
      * @param event 数据对象 {@link SseEvent}
      * @return this
      */
-    public SSEHandler send(HttpRes res, final SseEvent event) {
-        if (nonNull(res)) {
-            final PrintWriter writer = res.writer();
-            writer.write(event.toString());
-            writer.flush();
-        }
+    public SSEHandler send(SseEvent event) {
+        Opt.ofNullable(httpRes)
+                .ifPresent(r -> {
+                    PrintWriter writer = r.writer();
+                    writer.write(event.toString());
+                    writer.flush();
+                });
+
         return this;
     }
 

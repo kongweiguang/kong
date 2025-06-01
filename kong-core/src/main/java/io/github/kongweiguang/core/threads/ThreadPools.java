@@ -20,7 +20,7 @@ public class ThreadPools {
     );
     //虚拟线程池
     public static ExecutorService virtualPool = Executors.newThreadPerTaskExecutor(
-            Thread.ofVirtual().name("kong-virtual-",0).factory()
+            Thread.ofVirtual().name("kong-virtual-", 0).factory()
     );
 
 

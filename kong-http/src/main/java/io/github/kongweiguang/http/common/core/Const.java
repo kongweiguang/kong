@@ -1,4 +1,4 @@
-package io.github.kongweiguang.http.client.core;
+package io.github.kongweiguang.http.common.core;
 
 /**
  * http请求中涉及到的常量

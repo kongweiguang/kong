@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import static java.util.Objects.nonNull;
-import static java.util.Optional.ofNullable;
+import static io.github.kongweiguang.core.lang.Opt.ofNullable;
 
 /**
  * spring工具

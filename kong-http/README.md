@@ -24,6 +24,7 @@
 Maven
 
 ```xml
+
 <dependency>
     <groupId>io.github.kongweiguang</groupId>
     <artifactId>kong-http</artifactId>
@@ -97,13 +98,13 @@ public class UrlTest {
     @Test
     void test1() throws Exception {
         Res res = Req.get("http://localhost:8080/get/one/two").ok();
-        System.out.println("res = " + res.str());
+
+        Assertions.assertEquals("ok", res.str());
     }
 
-
-    // 使用构建方法
     @Test
     void test2() {
+        // http://localhost:8080/get/one/two
         Res res = Req.of()
                 .scheme("http")
                 .host("localhost")
@@ -112,11 +113,10 @@ public class UrlTest {
                 .path("one")
                 .path("two")
                 .ok();
-        System.out.println("res.str() = " + res.str());
-        // http://localhost:8080/get/one/two
+
+        Assertions.assertEquals("ok", res.str());
     }
 
-    //混合使用
     @Test
     void test3() throws Exception {
         // http://localhost:8080/get/one/two
@@ -127,7 +127,8 @@ public class UrlTest {
                 .path("one")
                 .path("two")
                 .ok();
-        System.out.println("res = " + res.str());
+
+        Assertions.assertEquals("ok", res.str());
     }
 }
 ```
@@ -135,6 +136,7 @@ public class UrlTest {
 ## url参数
 
 ```java
+
 public class UrlQueryTest {
 
     @Test
@@ -143,11 +145,13 @@ public class UrlQueryTest {
         Res res = Req.get("http://localhost:8080/get/one/two?q=1")
                 .query("k1", "v1")
                 .query("k2", Arrays.asList("1", "2"))
-                .query(new HashMap<String, String>() {{
+                .query(new HashMap<String, Object>() {{
                     put("k3", "v3");
                     put("k4", "v4");
                 }})
                 .ok();
+
+        //服务端接受{q=[1], k1=[v1], k2=[1, 2], k3=[v3], k4=[v4]}
     }
 
 }
@@ -158,18 +162,17 @@ public class UrlQueryTest {
 设置请求头内容，cookie等
 
 ```java
-
 public class HeaderTest {
 
     @Test
     void test1() throws Exception {
-        Res res = Req.get("http://localhost:8080/header")
+        final Res res = Req.get("http://localhost:8080/header")
                 //contentype
-                .contentType(ContentType.json)
+                .contentType(ContentType.JSON.v())
                 //charset
                 .charset(StandardCharsets.UTF_8)
                 //user-agent
-                .ua(Mac.chrome.v())
+                .ua(UA.Mac.chrome.v())
                 //authorization
                 .auth("auth qwe")
                 //authorization bearer
@@ -177,40 +180,58 @@ public class HeaderTest {
                 //header
                 .header("name", "value")
                 //headers
-                .headers(new HashMap<String, String>() {{
+                .headers(new HashMap<>() {{
                     put("name1", "value1");
                     put("name2", "value2");
                 }})
                 //cookie
                 .cookie("k", "v")
                 //cookies
-                .cookies(new HashMap<String, String>() {{
+                .cookies(new HashMap<>() {{
                     put("k1", "v1");
                     put("k2", "v2");
                 }})
                 .ok();
-        System.out.println("res.str() = " + res.str());
-    }
 
+        Assertions.assertEquals("ok", res.str());
+        //headers = {Cookie=[k1=v1; k2=v2; k=v;], Accept-encoding=[gzip], Authorization=[Bearer qqq], Content-type=[application/json;charset=UTF-8], Connection=[Keep-Alive], Host=[localhost:8080], User-agent=[Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.93 Safari/537.36], Name1=[value1], Name=[value], Name2=[value2]}
+    }
 }
 ```
 
 ## 请求体
 
 get和head请求就算添加了请求体也不会携带在请求
+post请求体必须有个请求体，默认会传入空字符串
 
 ```java
+
 public class BodyTest {
 
+    User user = new User().setAge(12).setHobby(new String[]{"a", "b", "c"}).setName("kkk");
+    String json = """
+            {
+                "age": 12,
+                "name": "kkk",
+                "hobby": ["a", "b", "c"]
+            }
+            """;
+
     @Test
-    void test1() throws Exception {
-        User kkk = new User().setAge(12).setHobby(new String[]{"a", "b", "c"}).setName("kkk");
+    public void test1() throws Exception {
         Res res = Req.post("http://localhost:8080/post_body")
-                //        .body(JSON.toJSONString(kkk))
-                //        .body("{}")
-                //自动会将对象转成json对象，使用jackson
-                .json(kkk)
-                //        .body("text", ContentType.text_plain)
+                //自动会将对象转成json字符串，使用jackson
+                .json(user)
+                .ok();
+
+        Assertions.assertEquals(json, res.body());
+    }
+
+    @Test
+    public void test2() throws Exception {
+        Res res = Req.post("http://localhost:8080/post_body")
+                //自动会将对象转成json字符串，使用jackson
+                .body("text", ContentType.TEXT_PLAIN.v())
                 .ok();
         System.out.println("res.str() = " + res.str());
     }
@@ -223,32 +244,34 @@ public class BodyTest {
 可发送application/x-www-form-urlencoded表单请求，如果需要上传文件则使用multipart/form-data
 
 ```java
-
 public class FormTest {
 
     @Test
-    void testForm() throws IOException {
+    public void testForm() throws IOException {
         //application/x-www-form-urlencoded
         Res ok = Req.formUrlencoded("http://localhost:8080/post_form")
                 .form("a", "1")
-                .form(new HashMap<String, String>() {{
+                .form(new HashMap<>() {{
                     put("b", "2");
                 }})
                 .ok();
-        System.out.println("ok.str() = " + ok.str());
+        Assertions.assertEquals("ok", ok.str());
+        //{a=[1], b=[2]}
     }
 
     @Test
-    void test2() throws Exception {
+    public void test2() throws Exception {
         //multipart/form-data
         Res ok = Req.multipart("http://localhost:8080/post_mul_form")
-                .file("k", "k.txt", Files.readAllBytes(Paths.get("D:\\k\\k.txt")))
+                .file("test", "test.txt", Files.readAllBytes(Paths.get("C:", "test", "test.txt")))
                 .form("a", "1")
-                .form(new HashMap<String, String>() {{
+                .form(new HashMap<>() {{
                     put("b", "2");
                 }})
                 .ok();
-        System.out.println("ok.str() = " + ok.str());
+        Assertions.assertEquals("ok", ok.str());
+        //params = {a=[1], b=[2]}
+        //files = {test=[io.github.kongweiguang.http.server.core.UploadFile@6231d793]}
     }
 }
 ```
@@ -256,36 +279,45 @@ public class FormTest {
 ## 异步请求
 
 异步请求返回的是future，也可以使用join()或者get()方法等待请求执行完，具体使用请看CompletableFuture（异步编排）
+请求错误的时候不会抛出异常，而是会调用fail回调方法，res内容是空的
 
 ```java
 public class AsyncTest {
 
     @Test
-    void test1() throws Exception {
+    public void test1() throws Exception {
         CompletableFuture<Res> future = Req.get("http://localhost:8080/get")
                 .query("a", "1")
                 .success(r -> System.out.println(r.str()))
-                .fail(System.out::println)
+                .fail(t -> System.out.println("error"))
                 .okAsync();
 
-        System.out.println("res = " + future.get(3, TimeUnit.SECONDS));
+        future.get(3, TimeUnit.MINUTES);
     }
 
+    @Test
+    public void test2() throws Exception {
+        CompletableFuture<Res> future = Req.get("http://localhost:8080/error")
+                .query("a", "1")
+                .success(r -> System.out.println(r.str()))
+                .fail(t -> System.out.println("error"))
+                .okAsync();
+
+        Res res = future.get(3, TimeUnit.MINUTES);
+        System.out.println(res);
+    }
 }
 ```
 
 ## 请求超时时间设置
 
-超时设置的时间单位是**秒**
-
 ```java
-
 public class TimeoutTest {
 
     @Test
     void test1() throws Exception {
         Res res = Req.get("http://localhost:8080/timeout")
-                .timeout(3)
+                .timeout(Duration.ofSeconds(1))
 //        .timeout(10, 10, 10)
                 .ok();
         System.out.println(res.str());
@@ -346,37 +378,39 @@ public class ResTest {
 public class RetryTest {
 
     @Test
-    void testRetry() {
+    public void testRetry() {
         Res res = Req.get("http://localhost:8080/error")
                 .query("a", "1")
-                .retry(3)
+                .retry(retry -> retry.maxAttempts(3)
+                        .delay(Duration.ofSeconds(2)))
                 .ok();
         System.out.println("res = " + res.str());
     }
 
     @Test
-    void testRetry2() {
+    public void testRetry2() {
         Res res = Req.get("http://localhost:8080/error")
                 .query("a", "1")
-                .retry(3, Duration.ofSeconds(2), (r, t) -> {
-                    String str = r.str();
-                    if (str.length() > 10) {
-                        return true;
-                    }
-                    return false;
-                })
+                .retry(retry -> retry.maxAttempts(3)
+                        .delay(Duration.ofSeconds(2))
+                        .predicate((r, t) -> {
+                            String str = r.str();
+                            if (str.length() > 10) {
+                                return Pair.of(false, r);
+                            }
+                            return Pair.of(true, r);
+                        }))
                 .ok();
         System.out.println("res.str() = " + res.str());
     }
 
     @Test
-    void testRetry3() {
+    public void testRetry3() {
         //异步重试
         CompletableFuture<Res> res = Req.get("http://localhost:8080/error")
                 .query("a", "1")
-                .retry(3)
+                .retry(r -> r.maxAttempts(3))
                 .okAsync();
-        System.out.println(1);
         System.out.println("res.join().str() = " + res.join().str());
     }
 }
@@ -408,16 +442,17 @@ public class ProxyTest {
 ## 下载
 
 ```java
+
 public class DowTest {
 
     @Test
     void testDow() {
-        Res ok = Req.get("http://localhost:80/get_file").ok();
+        Res ok = Req.get("http://localhost:8080/xz").ok();
 
         try {
-            ok.file("d:\\k.txt");
+            ok.file("C:\\test\\k.txt");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new KongHttpRuntimeException(e);
         }
     }
 }
@@ -456,44 +491,37 @@ ws请求返回的res对象为null
 public class WsTest {
 
     @Test
-    void test() {
+    public void test() {
+        WSListener listener = new WSListener() {
+            @Override
+            public void open(WSReqBuilder req, Res res) {
+                this.ws.send("123");
+            }
 
-        Res ok = Req.ws("ws://websocket/test")
+            @Override
+            public void msg(WSReqBuilder req, String text) {
+                System.out.println(text);
+            }
+
+            @Override
+            public void closed(WSReqBuilder req, int code, String reason) {
+                System.out.println(reason);
+            }
+        };
+
+        WebSocket ws = Req.ws("ws://localhost:8889/ws")
                 .query("k", "v")
-                .wsListener(new WSListener() {
-                    @Override
-                    public void open(Req req, Res res) {
-                        super.open(req, res);
-                    }
-
-                    @Override
-                    public void msg(Req req, String text) {
-                        send("hello");
-                    }
-
-                    @Override
-                    public void msg(Req req, byte[] bytes) {
-                        super.msg(req, bytes);
-                    }
-
-                    @Override
-                    public void fail(Req req, Res res, Throwable t) {
-                        super.fail(req, res, t);
-                    }
-
-                    @Override
-                    public void closing(Req req, int code, String reason) {
-                        super.closing(req, code, reason);
-                    }
-
-                    @Override
-                    public void closed(Req req, int code, String reason) {
-                        super.closed(req, code, reason);
-                    }
-                })
+                .header("h", "v")
+                .wsListener(listener)
                 .ok();
-        //res == null
-        Util.sync(this);
+        Threads.sleep(1000);
+
+        for (int i = 0; i < 100; i++) {
+            Threads.sleep(1000);
+            ws.send("123");
+        }
+
+        Threads.sync(this);
     }
 
 }
@@ -510,41 +538,44 @@ public class SseTest {
 
     @Test
     void test() throws InterruptedException {
+        SSEListener listener = new SSEListener() {
+            @Override
+            public void event(SSEReqBuilder req, SseEvent msg) {
+                System.out.println("sse -> " + msg.id());
+                System.out.println("sse -> " + msg.type());
+                System.out.println("sse -> " + msg.data());
+                if (Objects.equals(msg.data(), "done")) {
+                    closeCon();
+                }
+            }
 
-        Req.sse("localhost:8080/sse")
-                .sseListener(new SSEListener() {
-                    @Override
-                    public void event(Req req, SseEvent msg) {
-                        System.out.println("sse -> " + msg.id());
-                        System.out.println("sse -> " + msg.type());
-                        System.out.println("sse -> " + msg.data());
-                        if (Objects.equals(msg.data(), "done")) {
-                            close();
-                        }
-                    }
+            @Override
+            public void open(SSEReqBuilder req, Res res) {
+                System.out.println(req);
+                System.out.println(res);
+            }
 
-                    @Override
-                    public void open(Req req, Res res) {
-                        super.open(req, res);
-                    }
+            @Override
+            public void fail(SSEReqBuilder req, Res res, Throwable t) {
+                System.out.println("fail" + t);
+            }
 
-                    @Override
-                    public void fail(Req req, Res res, Throwable t) {
-                        super.fail(req, res, t);
-                    }
+            @Override
+            public void closed(SSEReqBuilder req) {
+                System.out.println("close");
+            }
+        };
 
-                    @Override
-                    public void closed(Req req) {
-                        super.closed(req);
-                    }
-                })
+        EventSource es = Req.sse("http://localhost:8080/sse")
+                .sseListener(listener)
                 .ok();
 
-        Util.sync(this);
+        Request request = es.request();
+
+        Threads.sync(this);
     }
 
 }
-
 ```
 
 ## 全局配置设置
@@ -594,15 +625,19 @@ public class SingingConfigTest {
 ```
 
 ## httpserver
+
 ```java
-public static void main(String[] args) {
+
+public class ServerTest {
+
+
+    public static void main(String[] args) {
 
         JavaServer.of()
-                .executor(Executors.newVirtualThreadPerTaskExecutor())
+                .executor(Executors.newCachedThreadPool())
                 //设置静态web地址，默认寻找index.html
-                .web("static","C:\\dev\\js\\xm\\vite-dev\\dist","index.html")
+                .web("static", "C:\\dev\\js\\xm\\vite-dev\\dist", "index.html")
                 .get("/get", (req, res) -> {
-//                    System.out.println("req = " + req.params());
                     res.send("ok");
                 })
                 .get("/get_string", (req, res) -> {
@@ -624,79 +659,67 @@ public static void main(String[] args) {
                     res.send("ok");
                 })
                 .get("/header", (req, res) -> {
-                    Headers headers = req.headers();
-                    for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
-                        System.out.println("entry.getKey() = " + entry.getKey());
-                        System.out.println("entry = " + entry.getValue());
-                    }
+                    Map<String, List<String>> headers = req.headerMap();
+                    System.out.println("headers = " + headers);
                     res.send("ok");
                 })
                 //接受post请求
                 .post("/post_body", ((req, res) -> {
                     String str = req.str();
                     System.out.println("str = " + str);
-
-                    res.send("{\"key\":\"i am post res\"}");
+                    res.send(str);
                 }))
                 .post("/post_form", ((req, res) -> {
                     System.out.println(req.params());
                     res.send("ok");
                 }))
-                .get("/timeout", ((req, res) -> {
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    res.send("ok");
-                }))
-                .get("/error", ((req, res) -> {
-                    System.out.println("req.str() = " + req.str());
-                    res.write(500, "error_123456".getBytes());
-                }))
                 //上传
                 .post("/post_mul_form", (req, res) -> {
-
                     Map<String, List<String>> params = req.params();
                     System.out.println("params = " + params);
                     Map<String, List<UploadFile>> files = req.fileMap();
                     System.out.println("files = " + files);
                     res.send("ok");
                 })
+                .get("/error", ((req, res) -> {
+                    System.out.println("req.str() = " + req.str());
+
+                    throw new KongHttpRuntimeException("error");
+                }))
+                .get("/timeout", ((req, res) -> {
+                    Threads.sleep(5000);
+                    res.send("ok");
+                }))
                 //下载文件
                 .get("/xz", (req, res) ->
-                        res.file("k.txt", Files.readAllBytes(Paths.get("D:\\k\\k.txt"))))
+                        res.file("k.txt", Files.readAllBytes(Paths.get("C:\\test\\test.txt"))))
                 //sse响应
                 .sse("/sse", new SSEHandler() {
                     @Override
                     public void handler(HttpReq req, HttpRes res) {
-                        for (int i = 0; i < 3; i++) {
-                            try {
-                                Thread.sleep(500);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                            send(res,
-                                    SseEvent.of()
-                                            .id(UUID.randomUUID().toString())
-                                            .type("eventType")
-                                            .data(new Date().toString())
+                        for (int i = 0; i < 10; i++) {
+                            Threads.sleep(500);
+                            send(SseEvent.of()
+                                    .id(UUID.randomUUID().toString())
+                                    .type("eventType")
+                                    .data(new Date().toString())
                             );
                         }
 
                         //完成
-                        send(res,
-                                SseEvent.of()
-                                        .id(UUID.randomUUID().toString())
-                                        .type("eventType")
-                                        .data("done")
+                        send(SseEvent.of()
+                                .id(UUID.randomUUID().toString())
+                                .type("eventType")
+                                .data("done")
                         );
 
                         //关闭
                         close(res);
                     }
                 })
-                .ok(8082);
+                .ok(8080);
 
     }
+}
+
 ```

@@ -1,7 +1,7 @@
 package io.github.kongweiguang.http.server.core;
 
 /**
- * rest类型
+ * 请求类型
  *
  * @author kongweiguang
  */

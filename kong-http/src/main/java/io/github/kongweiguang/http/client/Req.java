@@ -1,8 +1,10 @@
 package io.github.kongweiguang.http.client;
 
-
-import io.github.kongweiguang.http.client.core.Method;
-import io.github.kongweiguang.http.client.core.ReqTypeEnum;
+import io.github.kongweiguang.http.client.builder.HttpReqBuilder;
+import io.github.kongweiguang.http.client.builder.SSEReqBuilder;
+import io.github.kongweiguang.http.client.builder.WSReqBuilder;
+import io.github.kongweiguang.http.common.core.ContentType;
+import io.github.kongweiguang.http.common.core.Method;
 
 /**
  * 基于okhttp封装的http请求工具
@@ -10,69 +12,69 @@ import io.github.kongweiguang.http.client.core.ReqTypeEnum;
  * @author kongweiguang
  */
 public class Req {
-
-    //工厂方法
-    public static ReqBuilder of() {
-        return new ReqBuilder();
+    private static class DefHTTPReqBuilder extends HttpReqBuilder<DefHTTPReqBuilder, Res> {
     }
 
-    public static ReqBuilder of(String url) {
+    //工厂方法
+    public static HttpReqBuilder<?, Res> of() {
+        return new DefHTTPReqBuilder();
+    }
+
+    public static HttpReqBuilder<?, Res> of(String url) {
         return of().url(url);
     }
 
-    public static ReqBuilder get(String url) {
+    public static HttpReqBuilder<?, Res> get(String url) {
         return of(url).method(Method.GET);
     }
 
-    public static ReqBuilder post(String url) {
+    public static HttpReqBuilder<?, Res> post(String url) {
         return of(url).method(Method.POST);
     }
 
-    public static ReqBuilder delete(String url) {
+    public static HttpReqBuilder<?, Res> delete(String url) {
         return of(url).method(Method.DELETE);
     }
 
-    public static ReqBuilder put(String url) {
+    public static HttpReqBuilder<?, Res> put(String url) {
         return of(url).method(Method.PUT);
     }
 
-    public static ReqBuilder patch(String url) {
+    public static HttpReqBuilder<?, Res> patch(String url) {
         return of(url).method(Method.PATCH);
     }
 
-    public static ReqBuilder head(String url) {
+    public static HttpReqBuilder<?, Res> head(String url) {
         return of(url).method(Method.HEAD);
     }
 
-    public static ReqBuilder options(String url) {
+    public static HttpReqBuilder<?, Res> options(String url) {
         return of(url).method(Method.OPTIONS);
     }
 
-    public static ReqBuilder trace(String url) {
+    public static HttpReqBuilder<?, Res> trace(String url) {
         return of(url).method(Method.TRACE);
     }
 
-    public static ReqBuilder connect(String url) {
+    public static HttpReqBuilder<?, Res> connect(String url) {
         return of(url).method(Method.CONNECT);
     }
 
-    public static ReqBuilder formUrlencoded(String url) {
-        return of(url).formUrlencoded();
+    public static HttpReqBuilder<?, Res> formUrlencoded(String url) {
+        return post(url).contentType(ContentType.FORM_URLENCODED.v());
     }
 
-    public static ReqBuilder multipart(String url) {
-        return of(url).multipart();
+    public static HttpReqBuilder<?, Res> multipart(String url) {
+        return post(url).contentType(ContentType.MULTIPART.v());
     }
 
     //ws
-    public static ReqBuilder ws(String url) {
-        return of().reqType(ReqTypeEnum.ws).url(url);
+    public static WSReqBuilder ws(String url) {
+        return new WSReqBuilder().url(url);
     }
 
     //sse
-    public static ReqBuilder sse(String url) {
-        return of().reqType(ReqTypeEnum.sse).url(url);
+    public static SSEReqBuilder sse(String url) {
+        return new SSEReqBuilder().url(url);
     }
-
-
 }

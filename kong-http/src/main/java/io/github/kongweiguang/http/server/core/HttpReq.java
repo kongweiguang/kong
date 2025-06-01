@@ -2,24 +2,20 @@ package io.github.kongweiguang.http.server.core;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
-import io.github.kongweiguang.core.lang.Objs;
 import io.github.kongweiguang.core.lang.IOs;
-import io.github.kongweiguang.http.client.core.Header;
-import io.github.kongweiguang.http.client.core.Method;
+import io.github.kongweiguang.core.lang.Objs;
+import io.github.kongweiguang.http.common.core.Header;
+import io.github.kongweiguang.http.common.core.Method;
 
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
+import static io.github.kongweiguang.core.lang.Opt.ofNullable;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static java.util.Optional.ofNullable;
 
 /**
  * 请求参数
@@ -47,7 +43,7 @@ public class HttpReq {
      * @param url 请求地址
      * @param map 请求参数集合
      */
-    private static void getParams(String url, final Map<String, List<String>> map) {
+    private static void getParams(String url, Map<String, List<String>> map) {
         if (isNull(url)) {
             return;
         }
@@ -79,12 +75,28 @@ public class HttpReq {
     }
 
     /**
+     * 获取所有的请求头
+     *
+     * @return 请求头 {@link  Headers}
+     */
+    public Map<String, List<String>> headerMap() {
+        Headers headers = headers();
+        Map<String, List<String>> map = new HashMap<>();
+
+        for (String name : headers.keySet()) {
+            map.put(name, headers.get(name));
+        }
+
+        return map;
+    }
+
+    /**
      * 获取指定的请求头
      *
      * @param name 请求头的名称
      * @return 请求头的值
      */
-    public String header(final String name) {
+    public String header(String name) {
         return headers().getFirst(name);
     }
 
@@ -94,7 +106,7 @@ public class HttpReq {
      * @return contentType
      */
     public String contentType() {
-        return header(Header.content_type.v());
+        return header(Header.CONTENT_TYPE.v());
     }
 
     /**
@@ -104,11 +116,11 @@ public class HttpReq {
      */
     public Charset charset() {
         try {
-            final String contentType = contentType();
+            String contentType = contentType();
             if (nonNull(contentType)) {
-                final String[] parts = contentType.split(";");
+                String[] parts = contentType.split(";");
                 if (parts.length > 1) {
-                    final String part = parts[1];
+                    String part = parts[1];
                     if (part.startsWith("charset=")) {
                         return Charset.forName(part.substring("charset=".length()));
                     }
@@ -128,7 +140,7 @@ public class HttpReq {
      * @return user_agent
      */
     public String ua() {
-        return header(Header.user_agent.v());
+        return header(Header.USER_AGENT.v());
     }
 
     /**
@@ -177,7 +189,7 @@ public class HttpReq {
             return false;
         }
 
-        final String contentType = contentType();
+        String contentType = contentType();
 
         if (isNull(contentType)) {
             return false;
@@ -214,7 +226,7 @@ public class HttpReq {
      * @return byte数组
      */
     public byte[] bytes() {
-        final String length = header(Header.content_length.v());
+        String length = header(Header.CONTENT_LENGTH.v());
         return IOs.toByteArray(stream(), Integer.parseInt(isNull(length) ? "0" : length));
 
     }

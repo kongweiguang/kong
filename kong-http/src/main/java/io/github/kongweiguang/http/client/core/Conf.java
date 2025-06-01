@@ -1,5 +1,8 @@
 package io.github.kongweiguang.http.client.core;
 
+import io.github.kongweiguang.core.threads.ThreadPools;
+import io.github.kongweiguang.http.common.core.Header;
+import io.github.kongweiguang.http.common.utils.HttpClientUtil;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
 
@@ -21,9 +24,11 @@ import static java.util.Objects.nonNull;
  *
  * @author kongweiguang
  */
-public final class Conf {
+public class Conf {
     //全局配置
-    private static final Conf global = new Conf();
+    private static final Conf global = new Conf()
+            .exec(ThreadPools.virtualPool);
+
 
     /**
      * 获取全局配置
@@ -33,7 +38,6 @@ public final class Conf {
     public static Conf global() {
         return global;
     }
-
 
     //拦截器
     private List<Interceptor> interceptors;
@@ -73,22 +77,6 @@ public final class Conf {
     //cookieJar
     private CookieJar cookieJar;
 
-    private Conf(final Conf conf) {
-        this.interceptors = conf.interceptors();
-        this.dispatcher = conf.dispatcher();
-        this.exec = conf.exec();
-        this.connectionPool = conf.connectionPool();
-        this.proxy = conf.proxy();
-        this.proxyAuthenticator = conf.proxyAuthenticator();
-        this.ssl = conf.ssl();
-        this.timeout = conf.timeout();
-        this.httpLoggingInterceptor = conf.httpLoggingInterceptor();
-        this.eventListener = conf.eventListener();
-        this.followRedirects = conf.followRedirects();
-        this.followSslRedirects = conf.followSslRedirects();
-        this.cookieJar = conf.cookieJar();
-    }
-
     private Conf() {
     }
 
@@ -98,8 +86,9 @@ public final class Conf {
      * @return 新的配置 {@link Conf}
      */
     public static Conf of() {
-        return new Conf(global());
+        return new Conf();
     }
+
 
     /**
      * 设置ssl开关
@@ -107,7 +96,7 @@ public final class Conf {
      * @param ssl 是否开启
      * @return 自身实例 {@link Conf}
      */
-    public Conf ssl(final boolean ssl) {
+    public Conf ssl(boolean ssl) {
         this.ssl = ssl;
         return this;
     }
@@ -127,7 +116,7 @@ public final class Conf {
      * @param executor 使用的线程池
      * @return 自身实例 {@link Conf}
      */
-    public Conf exec(final Executor executor) {
+    public Conf exec(Executor executor) {
         notNull(executor, "executor must not be null");
 
         this.exec = executor;
@@ -140,10 +129,6 @@ public final class Conf {
      * @return 线程池
      */
     public Executor exec() {
-        if (isNull(exec)) {
-            exec(InnerUtil.exec());
-        }
-
         return exec;
     }
 
@@ -153,7 +138,7 @@ public final class Conf {
      * @param interceptor 拦截器
      * @return 自身实例 {@link Conf}
      */
-    public Conf addInterceptor(final Interceptor interceptor) {
+    public Conf addInterceptor(Interceptor interceptor) {
         if (nonNull(interceptor)) {
 
             if (isNull(interceptors)) {
@@ -181,7 +166,7 @@ public final class Conf {
      * @param dispatcher 分发器
      * @return 自身实例 {@link Conf}
      */
-    public Conf dispatcher(final Dispatcher dispatcher) {
+    public Conf dispatcher(Dispatcher dispatcher) {
         this.dispatcher = dispatcher;
         return this;
     }
@@ -201,7 +186,7 @@ public final class Conf {
      * @param pool 链接池
      * @return 自身实例 {@link Conf}
      */
-    public Conf connectionPool(final ConnectionPool pool) {
+    public Conf connectionPool(ConnectionPool pool) {
         this.connectionPool = pool;
         return this;
     }
@@ -223,7 +208,7 @@ public final class Conf {
      * @param port 端口
      * @return 自身实例 {@link Conf}
      */
-    public Conf proxy(final Proxy.Type type, final String host, final int port) {
+    public Conf proxy(Proxy.Type type, String host, int port) {
         notNull(type, "type must not be null");
         notNull(host, "host must not be null");
         isTrue(port > 0, "port must > 0");
@@ -239,7 +224,7 @@ public final class Conf {
      * @param port 端口
      * @return 自身实例 {@link Conf}
      */
-    public Conf proxy(final String host, final int port) {
+    public Conf proxy(String host, int port) {
         return proxy(Proxy.Type.HTTP, host, port);
     }
 
@@ -259,13 +244,13 @@ public final class Conf {
      * @param password 密码
      * @return 自身实例 {@link Conf}
      */
-    public Conf proxyAuthenticator(final String username, final String password) {
+    public Conf proxyAuthenticator(String username, String password) {
         notNull(username, "username must not be null");
         notNull(password, "password must not be null");
 
         this.proxyAuthenticator = (route, response) -> response.request()
                 .newBuilder()
-                .header(Header.proxy_authorization.v(),
+                .header(Header.PROXY_AUTHORIZATION.v(),
                         Credentials.basic(username, password, StandardCharsets.UTF_8))
                 .build();
 
@@ -296,7 +281,7 @@ public final class Conf {
      * @param proxySelector 代理选择器 {@link ProxySelector}
      * @return 自身实例 {@link Conf}
      */
-    public Conf proxySelector(final ProxySelector proxySelector) {
+    public Conf proxySelector(ProxySelector proxySelector) {
         this.proxySelector = proxySelector;
         return this;
     }
@@ -307,7 +292,7 @@ public final class Conf {
      * @param timeout 超时时间 {@link Timeout}
      * @return 自身实例 {@link Conf}
      */
-    public Conf timeout(final Timeout timeout) {
+    public Conf timeout(Timeout timeout) {
         this.timeout = timeout;
         return this;
     }
@@ -328,8 +313,8 @@ public final class Conf {
      * @param level  日志级别
      * @return 自身实例 {@link Conf}
      */
-    public Conf log(final ReqLog logger, final HttpLoggingInterceptor.Level level) {
-        this.httpLoggingInterceptor = InnerUtil.httpLoggingInterceptor(logger, level);
+    public Conf log(ReqLog logger, HttpLoggingInterceptor.Level level) {
+        this.httpLoggingInterceptor = HttpClientUtil.httpLoggingInterceptor(logger, level);
         return this;
     }
 
@@ -357,7 +342,7 @@ public final class Conf {
      * @param eventListener 事件监听器 {@link EventListener}
      * @return 自身实例 {@link Conf}
      */
-    public Conf eventListener(final EventListener eventListener) {
+    public Conf eventListener(EventListener eventListener) {
         this.eventListener = eventListener;
         return this;
     }
@@ -377,7 +362,7 @@ public final class Conf {
      * @param followRedirects 是否重定向
      * @return 自身实例 {@link Conf}
      */
-    public Conf followRedirects(final boolean followRedirects) {
+    public Conf followRedirects(boolean followRedirects) {
         this.followRedirects = followRedirects;
         return this;
     }
@@ -397,7 +382,7 @@ public final class Conf {
      * @param followSslRedirects 是否重定向
      * @return 自身实例 {@link Conf}
      */
-    public Conf followSslRedirects(final boolean followSslRedirects) {
+    public Conf followSslRedirects(boolean followSslRedirects) {
         this.followSslRedirects = followSslRedirects;
         return this;
     }
@@ -416,7 +401,7 @@ public final class Conf {
      *
      * @return 自身实例 {@link Conf}
      */
-    public Conf cookieJar(final CookieJar cookieJar) {
+    public Conf cookieJar(CookieJar cookieJar) {
         this.cookieJar = cookieJar;
         return this;
     }

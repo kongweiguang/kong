@@ -9,8 +9,8 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.util.function.Supplier;
 
+import static io.github.kongweiguang.core.lang.Opt.ofNullable;
 import static java.time.Duration.ofMinutes;
-import static java.util.Optional.ofNullable;
 import static javax.net.ssl.SSLContext.getInstance;
 
 /**

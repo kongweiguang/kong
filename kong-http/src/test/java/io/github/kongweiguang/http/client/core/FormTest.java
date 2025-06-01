@@ -2,6 +2,7 @@ package io.github.kongweiguang.http.client.core;
 
 import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.Res;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -12,27 +13,30 @@ import java.util.HashMap;
 public class FormTest {
 
     @Test
-    void testForm() throws IOException {
+    public void testForm() throws IOException {
         //application/x-www-form-urlencoded
-        final Res ok = Req.formUrlencoded("http://localhost:8080/post_form")
+        Res ok = Req.formUrlencoded("http://localhost:8080/post_form")
                 .form("a", "1")
-                .form(new HashMap<String, Object>() {{
+                .form(new HashMap<>() {{
                     put("b", "2");
                 }})
                 .ok();
-        System.out.println("ok.str() = " + ok.str());
+        Assertions.assertEquals("ok", ok.str());
+        //{a=[1], b=[2]}
     }
 
     @Test
-    void test2() throws Exception {
+    public void test2() throws Exception {
         //multipart/form-data
-        final Res ok = Req.multipart("http://localhost:8080/post_mul_form")
-                .file("k", "k.txt", Files.readAllBytes(Paths.get("/Users/kongweiguang/Desktop/Snipaste_2023-12-25_14-25-51.png")))
+        Res ok = Req.multipart("http://localhost:8080/post_mul_form")
+                .file("test", "test.txt", Files.readAllBytes(Paths.get("C:", "test", "test.txt")))
                 .form("a", "1")
-                .form(new HashMap<String, Object>() {{
+                .form(new HashMap<>() {{
                     put("b", "2");
                 }})
                 .ok();
-        System.out.println("ok.str() = " + ok.str());
+        Assertions.assertEquals("ok", ok.str());
+        //params = {a=[1], b=[2]}
+        //files = {test=[io.github.kongweiguang.http.server.core.UploadFile@6231d793]}
     }
 }

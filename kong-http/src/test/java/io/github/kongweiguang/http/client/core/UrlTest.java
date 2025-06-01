@@ -2,19 +2,22 @@ package io.github.kongweiguang.http.client.core;
 
 import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.Res;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class UrlTest {
 
     @Test
     void test1() throws Exception {
-        final Res res = Req.get("http://localhost:8080/get/one/two").ok();
-        System.out.println("res = " + res.str());
+        Res res = Req.get("http://localhost:8080/get/one/two").ok();
+
+        Assertions.assertEquals("ok", res.str());
     }
 
     @Test
     void test2() {
-        final Res res = Req.of()
+        // http://localhost:8080/get/one/two
+        Res res = Req.of()
                 .scheme("http")
                 .host("localhost")
                 .port(8080)
@@ -22,20 +25,21 @@ public class UrlTest {
                 .path("one")
                 .path("two")
                 .ok();
-        System.out.println("res.str() = " + res.str());
-        // http://localhost:8080/get/one/two
+
+        Assertions.assertEquals("ok", res.str());
     }
 
     @Test
     void test3() throws Exception {
         // http://localhost:8080/get/one/two
-        final Res res = Req.get("/get")
+        Res res = Req.get("/get")
                 .scheme("http")
                 .host("localhost")
                 .port(8080)
                 .path("one")
                 .path("two")
                 .ok();
-        System.out.println("res = " + res.str());
+
+        Assertions.assertEquals("ok", res.str());
     }
 }

@@ -2,7 +2,9 @@ package io.github.kongweiguang.core.retry;
 
 
 import io.github.kongweiguang.core.lang.Assert;
+import io.github.kongweiguang.core.lang.Opt;
 import io.github.kongweiguang.core.lang.Pair;
+import io.github.kongweiguang.core.threads.ThreadPools;
 import io.github.kongweiguang.core.threads.Threads;
 
 import java.time.Duration;
@@ -98,11 +100,11 @@ public class RetryableTask<T> {
     /**
      * 执行法方法
      */
-    private final Supplier<T> sup;
+    private Supplier<T> sup;
     /**
      * 重试策略
      */
-    private final RetryPre<T> predicate;
+    private RetryPre<T> predicate;
     /**
      * 重试次数，默认3次
      */
@@ -128,6 +130,32 @@ public class RetryableTask<T> {
 
         this.predicate = predicate;
         this.sup = sup;
+    }
+
+    /**
+     * 具体任务
+     *
+     * @param sup 执行的方法 {@link Supplier}
+     * @return 当前对象
+     */
+    public RetryableTask<T> task(Supplier<T> sup) {
+        Assert.notNull(sup, "task parameter cannot be null");
+
+        this.sup = sup;
+        return this;
+    }
+
+    /**
+     * 重试策略
+     *
+     * @param predicate 策略 {@link BiPredicate}，返回{@code true}时表示重试
+     * @return 当前对象
+     */
+    public RetryableTask<T> predicate(RetryPre<T> predicate) {
+        Assert.notNull(predicate, "predicate parameter cannot be null");
+
+        this.predicate = predicate;
+        return this;
     }
 
     /**
@@ -159,30 +187,20 @@ public class RetryableTask<T> {
     /**
      * 获取结果
      *
-     * @return 返回包装了结果的 {@link Optional}对象
+     * @return 返回包装了结果的 {@link Opt}对象
      */
-    public Optional<T> get() {
-        return Optional.ofNullable(result);
+    public Opt<T, Throwable> get() {
+        if (nonNull(result)) {
+            return Opt.ofNullable(result);
+        }
+
+        if (nonNull(throwable)) {
+            return Opt.error(throwable);
+        }
+
+        return Opt.empty();
     }
 
-    /**
-     * 获取结果, 如果无法获取结果, 则抛出最后一次执行时的异常
-     *
-     * @return 结果
-     * @throws Throwable 获取结果时, 如果无法获取结果, 则抛出最后一次执行时的异常
-     */
-    public T orElseThrow() throws Throwable {
-        return Optional.ofNullable(result).orElseThrow(() -> throwable().orElse(new RuntimeException()));
-    }
-
-    /**
-     * 获取异常
-     *
-     * @return 返回包装了异常的 {@link Optional}对象
-     */
-    public Optional<Throwable> throwable() {
-        return Optional.ofNullable(throwable);
-    }
 
     /**
      * 异步执行重试方法
@@ -190,7 +208,7 @@ public class RetryableTask<T> {
      * @return 返回一个异步对象 {@link CompletableFuture}
      */
     public CompletableFuture<RetryableTask<T>> asyncExecute() {
-        return CompletableFuture.supplyAsync(this::doExecute);
+        return CompletableFuture.supplyAsync(this::doExecute, ThreadPools.virtualPool);
     }
 
     /**

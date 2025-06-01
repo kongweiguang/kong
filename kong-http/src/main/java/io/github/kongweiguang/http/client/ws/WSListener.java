@@ -1,14 +1,17 @@
 package io.github.kongweiguang.http.client.ws;
 
 import io.github.kongweiguang.http.client.Req;
-import io.github.kongweiguang.http.client.ReqBuilder;
 import io.github.kongweiguang.http.client.Res;
+import io.github.kongweiguang.http.client.builder.WSReqBuilder;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static java.util.Optional.ofNullable;
+import static io.github.kongweiguang.core.lang.Opt.ofNullable;
+
 
 /**
  * ws监听器
@@ -16,43 +19,43 @@ import static java.util.Optional.ofNullable;
  * @author kongweiguang
  */
 public abstract class WSListener extends WebSocketListener {
-
-    private WebSocket ws;
+    private static final Logger log = LoggerFactory.getLogger(WSListener.class);
+    protected WebSocket ws;
 
     @Override
     public void onOpen(WebSocket webSocket, Response response) {
         this.ws = webSocket;
-        open(webSocket.request().tag(ReqBuilder.class), Res.of(response));
+        open(webSocket.request().tag(WSReqBuilder.class), Res.of(response));
     }
 
     @Override
     public void onMessage(WebSocket webSocket, String text) {
         this.ws = webSocket;
-        msg(webSocket.request().tag(ReqBuilder.class), text);
+        msg(webSocket.request().tag(WSReqBuilder.class), text);
     }
 
     @Override
     public void onMessage(WebSocket webSocket, ByteString bytes) {
         this.ws = webSocket;
-        msg(webSocket.request().tag(ReqBuilder.class), bytes.toByteArray());
+        msg(webSocket.request().tag(WSReqBuilder.class), bytes.toByteArray());
     }
 
     @Override
     public void onFailure(WebSocket webSocket, Throwable t, Response response) {
         this.ws = webSocket;
-        fail(webSocket.request().tag(ReqBuilder.class), Res.of(response), t);
+        fail(webSocket.request().tag(WSReqBuilder.class), Res.of(response), t);
     }
 
     @Override
     public void onClosing(WebSocket webSocket, int code, String reason) {
         this.ws = webSocket;
-        closing(webSocket.request().tag(ReqBuilder.class), code, reason);
+        closing(webSocket.request().tag(WSReqBuilder.class), code, reason);
     }
 
     @Override
-    public void onClosed(final WebSocket webSocket, final int code, final String reason) {
+    public void onClosed(WebSocket webSocket, int code, String reason) {
         this.ws = webSocket;
-        closed(webSocket.request().tag(ReqBuilder.class), code, reason);
+        closed(webSocket.request().tag(WSReqBuilder.class), code, reason);
     }
 
     /**
@@ -61,11 +64,8 @@ public abstract class WSListener extends WebSocketListener {
      * @param text 字符串类型
      * @return {@link WSListener}
      */
-    public WSListener send(final String text) {
-
-        ofNullable(ws).ifPresent(ws -> ws.send(text));
-
-        return this;
+    public WSListener send(String text) {
+        return send(text.getBytes());
     }
 
     /**
@@ -74,7 +74,7 @@ public abstract class WSListener extends WebSocketListener {
      * @param bytes byte类型
      * @return {@link WSListener}
      */
-    public WSListener send(final byte[] bytes) {
+    public WSListener send(byte[] bytes) {
 
         ofNullable(ws).ifPresent(ws -> ws.send(ByteString.of(bytes)));
 
@@ -84,7 +84,7 @@ public abstract class WSListener extends WebSocketListener {
     /**
      * 关闭连接
      */
-    public void close() {
+    public void closeCon() {
         ofNullable(ws).ifPresent(WebSocket::cancel);
     }
 
@@ -95,7 +95,7 @@ public abstract class WSListener extends WebSocketListener {
      * @param req {@link Req}
      * @param res {@link Res}
      */
-    public void open(final ReqBuilder req, final Res res) {
+    public void open(WSReqBuilder req, Res res) {
     }
 
     /**
@@ -104,7 +104,7 @@ public abstract class WSListener extends WebSocketListener {
      * @param req  请求信息 {@link Req}
      * @param text string类型响应数据 {@link String}
      */
-    public void msg(final ReqBuilder req, final String text) {
+    public void msg(WSReqBuilder req, String text) {
     }
 
 
@@ -114,7 +114,7 @@ public abstract class WSListener extends WebSocketListener {
      * @param req   请求信息 {@link Req}
      * @param bytes byte类型响应数据 {@link Byte}
      */
-    public void msg(final ReqBuilder req, final byte[] bytes) {
+    public void msg(WSReqBuilder req, byte[] bytes) {
     }
 
     /**
@@ -124,7 +124,7 @@ public abstract class WSListener extends WebSocketListener {
      * @param res 响应信息 {@link Res}
      * @param t   异常信息 {@link Throwable}
      */
-    public void fail(final ReqBuilder req, final Res res, final Throwable t) {
+    public void fail(WSReqBuilder req, Res res, Throwable t) {
     }
 
     /**
@@ -134,7 +134,7 @@ public abstract class WSListener extends WebSocketListener {
      * @param code   状态码
      * @param reason 原因
      */
-    public void closing(final ReqBuilder req, final int code, final String reason) {
+    public void closing(WSReqBuilder req, int code, String reason) {
     }
 
     /**
@@ -144,7 +144,7 @@ public abstract class WSListener extends WebSocketListener {
      * @param code   状态码
      * @param reason 原因
      */
-    public void closed(final ReqBuilder req, final int code, final String reason) {
+    public void closed(WSReqBuilder req, int code, String reason) {
     }
 
 }

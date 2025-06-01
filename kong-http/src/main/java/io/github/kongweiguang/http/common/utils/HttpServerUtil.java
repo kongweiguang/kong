@@ -1,7 +1,8 @@
-package io.github.kongweiguang.http.server.core;
+package io.github.kongweiguang.http.common.utils;
 
 import com.sun.net.httpserver.HttpExchange;
-import io.github.kongweiguang.http.client.core.ContentType;
+import io.github.kongweiguang.http.common.core.ContentType;
+import io.github.kongweiguang.http.server.core.HttpHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,14 +19,14 @@ import static java.util.Objects.isNull;
  *
  * @author kongweiguang
  */
-public class InnerUtil {
-    
+public class HttpServerUtil {
+
     // 自定义错误页面存储
     private static final Map<Integer, String> ERROR_PAGES = new ConcurrentHashMap<>();
-    
+
     // MIME类型映射表
     private static final Map<String, String> MIME_TYPES = new HashMap<>();
-    
+
     // 初始化常用MIME类型
     static {
         MIME_TYPES.put("html", "text/html");
@@ -53,27 +54,27 @@ public class InnerUtil {
         MIME_TYPES.put("wgt", "application/widget");
         MIME_TYPES.put("webp", "image/webp");
     }
-    
+
     /**
      * 设置自定义错误页面
-     * 
+     *
      * @param statusCode 状态码
-     * @param content 错误页面内容
+     * @param content    错误页面内容
      */
     public static void setErrorPage(int statusCode, String content) {
         ERROR_PAGES.put(statusCode, content);
     }
-    
+
     /**
      * 获取自定义错误页面
-     * 
+     *
      * @param statusCode 状态码
      * @return 错误页面内容，如果没有自定义则返回null
      */
     public static String getErrorPage(int statusCode) {
         return ERROR_PAGES.get(statusCode);
     }
-    
+
     /**
      * 判断是否有处理器，没有响应404
      *
@@ -90,13 +91,13 @@ public class InnerUtil {
         }
         return false;
     }
-    
+
     /**
      * 发送错误响应
-     * 
-     * @param he HttpExchange
+     *
+     * @param he         HttpExchange
      * @param statusCode 状态码
-     * @param content 错误内容
+     * @param content    错误内容
      * @throws IOException 异常
      */
     public static void sendError(HttpExchange he, int statusCode, String content) throws IOException {
@@ -107,12 +108,12 @@ public class InnerUtil {
             os.write(bytes);
         }
     }
-    
+
     /**
      * 增加自定义MIME类型
-     * 
+     *
      * @param extension 文件扩展名
-     * @param mimeType MIME类型
+     * @param mimeType  MIME类型
      */
     public static void addMimeType(String extension, String mimeType) {
         MIME_TYPES.put(extension.toLowerCase(), mimeType);
@@ -126,9 +127,9 @@ public class InnerUtil {
      */
     public static String getMimeType(final String fileName) {
         if (fileName == null || fileName.isEmpty()) {
-            return ContentType.octet_stream.v();
+            return ContentType.OCTET_STREAM.v();
         }
-        
+
         // 从扩展名获取MIME类型
         int lastDotPos = fileName.lastIndexOf(".");
         if (lastDotPos > 0) {
@@ -137,50 +138,50 @@ public class InnerUtil {
             if (mimeType != null) {
                 return mimeType;
             }
-            
+
             // 特殊处理一些复合扩展名
             if (ext.equals("js")) {
                 return "application/x-javascript";
             }
         }
-        
+
         // 检查特殊文件类型（例如没有扩展名但有特定格式的文件）
         for (Map.Entry<String, String> entry : MIME_TYPES.entrySet()) {
             if (fileName.toLowerCase().endsWith("." + entry.getKey())) {
                 return entry.getValue();
             }
         }
-    
-        return ContentType.octet_stream.v();
+
+        return ContentType.OCTET_STREAM.v();
     }
-    
+
     /**
      * 获取文件的MIME类型
-     * 
+     *
      * @param file 文件
      * @return MIME类型
      */
     public static String getMimeType(File file) {
         if (file == null) {
-            return ContentType.octet_stream.v();
+            return ContentType.OCTET_STREAM.v();
         }
-        
+
         // 先尝试通过文件名获取
         String name = file.getName();
         String mimeType = getMimeType(name);
-        
+
         // 如果已经找到具体类型（不是默认的二进制流类型），直接返回
-        if (!ContentType.octet_stream.v().equals(mimeType)) {
+        if (!ContentType.OCTET_STREAM.v().equals(mimeType)) {
             return mimeType;
         }
-    
+
         // 无法从扩展名确定，尝试从系统获取MIME类型
         try {
             String contentType = Files.probeContentType(file.toPath());
-            return contentType != null ? contentType : ContentType.octet_stream.v();
+            return contentType != null ? contentType : ContentType.OCTET_STREAM.v();
         } catch (IOException e) {
             // 出现异常时返回默认二进制流类型
-            return ContentType.octet_stream.v();
+            return ContentType.OCTET_STREAM.v();
         }
     }
 }
