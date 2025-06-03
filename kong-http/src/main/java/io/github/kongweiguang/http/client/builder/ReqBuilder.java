@@ -148,7 +148,7 @@ public abstract class ReqBuilder<T extends ReqBuilder<T, R>, R> {
         //cookie
         ofNullable(cookieMap).ifPresent(e -> header(Header.COOKIE.v(), cookie2Str(cookie())));
 
-        //
+        //将构建的类放入其中，可以在后面取出来
         Class aClass = this.getClass();
         builder().tag(aClass, this);
     }
