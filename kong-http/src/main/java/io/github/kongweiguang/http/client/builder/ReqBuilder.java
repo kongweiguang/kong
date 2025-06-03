@@ -12,14 +12,15 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import static io.github.kongweiguang.core.lang.Assert.isTrue;
 import static io.github.kongweiguang.core.lang.Assert.notNull;
+import static io.github.kongweiguang.core.lang.Opt.ofNullable;
 import static io.github.kongweiguang.http.common.utils.HttpClientUtil.*;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static io.github.kongweiguang.core.lang.Opt.ofNullable;
 
 /**
  * http请求构建器
@@ -153,14 +154,6 @@ public abstract class ReqBuilder<T extends ReqBuilder<T, R>, R> {
     }
 
     /**
-     * 同步请求，自定义client
-     *
-     * @param client {@link OkHttpClient}
-     * @return Res {@link Res}
-     */
-    public abstract R ok(OkHttpClient client);
-
-    /**
      * 同步请求，使用全局配置
      *
      * @return Res {@link Res}
@@ -168,6 +161,43 @@ public abstract class ReqBuilder<T extends ReqBuilder<T, R>, R> {
     public R ok() {
         return ok(Client.of(conf));
     }
+
+    /**
+     * 同步请求，自定义client
+     *
+     * @param client {@link OkHttpClient}
+     * @return Res {@link Res}
+     */
+    public R ok(OkHttpClient client) {
+        return okAsync(client).join();
+    }
+
+
+    /**
+     * 异步请求
+     *
+     * @return Res {@link ReqBuilder}
+     **/
+    public CompletableFuture<R> okAsync() {
+        return okAsync(Client.of(conf));
+    }
+
+    /**
+     * 异步请求，自定义okhttpClient
+     *
+     * @return Res {@link ReqBuilder}
+     */
+    public CompletableFuture<R> okAsync(OkHttpClient client) {
+        before();
+        return execute(client);
+    }
+
+    /**
+     * 发送请求，自定义okhttpClient
+     *
+     * @return Res {@link ReqBuilder}
+     */
+    protected abstract CompletableFuture<R> execute(OkHttpClient client);
 
     /**
      * 请求超时时间设置

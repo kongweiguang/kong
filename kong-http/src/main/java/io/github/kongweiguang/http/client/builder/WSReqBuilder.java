@@ -6,6 +6,8 @@ import io.github.kongweiguang.http.client.ws.WSListener;
 import okhttp3.OkHttpClient;
 import okhttp3.WebSocket;
 
+import java.util.concurrent.CompletableFuture;
+
 import static io.github.kongweiguang.core.lang.Assert.notNull;
 
 /**
@@ -24,9 +26,8 @@ public class WSReqBuilder extends ReqBuilder<WSReqBuilder, WebSocket> {
     }
 
     @Override
-    public WebSocket ok(OkHttpClient client) {
-        before();
-        return WSOK.ok(this, client).join();
+    protected CompletableFuture<WebSocket> execute(OkHttpClient client) {
+        return WSOK.ok(this, client);
     }
 
     /**

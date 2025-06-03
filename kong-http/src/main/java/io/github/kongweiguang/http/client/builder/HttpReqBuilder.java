@@ -3,7 +3,6 @@ package io.github.kongweiguang.http.client.builder;
 import io.github.kongweiguang.core.lang.Pair;
 import io.github.kongweiguang.core.retry.RetryableTask;
 import io.github.kongweiguang.http.client.Res;
-import io.github.kongweiguang.http.client.core.Client;
 import io.github.kongweiguang.http.client.ok.HttpOK;
 import io.github.kongweiguang.http.common.core.ContentType;
 import io.github.kongweiguang.http.common.exception.KongHttpRuntimeException;
@@ -21,8 +20,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import static io.github.kongweiguang.core.lang.Assert.notNull;
-import static java.util.Objects.*;
 import static io.github.kongweiguang.core.lang.Opt.ofNullable;
+import static java.util.Objects.*;
 import static okhttp3.internal.http.HttpMethod.permitsRequestBody;
 
 /**
@@ -66,26 +65,7 @@ public class HttpReqBuilder<T extends HttpReqBuilder<T, R>, R> extends ReqBuilde
     }
 
     @Override
-    public R ok(OkHttpClient client) {
-        return okAsync(client).join();
-    }
-
-    /**
-     * 异步请求
-     *
-     * @return Res {@link ReqBuilder}
-     **/
-    public CompletableFuture<R> okAsync() {
-        return okAsync(Client.of(conf));
-    }
-
-    /**
-     * 异步请求，自定义okhttpClient
-     *
-     * @return Res {@link ReqBuilder}
-     */
-    public CompletableFuture<R> okAsync(OkHttpClient client) {
-        before();
+    protected CompletableFuture<R> execute(OkHttpClient client) {
         return (CompletableFuture<R>) HttpOK.ok((HttpReqBuilder<?, Res>) this, client);
     }
 

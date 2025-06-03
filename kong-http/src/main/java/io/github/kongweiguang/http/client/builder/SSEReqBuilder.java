@@ -24,24 +24,8 @@ public class SSEReqBuilder extends HttpReqBuilder<SSEReqBuilder, EventSource> {
         reqType(ReqType.sse);
     }
 
-    /**
-     * 发送SSE请求
-     *
-     * @param client OkHttpClient {@link OkHttpClient}
-     * @return EventSource {@link EventSource}
-     */
-    public EventSource ok(OkHttpClient client) {
-        return okAsync(client).join();
-    }
-
     @Override
-    public CompletableFuture<EventSource> okAsync() {
-        return okAsync(Client.of(conf));
-    }
-
-    @Override
-    public CompletableFuture<EventSource> okAsync(OkHttpClient client) {
-        before();
+    protected CompletableFuture<EventSource> execute(OkHttpClient client) {
         return SSEOK.ok(this, client);
     }
 
