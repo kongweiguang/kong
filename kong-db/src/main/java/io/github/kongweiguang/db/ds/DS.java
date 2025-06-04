@@ -72,7 +72,7 @@ public class DS {
 
     private static Map<String, Object> getConfig() {
         try {
-            return Tomls.toMap(new ClassPathResource(DB.config).getStr());
+            return Tomls.toMap(new ClassPathResource(DB.config).str());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

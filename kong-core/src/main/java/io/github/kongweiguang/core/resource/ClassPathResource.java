@@ -80,7 +80,7 @@ public class ClassPathResource {
      * @return 资源输入流
      * @throws IOException 如果无法获取输入流
      */
-    public InputStream getInputStream() throws IOException {
+    public InputStream stream() throws IOException {
         if (resourceUrl != null) {
             return resourceUrl.openStream();
         }
@@ -108,7 +108,7 @@ public class ClassPathResource {
      * @return 资源URL
      * @throws IOException 如果无法获取URL
      */
-    public URL getURL() throws IOException {
+    public URL url() throws IOException {
         if (resourceUrl != null) {
             return resourceUrl;
         }
@@ -121,9 +121,9 @@ public class ClassPathResource {
      * @return 资源URI
      * @throws IOException 如果无法获取URI
      */
-    public URI getURI() throws IOException {
+    public URI uri() throws IOException {
         try {
-            return getURL().toURI();
+            return url().toURI();
         } catch (URISyntaxException e) {
             throw new IOException("Invalid URI", e);
         }
@@ -136,8 +136,8 @@ public class ClassPathResource {
      * @return 资源文件
      * @throws IOException 如果无法获取文件或资源不是文件系统中的文件
      */
-    public File getFile() throws IOException {
-        URI uri = getURI();
+    public File file() throws IOException {
+        URI uri = uri();
         if (!uri.getScheme().equals("file")) {
             throw new IOException("Resource " + path + " is not a file (URI scheme: " + uri.getScheme() + ")");
         }
@@ -149,7 +149,7 @@ public class ClassPathResource {
      *
      * @return 路径
      */
-    public String getPath() {
+    public String path() {
         return path;
     }
 
@@ -159,8 +159,8 @@ public class ClassPathResource {
      * @return 资源内容
      * @throws IOException 如果读取失败
      */
-    public String getStr() throws IOException {
-        return getStr(StandardCharsets.UTF_8);
+    public String str() throws IOException {
+        return str(StandardCharsets.UTF_8);
     }
 
     /**
@@ -170,8 +170,8 @@ public class ClassPathResource {
      * @return 资源内容
      * @throws IOException 如果读取失败
      */
-    public String getStr(Charset charset) throws IOException {
-        try (InputStream is = getInputStream()) {
+    public String str(Charset charset) throws IOException {
+        try (InputStream is = stream()) {
             return new String(is.readAllBytes(), charset);
         }
     }
@@ -182,8 +182,8 @@ public class ClassPathResource {
      * @return 资源内容字节数组
      * @throws IOException 如果读取失败
      */
-    public byte[] getByte() throws IOException {
-        try (InputStream is = getInputStream()) {
+    public byte[] bytes() throws IOException {
+        try (InputStream is = stream()) {
             return is.readAllBytes();
         }
     }
@@ -194,8 +194,8 @@ public class ClassPathResource {
      * @return 资源Path
      * @throws IOException 如果无法获取Path
      */
-    public Path getPath(boolean verifyExists) throws IOException {
-        URI uri = getURI();
+    public Path path(boolean verifyExists) throws IOException {
+        URI uri = uri();
         if (!uri.getScheme().equals("file")) {
             throw new IOException("Resource " + path + " is not a file (URI scheme: " + uri.getScheme() + ")");
         }
@@ -221,7 +221,7 @@ public class ClassPathResource {
      * @return 是否可读
      */
     public boolean isReadable() {
-        try (InputStream ignored = getInputStream()) {
+        try (InputStream ignored = stream()) {
             return true;
         } catch (IOException e) {
             return false;
@@ -235,7 +235,7 @@ public class ClassPathResource {
      */
     public boolean isFile() {
         try {
-            URI uri = getURI();
+            URI uri = uri();
             return uri.getScheme().equals("file");
         } catch (IOException e) {
             return false;
@@ -250,7 +250,7 @@ public class ClassPathResource {
     public long lastModified() {
         try {
             if (isFile()) {
-                return getFile().lastModified();
+                return file().lastModified();
             }
         } catch (IOException e) {
             // 忽略异常
