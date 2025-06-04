@@ -6,8 +6,13 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.github.kongweiguang.core.exception.KongException;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
@@ -336,5 +341,56 @@ public class Json {
     public static JsonAry ary() {
         return JsonAry.of();
     }
+
+    /**
+     * 读取json文件
+     *
+     * @param path 文件路径
+     * @return jsonNode
+     */
+    public static JsonNode read(Path path, Charset charset) {
+        try {
+            String json = Files.readString(path, charset);
+            return toNode(json);
+        } catch (IOException e) {
+            throw new KongException(e);
+        }
+    }
+
+    /**
+     * 读取json文件
+     *
+     * @param path 文件路径
+     * @return jsonNode
+     */
+    public static JsonNode read(Path path) {
+        return read(path, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * 读取jsonl文件
+     *
+     * @param path 文件路径
+     * @return jsonNode
+     */
+    public static List<JsonNode> readJsonl(Path path, Charset charset) {
+        try {
+            List<String> jsonl = Files.readAllLines(path, charset);
+            return jsonl.stream().map(Json::toNode).toList();
+        } catch (IOException e) {
+            throw new KongException(e);
+        }
+    }
+
+    /**
+     * 读取jsonl文件
+     *
+     * @param path 文件路径
+     * @return jsonNode
+     */
+    public static List<JsonNode> readJsonl(Path path) {
+        return readJsonl(path, StandardCharsets.UTF_8);
+    }
+
 }
 
