@@ -1,10 +1,11 @@
 package io.github.kongweiguang.spring.test;
 
+import io.github.kongweiguang.spring.SpringUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 
 @ContextConfiguration
 //@RunWith(SpringRunner.class)
@@ -16,9 +17,8 @@ public class Test1 {
 
     @Test
     public void test1() throws Exception {
-//        final C c = SpringUtil.getBean(C.class);
-//        c.m1();
-      new C().m1();
+        ApplicationContext context = SpringUtil.context();
+        System.out.println(context.getBeanDefinitionCount());
     }
 
 }

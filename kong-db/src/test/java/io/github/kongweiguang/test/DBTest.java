@@ -1,15 +1,13 @@
 package io.github.kongweiguang.test;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.kongweiguang.core.lang.Pair;
 import io.github.kongweiguang.core.map.Maps;
 import io.github.kongweiguang.db.DB;
-import io.github.kongweiguang.db.DbRun;
+import io.github.kongweiguang.db.run.DbRun;
 import io.github.kongweiguang.db.page.Page;
 import io.github.kongweiguang.db.page.PageRes;
 import io.github.kongweiguang.db.sql.*;
 import io.github.kongweiguang.db.util.Wheres;
-import io.github.kongweiguang.json.Json;
 import io.github.kongweiguang.test.domain.User;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +16,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DBTest {
-    private static final DbRun run = DB.ofHikari("mysql");
+    private static final DB run = DB.ofHikari("mysql");
 //    private static final DbRun run = null;
 
     @Test
@@ -257,7 +255,7 @@ public class DBTest {
                 .select("*")
                 .from("users")
                 .ok();
-        assertEquals("SELECT * FROM users", sr.sql());
+        assertEquals("SELECT * FROM users ", sr.sql());
 
         long select = run.count(sr.sql(), sr.params());
 
@@ -273,8 +271,8 @@ public class DBTest {
         assertEquals("SELECT * FROM users ", sr.sql());
 
         PageRes<Map<String, Object>> pages = run.page(sr.sql(), Page.of(1, 5), sr.params());
-        List<User> list = pages.data().stream().map(e -> Maps.toBean(e, User.class)).toList();
-        System.out.println(list);
+        List<User> list = Maps.toBeanList(pages.data(), User.class);
+        System.out.println("list = " + list);
         System.out.println("pages = " + pages);
     }
 
@@ -284,16 +282,13 @@ public class DBTest {
                 .select("*")
                 .from("users")
                 .ok();
-        assertEquals("SELECT * FROM users", sr.sql());
+        assertEquals("SELECT * FROM users ", sr.sql());
 
         List<Map<String, Object>> maps = run.selectList(sr.sql(), sr.params());
 
-        List<User> collect = maps.stream()
-                .map(Maps::key2CamelCase)
-                .map(e -> Json.toObj(e, User.class))
-                .toList();
+        List<User> list = Maps.toBeanList(maps, User.class);
 
-        System.out.println("collect = " + collect);
+        System.out.println("collect = " + list);
     }
 
     @Test
@@ -304,13 +299,11 @@ public class DBTest {
                 .where("id = ?", 1)
                 .orderBy(Order.desc("created_at"))
                 .ok();
-        assertEquals("SELECT * FROM users WHERE id = ? ORDER BY created_at DESC", sr.sql());
+        assertEquals("SELECT * FROM users WHERE id = ? ORDER BY created_at DESC ", sr.sql());
 
         Map<String, Object> select = run.select(sr.sql(), sr.params());
-
-        User user = Json.toObj(Maps.key2CamelCase(select), new TypeReference<>() {
-        });
-
+        System.out.println(select);
+        User user = Maps.toBean(select, User.class);
         System.out.println(user);
     }
 }

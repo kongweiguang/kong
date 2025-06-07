@@ -66,7 +66,7 @@ public class Tomls {
      * @param data 数据Map
      * @return TOML格式的字符串
      */
-    public static String toStr(Map<String, Object> data) {
+    public static String toTomlStr(Map<String, Object> data) {
         try (StringWriter stringWriter = new StringWriter();
              BufferedWriter writer = new BufferedWriter(stringWriter)) {
 

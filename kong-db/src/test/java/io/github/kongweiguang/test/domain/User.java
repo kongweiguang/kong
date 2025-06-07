@@ -17,4 +17,18 @@ public class User {
     private LocalDateTime updatedAt;
     private List<Role> roles;
 
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("username='" + username + "'")
+                .add("password='" + password + "'")
+                .add("email='" + email + "'")
+                .add("firstName='" + firstName + "'")
+                .add("lastName='" + lastName + "'")
+                .add("createdAt=" + createdAt)
+                .add("updatedAt=" + updatedAt)
+                .add("roles=" + roles)
+                .toString();
+    }
 }

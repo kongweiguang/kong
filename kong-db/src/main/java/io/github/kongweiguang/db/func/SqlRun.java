@@ -1,6 +1,6 @@
 package io.github.kongweiguang.db.func;
 
-import io.github.kongweiguang.db.DbRun;
+import io.github.kongweiguang.db.run.DbRun;
 
 /**
  * 数据库事务操作接口

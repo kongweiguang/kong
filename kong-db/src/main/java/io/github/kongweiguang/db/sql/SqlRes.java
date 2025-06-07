@@ -17,4 +17,5 @@ public record SqlRes(String sql, Object[] params) {
                 .add("params=" + Arrays.toString(params))
                 .toString();
     }
+
 }

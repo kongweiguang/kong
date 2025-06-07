@@ -11,7 +11,7 @@ public class ClientTest {
 
     public static void main(String[] args) {
         // 创建客户端实例并连接
-        NioClient client = NioClient.of(c -> c.bufferSize(100))
+        NioClient client = NioClient.of()
                 .socketHandler((response, channel) -> {
                     //打印响应
                     byte[] data = new byte[response.remaining()];

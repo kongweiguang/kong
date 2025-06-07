@@ -1,9 +1,11 @@
 package io.github.kongweiguang.http.server.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * 解析form表单数据，简易实现
@@ -12,7 +14,7 @@ import java.util.Arrays;
  * @author kongweiguang
  */
 public class FormResolver {
-
+    private static final Logger log = LoggerFactory.getLogger(FormResolver.class);
     private static final byte[] CRLF = "\r\n".getBytes(StandardCharsets.UTF_8);
     private static final String CONTENT_DISPOSITION = "Content-Disposition: form-data; ";
     private static final String TEXT_TYPE = "text";
@@ -27,7 +29,7 @@ public class FormResolver {
         if (req == null || req.contentType() == null) {
             return;
         }
-        
+
         try {
             // 提取boundary
             String contentType = req.contentType();
@@ -35,22 +37,22 @@ public class FormResolver {
             if (boundaryIndex == -1) {
                 return;
             }
-            
+
             byte[] boundary = ("--" + contentType.substring(boundaryIndex + 1)).getBytes(StandardCharsets.UTF_8);
             byte[] body = req.bytes();
-            
+
             parseMultipartBody(req, body, boundary);
         } catch (Exception e) {
             // 解析异常时记录日志或处理错误，但不中断请求处理
-            System.err.println("解析表单数据时发生错误: " + e.getMessage());
+            log.error("解析表单数据时发生错误: ", e);
         }
     }
-    
+
     /**
      * 解析multipart/form-data格式的请求体
      *
-     * @param req HTTP请求对象
-     * @param body 请求体字节数组
+     * @param req      HTTP请求对象
+     * @param body     请求体字节数组
      * @param boundary 分隔符字节数组
      */
     private static void parseMultipartBody(HttpReq req, byte[] body, byte[] boundary) {
@@ -81,7 +83,7 @@ public class FormResolver {
 
                 if (crlfCount == 2) {
                     processHeaderLine(body, i, cursor, req, part);
-                    
+
                     byte[] line = extractLine(body, cursor, i);
 
                     if (isLineBlank(line)) {
@@ -112,7 +114,7 @@ public class FormResolver {
             count = 0;
         }
     }
-    
+
     /**
      * 匹配boundary
      */
@@ -130,7 +132,7 @@ public class FormResolver {
         }
         return count;
     }
-    
+
     /**
      * 匹配CRLF (\r\n)
      */
@@ -148,7 +150,7 @@ public class FormResolver {
         }
         return count;
     }
-    
+
     /**
      * 提取一行数据
      */
@@ -160,14 +162,14 @@ public class FormResolver {
         System.arraycopy(body, start, line, 0, end - start);
         return line;
     }
-    
+
     /**
      * 处理头部行
      */
     private static void processHeaderLine(byte[] body, int position, int cursor, HttpReq req, Part part) {
         // 此方法为将来扩展预留，可以处理Content-Type等其他头部信息
     }
-    
+
     /**
      * 处理表单部分
      */
@@ -215,10 +217,10 @@ public class FormResolver {
             if (eqIndex <= 0) {
                 continue;
             }
-            
+
             String key = kv.substring(0, eqIndex);
             String value = kv.substring(eqIndex + 1).replace("\"", "");
-            
+
             if ("name".equals(key)) {
                 part.name(value);
             } else if ("filename".equals(key)) {
@@ -251,7 +253,7 @@ public class FormResolver {
                 return false;
             }
         }
-        
+
         return true;
     }
 

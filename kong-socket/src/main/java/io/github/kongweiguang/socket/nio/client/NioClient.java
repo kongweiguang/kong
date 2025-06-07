@@ -15,6 +15,8 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.function.Consumer;
 
+import static io.github.kongweiguang.core.lang.Objs.notNull;
+
 /**
  * NIO客户端实现
  * 提供异步非阻塞的Socket通信能力
@@ -37,16 +39,6 @@ public class NioClient implements AutoCloseable {
 
     //是否运行中
     private volatile boolean running = false;
-
-    /**
-     * 创建客户端
-     *
-     * @param config 配置
-     * @return 客户端实例
-     */
-    public static NioClient of(NioClientConfig config) {
-        return new NioClient(config);
-    }
 
     /**
      * 使用配置器创建客户端
@@ -188,7 +180,7 @@ public class NioClient implements AutoCloseable {
         if (bytesRead > 0) {
             buffer.flip();
             // 调用处理器处理响应
-            if (socketHandler != null) {
+            if (notNull(socketHandler)) {
                 socketHandler.handler(buffer, channel);
             }
 

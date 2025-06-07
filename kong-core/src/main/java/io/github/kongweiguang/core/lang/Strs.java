@@ -199,5 +199,17 @@ public class Strs {
         return sb.toString();
     }
 
+    /**
+     * 首字母大写
+     *
+     * @param str 字符串
+     * @return 首字母大写的字符串
+     */
+    public static String capitalize(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        return Character.toUpperCase(str.charAt(0)) + str.substring(1);
+    }
 
 }

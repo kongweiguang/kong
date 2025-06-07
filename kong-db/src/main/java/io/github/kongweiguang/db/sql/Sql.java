@@ -372,8 +372,8 @@ public class Sql {
     /**
      * 多条插入 *
      *
-     * @param values
-     * @return
+     * @param values 值
+     * @return Sql对象
      */
     public Sql values(List<Object[]> values) {
         if (insertFlag) {
@@ -401,8 +401,8 @@ public class Sql {
     /**
      * 单条插入
      *
-     * @param values
-     * @return
+     * @param values 值
+     * @return Sql对象
      */
     public Sql value(Object... values) {
         return values(Collections.singletonList(values));

@@ -48,8 +48,10 @@ public class NioServer implements AutoCloseable {
     }
 
     /**
-     * @param configConsumer
-     * @return
+     * 创建NIO服务器
+     *
+     * @param configConsumer 配置消费者
+     * @return NioServer
      */
     public static NioServer of(Consumer<NioServerConfig> configConsumer) {
         NioServerConfig config = NioServerConfig.of();
@@ -57,12 +59,14 @@ public class NioServer implements AutoCloseable {
         return new NioServer(config);
     }
 
+
     /**
-     * @param config
-     * @return
+     * 创建NIO服务器
+     *
+     * @return NioServer
      */
-    public static NioServer of(NioServerConfig config) {
-        return new NioServer(config);
+    public static NioServer of() {
+        return new NioServer(NioServerConfig.of());
     }
 
     /**

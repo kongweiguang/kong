@@ -2,6 +2,7 @@ package io.github.kongweiguang.db;
 
 
 import io.github.kongweiguang.db.ds.DS;
+import io.github.kongweiguang.db.run.DbRun;
 
 import javax.sql.DataSource;
 
@@ -10,8 +11,12 @@ import javax.sql.DataSource;
  *
  * @author kongweiguang
  */
-public class DB {
+public class DB extends DbRun {
     public static final String config = "kong-db.toml";
+
+    public DB(DataSource ds) {
+        super(ds);
+    }
 
     /**
      * 获取数据库执行,采用默认数据源
@@ -19,8 +24,8 @@ public class DB {
      * @param source 数据源名
      * @return DbRun
      */
-    public static DbRun of(String source) {
-        return DbRun.of(DS.of(source));
+    public static DB of(String source) {
+        return new DB(DS.of(source));
     }
 
     /**
@@ -29,8 +34,8 @@ public class DB {
      * @param source 数据源名
      * @return DbRun
      */
-    public static DbRun ofHikari(String source) {
-        return DbRun.of(DS.ofHikari(source));
+    public static DB ofHikari(String source) {
+        return of(DS.ofHikari(source));
     }
 
     /**
@@ -39,8 +44,8 @@ public class DB {
      * @param ds 数据源
      * @return DbRun
      */
-    public static DbRun of(DataSource ds) {
-        return DbRun.of(ds);
+    public static DB of(DataSource ds) {
+        return new DB(ds);
     }
 
 }

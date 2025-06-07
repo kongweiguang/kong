@@ -9,14 +9,15 @@ import java.util.concurrent.locks.LockSupport;
 public class ServerTest {
 
     public static void main(String[] args) {
-        // 创建自定义配置
-        NioServerConfig config = NioServerConfig.of()
-                .bossThreads(1)
-                .workerThreads(4)
-                .bufferSize(8192);
+
 
         // 创建服务器实例
-        NioServer.of(config)
+        NioServer.of(config -> {
+                    // 创建自定义配置
+                    config.bossThreads(1)
+                            .workerThreads(4)
+                            .bufferSize(8192);
+                })
 //                .socketHandler(new DefaultRequestHandler())
                 .socketHandler(new EchoSocketHandler())
                 .bind(8888)

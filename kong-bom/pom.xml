@@ -38,25 +38,14 @@
     </licenses>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>io.github.kongweiguang</groupId>
-                <artifactId>kong-bus</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.github.kongweiguang</groupId>
-                <artifactId>kong-bus-springboot-starter</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>io.github.kongweiguang</groupId>
