@@ -10,5 +10,5 @@ import java.sql.SQLException;
  */
 @FunctionalInterface
 public interface RsFn<T> {
-    T hd(ResultSet rs) throws SQLException;
+    T handle(ResultSet rs) throws SQLException;
 }

@@ -1,6 +1,6 @@
 package io.github.kongweiguang.db.func;
 
-import io.github.kongweiguang.db.run.DbRun;
+import io.github.kongweiguang.db.DB;
 
 /**
  * 数据库事务操作接口
@@ -9,5 +9,5 @@ import io.github.kongweiguang.db.run.DbRun;
  **/
 @FunctionalInterface
 public interface SqlRun {
-    void run(DbRun con);
+    void run(DB con);
 }

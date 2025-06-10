@@ -1,12 +1,13 @@
 package io.github.kongweiguang.db.sql;
 
 import io.github.kongweiguang.core.lang.Pair;
-import io.github.kongweiguang.db.util.Wheres;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static io.github.kongweiguang.core.lang.Opt.ofNullable;
 
 /**
  * Sql对象
@@ -21,6 +22,17 @@ public class Sql {
     private Sql(StringBuilder sql) {
         this.sql = sql;
     }
+
+    /**
+     * 创建Sql对象
+     *
+     * @return Sql对象
+     */
+    public static Sql of() {
+        return new Sql(new StringBuilder());
+    }
+
+    //region  select
 
     /**
      * 查询
@@ -286,8 +298,9 @@ public class Sql {
      * @param str 字段
      * @return Sql对象
      */
-    public Sql first(String str) {
+    public Sql first(String str, Object... params) {
         sql.insert(0, str).append(" ");
+        ofNullable(params).ifPresent(p -> paramsList.addAll(Arrays.asList(p)));
         return this;
     }
 
@@ -297,12 +310,14 @@ public class Sql {
      * @param str 字段
      * @return Sql对象
      */
-    public Sql last(String str) {
+    public Sql last(String str, Object... params) {
         sql.append(str).append(" ");
+        ofNullable(params).ifPresent(p -> paramsList.addAll(Arrays.asList(p)));
         return this;
     }
+    // endregion
 
-    // region ------ update
+    // region update
 
     /**
      * 更新
@@ -343,7 +358,9 @@ public class Sql {
         return this;
     }
 
-    // region ------ insert
+    // endregion
+
+    // region insert
 
     /**
      * 插入
@@ -407,8 +424,9 @@ public class Sql {
     public Sql value(Object... values) {
         return values(Collections.singletonList(values));
     }
+    // endregion
 
-    //region ------ delete
+    //region delete
 
     /**
      * 删除
@@ -422,7 +440,12 @@ public class Sql {
         return new Sql(sql);
     }
 
-    // 生成最终 SQL
+    // endregion
+
+
+    /**
+     * 生成最终 SQL
+     */
     public SqlRes ok() {
         return new SqlRes(sql.toString(), paramsList.toArray());
     }

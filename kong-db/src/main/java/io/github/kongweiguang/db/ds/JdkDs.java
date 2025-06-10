@@ -14,10 +14,10 @@ import java.util.logging.Logger;
  *
  * @author kongweiguang
  */
-public class JdkDataSource implements DataSource {
+public class JdkDs implements DataSource {
     private final Properties props;
 
-    public JdkDataSource(Properties props) {
+    public JdkDs(Properties props) {
         this.props = props;
     }
 

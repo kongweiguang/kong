@@ -1,9 +1,6 @@
-package io.github.kongweiguang.db.util;
+package io.github.kongweiguang.db.sql;
 
 import io.github.kongweiguang.core.lang.Pair;
-import io.github.kongweiguang.db.sql.GroupType;
-import io.github.kongweiguang.db.sql.Where;
-import io.github.kongweiguang.db.sql.WhereGroup;
 
 import java.util.ArrayList;
 import java.util.List;
