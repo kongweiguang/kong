@@ -62,6 +62,10 @@ public class RS {
                 resultList.add(processRow(rs, meta, columnCount));
             }
 
+            if (clazz.isAssignableFrom(Map.class)) {
+                return (List<T>) resultList;
+            }
+
             return Maps.toBeanList(resultList, clazz);
         } catch (SQLException e) {
             throw new DataAccessException("Failed to convert result set to list", e);
