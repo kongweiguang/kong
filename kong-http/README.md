@@ -28,20 +28,20 @@ Maven
 <dependency>
     <groupId>io.github.kongweiguang</groupId>
     <artifactId>kong-http</artifactId>
-    <version>0.5</version>
+    <version>0.6</version>
 </dependency>
 ```
 
 Gradle
 
 ```
-implementation 'io.github.kongweiguang:kong-http:0.5'
+implementation 'io.github.kongweiguang:kong-http:0.6'
 ```
 
 Gradle-Kotlin
 
 ```
-implementation("io.github.kongweiguang:kong-http:0.5")
+implementation("io.github.kongweiguang:kong-http:0.6")
 ```
 
 # 简单介绍
