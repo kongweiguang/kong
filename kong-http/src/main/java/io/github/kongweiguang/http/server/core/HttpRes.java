@@ -2,7 +2,7 @@ package io.github.kongweiguang.http.server.core;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
-import io.github.kongweiguang.core.lang.IOs;
+import io.github.kongweiguang.core.utils.IoUtil;
 import io.github.kongweiguang.http.common.core.ContentType;
 import io.github.kongweiguang.http.common.core.Header;
 import io.github.kongweiguang.http.common.exception.KongHttpRuntimeException;
@@ -212,7 +212,7 @@ public class HttpRes {
      * 关闭响应流
      */
     public void close() {
-        IOs.close(out());
+        IoUtil.close(out());
     }
 
 }

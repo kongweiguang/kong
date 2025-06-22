@@ -35,7 +35,7 @@ public class DB extends ChainDbRun {
     /**
      * 获取数据库执行,采用指定数据源
      *
-     * @param conf 数据源配置
+     * @param confCsm 数据源配置
      * @return DbRun
      */
     public static DB of(Consumer<DsConf> confCsm) {

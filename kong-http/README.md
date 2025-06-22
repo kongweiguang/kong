@@ -633,7 +633,7 @@ public class ServerTest {
 
     public static void main(String[] args) {
 
-        JavaServer.of()
+        KongHttpServer.of()
                 .executor(Executors.newCachedThreadPool())
                 //设置静态web地址，默认寻找index.html
                 .web("static", "C:\\dev\\js\\xm\\vite-dev\\dist", "index.html")

@@ -1,7 +1,7 @@
 package io.github.kongweiguang.http.server.core;
 
 import com.sun.net.httpserver.HttpExchange;
-import io.github.kongweiguang.core.lang.IOs;
+import io.github.kongweiguang.core.utils.IoUtil;
 import io.github.kongweiguang.http.common.core.Method;
 import io.github.kongweiguang.http.common.exception.KongHttpRuntimeException;
 
@@ -120,7 +120,7 @@ public class CenterHandler implements com.sun.net.httpserver.HttpHandler {
             throw new KongHttpRuntimeException(e);
         } finally {
             if (!ReqType.SSE.equals(type)) {
-                IOs.close(he);
+                IoUtil.close(he);
             }
         }
     }

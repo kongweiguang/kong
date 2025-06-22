@@ -1,6 +1,6 @@
 package io.github.kongweiguang.socket.nio.server;
 
-import io.github.kongweiguang.core.lang.IOs;
+import io.github.kongweiguang.core.utils.IoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -192,6 +192,6 @@ public class SelectorThread extends ThreadLocal<LinkedBlockingQueue<Channel>> im
     @Override
     public void close() throws Exception {
         this.running = false;
-        IOs.close(selector);
+        IoUtil.close(selector);
     }
 }

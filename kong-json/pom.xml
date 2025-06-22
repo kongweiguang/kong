@@ -19,6 +19,7 @@
         <dependency>
             <groupId>io.github.kongweiguang</groupId>
             <artifactId>kong-core</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <!--json序列化工具-->

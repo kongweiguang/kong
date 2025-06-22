@@ -1,7 +1,7 @@
 package io.github.kongweiguang.core.pattern.bus.push_obj_method;
 
 
-import io.github.kongweiguang.core.pattern.bus.core.Oper;
+import io.github.kongweiguang.core.pattern.bus.core.Event;
 import io.github.kongweiguang.core.pattern.bus.anno.Pull;
 
 import io.github.kongweiguang.core.pattern.bus.metedata.User;
@@ -26,7 +26,7 @@ public class MyHandler {
     }
 
     @Pull
-    public String fn3(Oper<User, String> oper) {
+    public String fn3(Event<User, String> oper) {
         System.out.println(oper);
         return "hello2";
     }

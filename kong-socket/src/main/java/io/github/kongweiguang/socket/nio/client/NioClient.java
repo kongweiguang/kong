@@ -1,6 +1,6 @@
 package io.github.kongweiguang.socket.nio.client;
 
-import io.github.kongweiguang.core.lang.IOs;
+import io.github.kongweiguang.core.utils.IoUtil;
 import io.github.kongweiguang.core.threads.ThreadPools;
 import io.github.kongweiguang.socket.nio.common.SocketHandler;
 import org.slf4j.Logger;
@@ -194,7 +194,7 @@ public class NioClient implements AutoCloseable {
     @Override
     public void close() {
         this.running = false;
-        IOs.close(selector);
-        IOs.close(socketChannel);
+        IoUtil.close(selector);
+        IoUtil.close(socketChannel);
     }
 }

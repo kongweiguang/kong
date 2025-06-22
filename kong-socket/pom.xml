@@ -10,20 +10,13 @@
     </parent>
 
     <artifactId>kong-socket</artifactId>
-    <properties>
-        <slf4j.version>2.0.9</slf4j.version>
-    </properties>
 
     <dependencies>
         <dependency>
             <groupId>io.github.kongweiguang</groupId>
             <artifactId>kong-core</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
     </dependencies>
 </project>

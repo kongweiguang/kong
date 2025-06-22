@@ -16,21 +16,21 @@ import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 import static io.github.kongweiguang.core.lang.Assert.notNull;
+import static io.github.kongweiguang.core.lang.Opt.ofNullable;
 import static io.github.kongweiguang.http.common.core.Method.*;
 import static java.util.Objects.nonNull;
-import static io.github.kongweiguang.core.lang.Opt.ofNullable;
 
 /**
  * 基于内置httpserver封装的简易http服务器
  *
  * @author kongweiguang
  */
-public class JavaServer {
+public class KongHttpServer {
 
     private final List<Filter> filters = new ArrayList<>();
     private final HttpServer httpServer;
 
-    private JavaServer(HttpsConfigurator config) {
+    private KongHttpServer(HttpsConfigurator config) {
         try {
             if (nonNull(config)) {
                 HttpsServer server = HttpsServer.create();
@@ -52,7 +52,7 @@ public class JavaServer {
      * @param content    错误页面内容
      * @return 当前对象
      */
-    public JavaServer errorPage(int statusCode, String content) {
+    public KongHttpServer errorPage(int statusCode, String content) {
         HttpServerUtil.setErrorPage(statusCode, content);
         return this;
     }
@@ -62,8 +62,8 @@ public class JavaServer {
      *
      * @return JavaServer实例
      */
-    public static JavaServer of() {
-        return new JavaServer(null);
+    public static KongHttpServer of() {
+        return new KongHttpServer(null);
     }
 
     /**
@@ -72,8 +72,8 @@ public class JavaServer {
      * @param config http配置 {@link HttpsConfigurator}
      * @return 当前对象
      */
-    public static JavaServer of(HttpsConfigurator config) {
-        return new JavaServer(config);
+    public static KongHttpServer of(HttpsConfigurator config) {
+        return new KongHttpServer(config);
     }
 
     /**
@@ -82,7 +82,7 @@ public class JavaServer {
      * @param executor 线程池 {@link Executor}
      * @return 当前对象
      */
-    public JavaServer executor(Executor executor) {
+    public KongHttpServer executor(Executor executor) {
         ofNullable(executor).ifPresent(e -> server().setExecutor(e));
         return this;
     }
@@ -95,7 +95,7 @@ public class JavaServer {
      * @param fileName 文件名称
      * @return 当前对象
      */
-    public JavaServer web(String path, String filePath, String fileName) {
+    public KongHttpServer web(String path, String filePath, String fileName) {
         return web(path, filePath, fileName, false, 0);
     }
 
@@ -108,7 +108,7 @@ public class JavaServer {
      * @param fileName    默认文件名称
      * @return 当前对象
      */
-    public JavaServer web(String path, String filePath, String fileName, boolean enableCache, int cacheMaxAge) {
+    public KongHttpServer web(String path, String filePath, String fileName, boolean enableCache, int cacheMaxAge) {
         StaticHandler handler = new StaticHandler(path, filePath, fileName, enableCache, cacheMaxAge);
         CenterHandler.add(ReqType.STATIC, GET, path, handler);
         return this;
@@ -122,7 +122,7 @@ public class JavaServer {
      * @param config   WebHandler配置函数
      * @return 当前对象
      */
-    public JavaServer web(String path, String filePath, Consumer<StaticHandler> config) {
+    public KongHttpServer web(String path, String filePath, Consumer<StaticHandler> config) {
         StaticHandler handler = new StaticHandler(path, filePath, null, false, 0);
         config.accept(handler);
         CenterHandler.add(ReqType.STATIC, GET, path, handler);
@@ -135,7 +135,7 @@ public class JavaServer {
      * @param filter 过滤器 {@link HttpFilter}
      * @return 当前对象
      */
-    public JavaServer filter(HttpFilter filter) {
+    public KongHttpServer filter(HttpFilter filter) {
         notNull(filter, "filter must not be null");
 
         filters.add(new Filter() {
@@ -160,7 +160,7 @@ public class JavaServer {
      * @param handler 处理器
      * @return 当前对象
      */
-    public JavaServer sse(Method method, String path, SSEHandler handler) {
+    public KongHttpServer sse(Method method, String path, SSEHandler handler) {
         CenterHandler.add(ReqType.SSE, method, path, handler);
         return this;
     }
@@ -172,7 +172,7 @@ public class JavaServer {
      * @param handler 处理器
      * @return 当前对象
      */
-    public JavaServer sse(String path, SSEHandler handler) {
+    public KongHttpServer sse(String path, SSEHandler handler) {
         CenterHandler.add(ReqType.SSE, path, handler);
         return this;
     }
@@ -185,7 +185,7 @@ public class JavaServer {
      * @param handler 处理器 {@link HttpHandler}
      * @return 当前对象
      */
-    public JavaServer rest(Method method, String path, HttpHandler handler) {
+    public KongHttpServer rest(Method method, String path, HttpHandler handler) {
         CenterHandler.add(ReqType.REST, method, path, handler);
         return this;
     }
@@ -197,7 +197,7 @@ public class JavaServer {
      * @param handler 处理器 {@link HttpHandler}
      * @return 当前对象
      */
-    public JavaServer rest(String path, HttpHandler handler) {
+    public KongHttpServer rest(String path, HttpHandler handler) {
         CenterHandler.add(ReqType.REST, path, handler);
         return this;
     }
@@ -209,7 +209,7 @@ public class JavaServer {
      * @param handler 处理器 {@link HttpHandler}
      * @return 当前对象
      */
-    public JavaServer get(String path, HttpHandler handler) {
+    public KongHttpServer get(String path, HttpHandler handler) {
         CenterHandler.add(ReqType.REST, GET, path, handler);
         return this;
     }
@@ -221,7 +221,7 @@ public class JavaServer {
      * @param handler 处理器 {@link HttpHandler}
      * @return 当前对象
      */
-    public JavaServer post(String path, HttpHandler handler) {
+    public KongHttpServer post(String path, HttpHandler handler) {
         CenterHandler.add(ReqType.REST, POST, path, handler);
         return this;
     }
@@ -233,7 +233,7 @@ public class JavaServer {
      * @param handler 处理器 {@link HttpHandler}
      * @return 当前对象
      */
-    public JavaServer delete(String path, HttpHandler handler) {
+    public KongHttpServer delete(String path, HttpHandler handler) {
         CenterHandler.add(ReqType.REST, DELETE, path, handler);
         return this;
     }
@@ -245,7 +245,7 @@ public class JavaServer {
      * @param handler 处理器 {@link HttpHandler}
      * @return 当前对象
      */
-    public JavaServer put(String path, HttpHandler handler) {
+    public KongHttpServer put(String path, HttpHandler handler) {
         CenterHandler.add(ReqType.REST, PUT, path, handler);
         return this;
     }

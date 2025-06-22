@@ -1,4 +1,4 @@
-package io.github.kongweiguang.core.pattern.bus.anno;
+package io.github.kongweiguang.core.pattern.bus.core;
 
 /**
  * 合并器

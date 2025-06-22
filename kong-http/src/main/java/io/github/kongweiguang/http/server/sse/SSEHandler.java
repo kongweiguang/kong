@@ -2,7 +2,7 @@ package io.github.kongweiguang.http.server.sse;
 
 
 import io.github.kongweiguang.core.lang.Opt;
-import io.github.kongweiguang.http.client.sse.SseEvent;
+import io.github.kongweiguang.http.common.sse.SseEvent;
 import io.github.kongweiguang.http.common.core.ContentType;
 import io.github.kongweiguang.http.common.core.Header;
 import io.github.kongweiguang.http.server.core.HttpHandler;

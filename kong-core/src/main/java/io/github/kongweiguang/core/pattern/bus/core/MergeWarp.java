@@ -1,7 +1,5 @@
 package io.github.kongweiguang.core.pattern.bus.core;
 
-import io.github.kongweiguang.core.pattern.bus.anno.Merge;
-
 /**
  * 合并器包装，可以给合并器排序，拉取时可以指定那些pull先执行
  *

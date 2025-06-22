@@ -4,11 +4,11 @@ import io.github.kongweiguang.core.threads.Threads;
 import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.Res;
 import io.github.kongweiguang.http.client.builder.SSEReqBuilder;
+import io.github.kongweiguang.http.common.sse.SseEvent;
 import okhttp3.Request;
 import okhttp3.sse.EventSource;
 import org.junit.jupiter.api.Test;
 
-import java.time.Duration;
 import java.util.Objects;
 
 public class SseTest {

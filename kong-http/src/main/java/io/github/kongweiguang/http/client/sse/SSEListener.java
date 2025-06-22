@@ -4,6 +4,7 @@ import io.github.kongweiguang.core.lang.Opt;
 import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.Res;
 import io.github.kongweiguang.http.client.builder.SSEReqBuilder;
+import io.github.kongweiguang.http.common.sse.SseEvent;
 import okhttp3.Response;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSourceListener;

@@ -10,30 +10,38 @@
     </parent>
 
     <artifactId>kong-db</artifactId>
+
+    <properties>
+        <hikari.version>4.0.3</hikari.version>
+        <mysql.version>8.3.0</mysql.version>
+        <postgresql.version>42.7.5</postgresql.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>io.github.kongweiguang</groupId>
             <artifactId>kong-json</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>4.0.3</version>
+            <version>${hikari.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <version>8.3.0</version>
+            <version>${mysql.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.7.5</version>
+            <version>${postgresql.version}</version>
             <scope>provided</scope>
         </dependency>
 

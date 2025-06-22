@@ -1,13 +1,13 @@
 package io.github.kongweiguang.http.server.staticFile;
 
-import io.github.kongweiguang.http.server.JavaServer;
+import io.github.kongweiguang.http.server.KongHttpServer;
 
 import java.util.concurrent.Executors;
 
 public class Test2 {
     public static void main(String[] args) {
         // 创建带高级选项的静态文件服务器
-        JavaServer.of()
+        KongHttpServer.of()
                 .executor(Executors.newVirtualThreadPerTaskExecutor())
                 // 高级用法 - 自定义缓存和索引文件
                 .web("/static","C:\\dev\\test","index.html")

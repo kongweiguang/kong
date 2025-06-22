@@ -1,8 +1,5 @@
 package io.github.kongweiguang.core.pattern.bus.core;
 
-import io.github.kongweiguang.core.pattern.bus.anno.Hub;
-import io.github.kongweiguang.core.pattern.bus.anno.Merge;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;

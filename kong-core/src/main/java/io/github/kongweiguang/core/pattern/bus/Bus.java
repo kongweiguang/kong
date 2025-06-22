@@ -1,6 +1,6 @@
 package io.github.kongweiguang.core.pattern.bus;
 
-import io.github.kongweiguang.core.pattern.bus.anno.Hub;
+import io.github.kongweiguang.core.pattern.bus.core.Hub;
 import io.github.kongweiguang.core.pattern.bus.core.DefaultHubImpl;
 
 import java.util.Map;

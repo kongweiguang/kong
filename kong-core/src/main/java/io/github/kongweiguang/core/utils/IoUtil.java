@@ -1,10 +1,8 @@
-package io.github.kongweiguang.core.lang;
+package io.github.kongweiguang.core.utils;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.channels.Channels;
-import java.nio.file.Files;
 
 import static java.util.Objects.nonNull;
 
@@ -13,7 +11,7 @@ import static java.util.Objects.nonNull;
  *
  * @author kongweiguang
  */
-public class IOs {
+public class IoUtil {
 
     /**
      * 将流转成byte数组

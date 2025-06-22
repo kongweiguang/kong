@@ -1,4 +1,4 @@
-package io.github.kongweiguang.http.client.sse;
+package io.github.kongweiguang.http.common.sse;
 
 /**
  * sse 事件

@@ -1,6 +1,5 @@
 package io.github.kongweiguang.http.client.builder;
 
-import io.github.kongweiguang.http.client.core.Client;
 import io.github.kongweiguang.http.client.core.ReqType;
 import io.github.kongweiguang.http.client.ok.SSEOK;
 import io.github.kongweiguang.http.client.sse.SSEListener;

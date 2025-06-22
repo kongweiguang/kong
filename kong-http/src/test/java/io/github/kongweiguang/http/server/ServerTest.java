@@ -2,7 +2,7 @@ package io.github.kongweiguang.http.server;
 
 
 import io.github.kongweiguang.core.threads.Threads;
-import io.github.kongweiguang.http.client.sse.SseEvent;
+import io.github.kongweiguang.http.common.sse.SseEvent;
 import io.github.kongweiguang.http.common.exception.KongHttpRuntimeException;
 import io.github.kongweiguang.http.server.core.HttpReq;
 import io.github.kongweiguang.http.server.core.HttpRes;
@@ -22,7 +22,7 @@ public class ServerTest {
 
     public static void main(String[] args) {
 
-        JavaServer.of()
+        KongHttpServer.of()
                 .executor(Executors.newVirtualThreadPerTaskExecutor())
                 //设置静态web地址，默认寻找index.html
                 .web("/static", "C:\\dev\\js\\xm\\vite-dev\\dist", "index.html")

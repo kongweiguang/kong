@@ -1,5 +1,6 @@
 package io.github.kongweiguang.core.lang;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.StringJoiner;
 
@@ -11,6 +12,7 @@ import java.util.StringJoiner;
  * @author kongweiguang
  */
 public class Pair<K, V> implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final K k;

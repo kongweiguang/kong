@@ -1,6 +1,6 @@
 package io.github.kongweiguang.db.run;
 
-import io.github.kongweiguang.core.lang.IOs;
+import io.github.kongweiguang.core.utils.IoUtil;
 import io.github.kongweiguang.db.DB;
 import io.github.kongweiguang.db.core.PS;
 import io.github.kongweiguang.db.func.RsFn;
@@ -55,7 +55,7 @@ public abstract class DbRun {
             return;
         }
         cache.remove();
-        IOs.close(con);
+        IoUtil.close(con);
     }
 
     /**

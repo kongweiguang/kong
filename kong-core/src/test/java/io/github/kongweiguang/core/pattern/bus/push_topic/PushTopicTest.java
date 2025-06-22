@@ -1,6 +1,6 @@
 package io.github.kongweiguang.core.pattern.bus.push_topic;
 
-import io.github.kongweiguang.core.pattern.bus.core.Oper;
+import io.github.kongweiguang.core.pattern.bus.core.Event;
 import org.junit.jupiter.api.Test;
 
 import static io.github.kongweiguang.core.pattern.bus.Bus.hub;
@@ -21,7 +21,7 @@ public class PushTopicTest {
         //推送消息
         hub().push(branch, "content");
         hub().push(branch, "content", e -> System.out.println("callback 1 -> " + e));
-        hub().push(Oper.of(branch, "content"));
-        hub().push(Oper.of(branch, "content"), e -> System.out.println("callback 2 -> " + e));
+        hub().push(Event.of(branch, "content"));
+        hub().push(Event.of(branch, "content"), e -> System.out.println("callback 2 -> " + e));
     }
 }

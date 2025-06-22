@@ -1,6 +1,6 @@
 package io.github.kongweiguang.socket.nio.server;
 
-import io.github.kongweiguang.core.lang.IOs;
+import io.github.kongweiguang.core.utils.IoUtil;
 import io.github.kongweiguang.core.lang.Strs;
 import io.github.kongweiguang.socket.nio.common.SocketHandler;
 import org.slf4j.Logger;
@@ -195,7 +195,7 @@ public class SelectorThreadGroup implements AutoCloseable {
     @Override
     public void close() throws Exception {
         for (SelectorThread selectorThread : selectorThreads) {
-            IOs.close(selectorThread);
+            IoUtil.close(selectorThread);
         }
     }
 }

@@ -2,7 +2,7 @@ package io.github.kongweiguang.http.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import io.github.kongweiguang.core.lang.IOs;
+import io.github.kongweiguang.core.utils.IoUtil;
 import io.github.kongweiguang.http.common.core.Header;
 import io.github.kongweiguang.http.common.exception.KongHttpRuntimeException;
 import io.github.kongweiguang.json.Json;
@@ -393,7 +393,7 @@ public class Res implements AutoCloseable {
      */
     @Override
     public void close() {
-        IOs.close(raw());
+        IoUtil.close(raw());
     }
 
     @Override

@@ -15,6 +15,7 @@
         <dependency>
             <groupId>io.github.kongweiguang</groupId>
             <artifactId>kong-http</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
 

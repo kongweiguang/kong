@@ -10,6 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 反射工具类
+ *
+ * @author kongweiguang
+ */
 public class Reflections {
     /**
      * 创建实例

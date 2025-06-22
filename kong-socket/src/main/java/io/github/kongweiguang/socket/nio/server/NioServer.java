@@ -1,6 +1,6 @@
 package io.github.kongweiguang.socket.nio.server;
 
-import io.github.kongweiguang.core.lang.IOs;
+import io.github.kongweiguang.core.utils.IoUtil;
 import io.github.kongweiguang.socket.nio.common.SocketHandler;
 
 import java.net.InetSocketAddress;
@@ -132,7 +132,7 @@ public class NioServer implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-        IOs.close(bossGroup);
-        IOs.close(workerGroup);
+        IoUtil.close(bossGroup);
+        IoUtil.close(workerGroup);
     }
 }
