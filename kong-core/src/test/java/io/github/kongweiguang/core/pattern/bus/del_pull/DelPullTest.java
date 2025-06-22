@@ -1,7 +1,7 @@
 package io.github.kongweiguang.core.pattern.bus.del_pull;
 
 import io.github.kongweiguang.core.pattern.bus.core.Merge;
-import io.github.kongweiguang.core.pattern.bus.core.Event;
+import io.github.kongweiguang.core.pattern.bus.core.Oper;
 import org.junit.jupiter.api.Test;
 
 import static io.github.kongweiguang.core.pattern.bus.Bus.hub;
@@ -13,14 +13,14 @@ public class DelPullTest {
     @Test
     void test() throws Exception {
         //拉取消息
-        hub().pull(branch, new Merge<Event<Object, Object>>() {
+        hub().pull(branch, new Merge<Oper<Object, Object>>() {
             @Override
             public String name() {
                 return "k_pull";
             }
 
             @Override
-            public void mr(Event<Object, Object> a) throws Exception {
+            public void mr(Oper<Object, Object> a) throws Exception {
                 System.out.println(a);
             }
         });
