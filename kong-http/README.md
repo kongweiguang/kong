@@ -172,7 +172,7 @@ public class HeaderTest {
                 //charset
                 .charset(StandardCharsets.UTF_8)
                 //user-agent
-                .ua(UA.Mac.chrome.v())
+                .userAgent(UserAgent.Mac.chrome.v())
                 //authorization
                 .auth("auth qwe")
                 //authorization bearer
@@ -224,7 +224,7 @@ public class BodyTest {
                 .json(user)
                 .ok();
 
-        Assertions.assertEquals(json, res.body());
+        Assertions.assertEquals(json, res.str());
     }
 
     @Test
@@ -344,14 +344,15 @@ public class ResTest {
         String str = res.str();
         byte[] bytes = res.bytes();
         User obj = res.obj(User.class);
-        List<User> obj1 = res.obj(new TypeRef<List<User>>() {
-        }.type());
-        List<String> list = res.list();
-        Map<String, String> map = res.map();
-        JSONObject jsonObject = res.jsonObj();
+        List<User> obj1 = res.obj(new TypeReference<List<User>>() {
+        });
+        List<String> list = res.list(String.class);
+        Map<String, String> map = res.map(String.class, String.class);
+        JsonNode node = res.node();
         InputStream stream = res.stream();
-        Integer i = res.rInt();
-        Boolean b = res.rBool();
+        Integer i = res.i32();
+        Long l = res.i64();
+        Boolean b = res.bool();
 
         //响应头
         String ok = res.header("ok");
@@ -427,11 +428,22 @@ public class ProxyTest {
     @Test
     void test1() throws Exception {
 
-        Config.proxy("127.0.0.1", 80);
-        Config.proxy(Type.SOCKS, "127.0.0.1", 80);
-        Config.proxyAuthenticator("k", "pass");
+        OK.conf()
+                .proxy("127.0.0.1", 80)
+                .proxy(Type.SOCKS, "127.0.0.1", 80)
+                .proxyAuthenticator("k", "pass");
 
         Res res = Req.get("http://localhost:8080/get/one/two")
+                .query("a", "1")
+                .ok();
+    }
+
+    @Test
+    void test2() throws Exception {
+        Res res = Req.get("http://localhost:8080/get/one/two")
+                .config(e -> e.proxy("127.0.0.1", 80)
+                        .proxy(Type.SOCKS, "127.0.0.1", 80)
+                        .proxyAuthenticator("k", "pass"))
                 .query("a", "1")
                 .ok();
     }
@@ -622,104 +634,4 @@ public class SingingConfigTest {
                 .ok();
     }
 }
-```
-
-## httpserver
-
-```java
-
-public class ServerTest {
-
-
-    public static void main(String[] args) {
-
-        KongHttpServer.of()
-                .executor(Executors.newCachedThreadPool())
-                //设置静态web地址，默认寻找index.html
-                .web("static", "C:\\dev\\js\\xm\\vite-dev\\dist", "index.html")
-                .get("/get", (req, res) -> {
-                    res.send("ok");
-                })
-                .get("/get_string", (req, res) -> {
-                    System.out.println("req = " + req.query());
-                    System.out.println("req = " + req.params());
-                    res.send("ok");
-                })
-                .post("/post_json", (req, res) -> {
-                    Map<String, List<String>> params = req.params();
-                    System.out.println("params = " + params);
-
-                    System.out.println("req.str() = " + req.str());
-
-                    res.send("\"{\"key\":\"i am post res\"}\"");
-                })
-                .get("/get/one/two", (req, res) -> {
-                    System.out.println("req = " + req.path());
-                    System.out.println("params" + req.params());
-                    res.send("ok");
-                })
-                .get("/header", (req, res) -> {
-                    Map<String, List<String>> headers = req.headerMap();
-                    System.out.println("headers = " + headers);
-                    res.send("ok");
-                })
-                //接受post请求
-                .post("/post_body", ((req, res) -> {
-                    String str = req.str();
-                    System.out.println("str = " + str);
-                    res.send(str);
-                }))
-                .post("/post_form", ((req, res) -> {
-                    System.out.println(req.params());
-                    res.send("ok");
-                }))
-                //上传
-                .post("/post_mul_form", (req, res) -> {
-                    Map<String, List<String>> params = req.params();
-                    System.out.println("params = " + params);
-                    Map<String, List<UploadFile>> files = req.fileMap();
-                    System.out.println("files = " + files);
-                    res.send("ok");
-                })
-                .get("/error", ((req, res) -> {
-                    System.out.println("req.str() = " + req.str());
-
-                    throw new KongHttpRuntimeException("error");
-                }))
-                .get("/timeout", ((req, res) -> {
-                    Threads.sleep(5000);
-                    res.send("ok");
-                }))
-                //下载文件
-                .get("/xz", (req, res) ->
-                        res.file("k.txt", Files.readAllBytes(Paths.get("C:\\test\\test.txt"))))
-                //sse响应
-                .sse("/sse", new SSEHandler() {
-                    @Override
-                    public void handler(HttpReq req, HttpRes res) {
-                        for (int i = 0; i < 10; i++) {
-                            Threads.sleep(500);
-                            send(SseEvent.of()
-                                    .id(UUID.randomUUID().toString())
-                                    .type("eventType")
-                                    .data(new Date().toString())
-                            );
-                        }
-
-                        //完成
-                        send(SseEvent.of()
-                                .id(UUID.randomUUID().toString())
-                                .type("eventType")
-                                .data("done")
-                        );
-
-                        //关闭
-                        close(res);
-                    }
-                })
-                .ok(8080);
-
-    }
-}
-
 ```

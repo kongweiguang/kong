@@ -91,7 +91,7 @@ public class HttpReqBuilder<T extends HttpReqBuilder<T, R>, R> extends ReqBuilde
 
                 FormBody.Builder formBuilder = new FormBody.Builder(charset());
 
-                ofNullable(formMap).ifPresent(ignore -> form().forEach(formBuilder::addEncoded));
+                ofNullable(formMap).ifPresent(ignore -> form().forEach(formBuilder::add));
 
                 rb = formBuilder.build();
 
@@ -142,7 +142,7 @@ public class HttpReqBuilder<T extends HttpReqBuilder<T, R>, R> extends ReqBuilde
      * @return ReqBuilder {@link ReqBuilder}
      */
     public T retry(Consumer<RetryableTask<Res>> consumer) {
-        notNull(retry, "retry must not be null");
+        notNull(consumer, "retry consumer must not be null");
         consumer.accept(retry);
         return (T) this;
     }

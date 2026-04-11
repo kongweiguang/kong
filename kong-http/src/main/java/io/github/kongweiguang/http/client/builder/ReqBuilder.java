@@ -51,7 +51,7 @@ public abstract class ReqBuilder<T extends ReqBuilder<T, R>, R> {
         this.method = Method.GET;
         this.reqType = ReqType.http;
         this.builder = new Builder();
-        this.conf = Conf.global();
+        this.conf = Conf.global().copy();
         this.urlBuilder = new HttpUrl.Builder();
     }
 
@@ -142,11 +142,17 @@ public abstract class ReqBuilder<T extends ReqBuilder<T, R>, R> {
             }
         }
 
+        if (nonNull(contentType()) && !isMul() && !isFormUrl()) {
+            header(Header.CONTENT_TYPE.v(), contentType() + ";charset=" + charset().name());
+        }
+
         //method url
         builder().method(method().name(), requestBody).url(urlBuilder().build());
 
         //cookie
-        ofNullable(cookieMap).ifPresent(e -> header(Header.COOKIE.v(), cookie2Str(cookie())));
+        if (nonNull(cookieMap) && !cookieMap.isEmpty()) {
+            header(Header.COOKIE.v(), cookie2Str(cookieMap));
+        }
 
         //将构建的类放入其中，可以在后面取出来
         Class aClass = this.getClass();
@@ -363,8 +369,6 @@ public abstract class ReqBuilder<T extends ReqBuilder<T, R>, R> {
 
         if (nonNull(contentType)) {
             this.contentType = contentType;
-
-            header(Header.CONTENT_TYPE.v(), contentType() + ";charset=" + charset().name());
         }
 
         return (T) this;
@@ -442,7 +446,13 @@ public abstract class ReqBuilder<T extends ReqBuilder<T, R>, R> {
     public T url(String url) {
         notNull(url, "url must not be null");
 
-        this.urlBuilder = ofNullable(HttpUrl.parse(fixUrl(url.trim()))).map(HttpUrl::newBuilder).orElse(urlBuilder());
+        String fixedUrl = fixUrl(url.trim());
+        HttpUrl parsed = HttpUrl.parse(fixedUrl);
+        if (isNull(parsed)) {
+            throw new IllegalArgumentException("invalid url: " + url);
+        }
+
+        this.urlBuilder = parsed.newBuilder();
 
         return (T) this;
     }
@@ -540,6 +550,13 @@ public abstract class ReqBuilder<T extends ReqBuilder<T, R>, R> {
      * @return ReqBuilder {@link ReqBuilder}
      */
     public T encodeQuery(String k, Object v) {
+        return encodedQuery(k, v);
+    }
+
+    /**
+     * Add an already-encoded query parameter.
+     */
+    public T encodedQuery(String k, Object v) {
 
         if (nonNull(k) && nonNull(v)) {
             urlBuilder().addEncodedQueryParameter(k, String.valueOf(v));
@@ -580,6 +597,10 @@ public abstract class ReqBuilder<T extends ReqBuilder<T, R>, R> {
         return (T) this;
     }
 
+    public T encodeQuery(String k, Iterable<Object> vs) {
+        return encodedQuery(k, vs);
+    }
+
     /**
      * 设置url的query
      *
@@ -604,6 +625,10 @@ public abstract class ReqBuilder<T extends ReqBuilder<T, R>, R> {
         ofNullable(querys).ifPresent(q -> q.forEach((k, v) -> urlBuilder().addEncodedQueryParameter(k, String.valueOf(v))));
 
         return (T) this;
+    }
+
+    public T encodeQuery(Map<String, Object> querys) {
+        return encodedQuery(querys);
     }
 
     /**

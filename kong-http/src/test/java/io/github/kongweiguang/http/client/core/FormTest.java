@@ -2,41 +2,44 @@ package io.github.kongweiguang.http.client.core;
 
 import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.Res;
+import io.github.kongweiguang.http.client.TestHttpServer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 public class FormTest {
 
     @Test
     public void testForm() throws IOException {
-        //application/x-www-form-urlencoded
-        Res ok = Req.formUrlencoded("http://localhost:8080/post_form")
+        Res ok = Req.formUrlencoded(TestHttpServer.url("/post_form"))
                 .form("a", "1")
                 .form(new HashMap<>() {{
                     put("b", "2");
                 }})
                 .ok();
-        Assertions.assertEquals("ok", ok.str());
-        //{a=[1], b=[2]}
+
+        String body = ok.str();
+        Assertions.assertTrue(body.contains("a=1"));
+        Assertions.assertTrue(body.contains("b=2"));
     }
 
     @Test
     public void test2() throws Exception {
-        //multipart/form-data
-        Res ok = Req.multipart("http://localhost:8080/post_mul_form")
-                .file("test", "test.txt", Files.readAllBytes(Paths.get("C:", "test", "test.txt")))
+        Res ok = Req.multipart(TestHttpServer.url("/post_mul_form"))
+                .file("test", "test.txt", "file-content".getBytes(StandardCharsets.UTF_8))
                 .form("a", "1")
                 .form(new HashMap<>() {{
                     put("b", "2");
                 }})
                 .ok();
-        Assertions.assertEquals("ok", ok.str());
-        //params = {a=[1], b=[2]}
-        //files = {test=[io.github.kongweiguang.http.server.core.UploadFile@6231d793]}
+
+        String body = ok.str();
+        Assertions.assertTrue(body.contains("name=\"test\""));
+        Assertions.assertTrue(body.contains("file-content"));
+        Assertions.assertTrue(body.contains("name=\"a\""));
+        Assertions.assertTrue(body.contains("name=\"b\""));
     }
 }

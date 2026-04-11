@@ -58,7 +58,7 @@ public class Client {
     public static OkHttpClient of(Conf conf) {
         OkHttpClient.Builder builder = client.newBuilder();
 
-        ofNullable(conf.httpLoggingInterceptor()).ifPresent(conf::addInterceptor);
+        ofNullable(conf.httpLoggingInterceptor()).ifPresent(builder::addInterceptor);
 
         ofNullable(conf.interceptors()).ifPresent(interceptors -> interceptors.forEach(builder::addInterceptor));
 
@@ -69,6 +69,8 @@ public class Client {
         ofNullable(conf.proxy()).ifPresent(builder::proxy);
 
         ofNullable(conf.proxyAuthenticator()).ifPresent(builder::proxyAuthenticator);
+
+        ofNullable(conf.proxySelector()).ifPresent(builder::proxySelector);
 
         ofNullable(conf.eventListener()).ifPresent(builder::eventListener);
 

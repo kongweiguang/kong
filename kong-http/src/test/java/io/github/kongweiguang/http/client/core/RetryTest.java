@@ -3,6 +3,8 @@ package io.github.kongweiguang.http.client.core;
 import io.github.kongweiguang.core.lang.Pair;
 import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.Res;
+import io.github.kongweiguang.http.client.TestHttpServer;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -12,20 +14,23 @@ public class RetryTest {
 
     @Test
     public void testRetry() {
-        Res res = Req.get("http://localhost:8080/error")
-                .query("a", "1")
+        TestHttpServer.resetRetry();
+        Res res = Req.get(TestHttpServer.url("/retry"))
                 .retry(retry -> retry.maxAttempts(3)
-                        .delay(Duration.ofSeconds(2)))
+                        .delay(Duration.ofMillis(10)))
                 .ok();
-        System.out.println("res = " + res.str());
+
+        Assertions.assertEquals(200, res.code());
+        Assertions.assertEquals("success-after-retry", res.str());
+        Assertions.assertEquals(3, TestHttpServer.retryAttempts());
     }
 
     @Test
     public void testRetry2() {
-        Res res = Req.get("http://localhost:8080/error")
-                .query("a", "1")
+        TestHttpServer.resetRetryBody();
+        Res res = Req.get(TestHttpServer.url("/retry-body"))
                 .retry(retry -> retry.maxAttempts(3)
-                        .delay(Duration.ofSeconds(2))
+                        .delay(Duration.ofMillis(10))
                         .predicate((r, t) -> {
                             String str = r.str();
                             if (str.length() > 10) {
@@ -34,16 +39,21 @@ public class RetryTest {
                             return Pair.of(true, r);
                         }))
                 .ok();
-        System.out.println("res.str() = " + res.str());
+
+        Assertions.assertEquals(200, res.code());
+        Assertions.assertEquals(3, TestHttpServer.retryBodyAttempts());
     }
 
     @Test
     public void testRetry3() {
-        //异步重试
-        CompletableFuture<Res> res = Req.get("http://localhost:8080/error")
-                .query("a", "1")
-                .retry(r -> r.maxAttempts(3))
+        TestHttpServer.resetRetry();
+        CompletableFuture<Res> res = Req.get(TestHttpServer.url("/retry"))
+                .retry(r -> r.maxAttempts(3).delay(Duration.ofMillis(10)))
                 .okAsync();
-        System.out.println("res.join().str() = " + res.join().str());
+
+        Res value = res.join();
+        Assertions.assertEquals(200, value.code());
+        Assertions.assertEquals("success-after-retry", value.str());
+        Assertions.assertEquals(3, TestHttpServer.retryAttempts());
     }
 }

@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-import static io.github.kongweiguang.core.lang.Opt.ofNullable;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 /**
@@ -45,37 +44,42 @@ public class HttpOK extends OK<HttpReqBuilder<?, Res>, Res> {
      * @return 结果
      */
     private CompletableFuture<Res> ojbk() {
-        return supplyAsync(
-                () -> {
-                    Opt<Res, Throwable> resOpt = retryTask.task(this::execute)
-                            .execute()
-                            .get();
+        return supplyAsync(this::executeWithStrategy, reqBuilder().config().exec());
+    }
 
-                    Opt<Consumer<Res>, Object> successOpt = ofNullable(success());
-                    Opt<Consumer<Throwable>, Object> failOpt = ofNullable(fail());
+    private Res executeWithStrategy() {
+        Opt<Res, Throwable> resOpt = retryTask.task(this::execute)
+                .execute()
+                .get();
 
-                    // 异步异常使用回调
-                    if (successOpt.isPresent() || failOpt.isPresent()) {
-                        resOpt.match(
-                                r -> successOpt.ifPresent(fn -> fn.accept(r)),
-                                () -> {
-                                },
-                                t -> failOpt.ifPresent(fn -> fn.accept(t))
+        Consumer<Res> onSuccess = success();
+        Consumer<Throwable> onFail = fail();
 
-                        );
-                    }
-                    // 同步异常直接抛
-                    else {
-
-                        if (resOpt.isError()) {
-                            throw new KongHttpRuntimeException(resOpt.getError());
+        // async mode: deliver failures via callbacks
+        if (onSuccess != null || onFail != null) {
+            resOpt.match(
+                    r -> {
+                        if (onSuccess != null) {
+                            onSuccess.accept(r);
                         }
-
+                    },
+                    () -> {
+                    },
+                    t -> {
+                        if (onFail != null) {
+                            onFail.accept(t);
+                        }
                     }
+            );
+            return resOpt.value();
+        }
 
-                    return resOpt.value();
-                },
-                reqBuilder().config().exec());
+        // sync mode: throw directly on error
+        if (resOpt.isError()) {
+            throw new KongHttpRuntimeException(resOpt.getError());
+        }
+
+        return resOpt.value();
     }
 
 

@@ -3,9 +3,12 @@ package io.github.kongweiguang.http.client.core;
 
 import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.Res;
+import io.github.kongweiguang.http.client.TestHttpServer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -13,23 +16,27 @@ public class AsyncTest {
 
     @Test
     public void test1() throws Exception {
-        CompletableFuture<Res> future = Req.get("http://localhost:8080/get")
+        AtomicReference<String> successBody = new AtomicReference<>();
+        CompletableFuture<Res> future = Req.get(TestHttpServer.url("/get"))
                 .query("a", "1")
-                .success(r -> System.out.println(r.str()))
-                .fail(t -> System.out.println("error"))
+                .success(r -> successBody.set(r.str()))
                 .okAsync();
 
-        future.get(3, TimeUnit.MINUTES);
+        Res res = future.get(30, TimeUnit.SECONDS);
+        Assertions.assertNotNull(res);
+        Assertions.assertEquals(200, res.code());
+        Assertions.assertEquals("ok", successBody.get());
     }
+
     @Test
     public void test2() throws Exception {
-        CompletableFuture<Res> future = Req.get("http://localhost:8080/error")
-                .query("a", "1")
-                .success(r -> System.out.println(r.str()))
-                .fail(t -> System.out.println("error"))
+        AtomicBoolean failCalled = new AtomicBoolean(false);
+        CompletableFuture<Res> future = Req.get("http://127.0.0.1:1/error")
+                .fail(t -> failCalled.set(true))
                 .okAsync();
 
-        Res res = future.get(3, TimeUnit.MINUTES);
-        System.out.println(res);
+        Res res = future.get(30, TimeUnit.SECONDS);
+        Assertions.assertNull(res);
+        Assertions.assertTrue(failCalled.get());
     }
 }

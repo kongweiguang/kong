@@ -1,46 +1,28 @@
 package io.github.kongweiguang.http.client.ws;
 
-import io.github.kongweiguang.core.threads.Threads;
 import io.github.kongweiguang.http.client.Req;
-import io.github.kongweiguang.http.client.Res;
 import io.github.kongweiguang.http.client.builder.WSReqBuilder;
-import okhttp3.WebSocket;
+import io.github.kongweiguang.http.client.core.ReqType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class WsTest {
 
     @Test
-    public void test() {
+    public void testBuilder() {
         WSListener listener = new WSListener() {
-            @Override
-            public void open(WSReqBuilder req, Res res) {
-                this.ws.send("123");
-            }
-
-            @Override
-            public void msg(WSReqBuilder req, String text) {
-                System.out.println(text);
-            }
-
-            @Override
-            public void closed(WSReqBuilder req, int code, String reason) {
-                System.out.println(reason);
-            }
         };
 
-        WebSocket ws = Req.ws("ws://localhost:8889/ws")
+        WSReqBuilder builder = Req.ws("ws://localhost:8889/ws")
                 .query("k", "v")
                 .header("h", "v")
-                .wsListener(listener)
-                .ok();
-        Threads.sleep(1000);
+                .wsListener(listener);
 
-        for (int i = 0; i < 100; i++) {
-            Threads.sleep(1000);
-            ws.send("123");
-        }
-
-        Threads.sync(this);
+        Assertions.assertEquals(ReqType.ws, builder.reqType());
+        Assertions.assertSame(listener, builder.wsListener());
+        Assertions.assertEquals("localhost", builder.urlBuilder().build().host());
+        Assertions.assertEquals(8889, builder.urlBuilder().build().port());
+        Assertions.assertEquals("/ws", builder.urlBuilder().build().encodedPath());
     }
 
 }

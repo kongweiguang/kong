@@ -4,13 +4,12 @@ package io.github.kongweiguang.core.retry;
 import io.github.kongweiguang.core.lang.Assert;
 import io.github.kongweiguang.core.lang.Opt;
 import io.github.kongweiguang.core.lang.Pair;
-import io.github.kongweiguang.core.threads.ThreadPools;
 import io.github.kongweiguang.core.threads.Threads;
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
@@ -208,7 +207,7 @@ public class RetryableTask<T> {
      * @return 返回一个异步对象 {@link CompletableFuture}
      */
     public CompletableFuture<RetryableTask<T>> asyncExecute() {
-        return CompletableFuture.supplyAsync(this::doExecute, ThreadPools.virtualPool);
+        return CompletableFuture.supplyAsync(this::doExecute, Executors.newVirtualThreadPerTaskExecutor());
     }
 
     /**

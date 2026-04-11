@@ -6,6 +6,7 @@ import io.github.kongweiguang.http.common.exception.KongHttpRuntimeException;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 import java.util.Map;
+import java.util.StringJoiner;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -22,28 +23,81 @@ public final class HttpClientUtil {
     }
 
     /**
-     * 修复URL，确保其以URL可以被请求
+     * 修复URL，确保其作为URL可被请求
      */
     public static String fixUrl(String url) {
-        if (isNull(url) || url.trim().isEmpty()) {
+        if (isNull(url)) {
             return Const._http + Const.localhost;
         }
 
-        url = url.trim();
-
-        if (url.startsWith(Const._http) || url.startsWith(Const._https)) {
-            return url;
+        String value = url.trim();
+        if (value.isEmpty()) {
+            return Const._http + Const.localhost;
         }
 
-        if (url.startsWith(Const._ws)) {
-            return Const._http + url.substring(Const._ws.length());
+        if (value.startsWith(Const._http) || value.startsWith(Const._https)) {
+            return value;
         }
 
-        if (url.startsWith(Const._wss)) {
-            return Const._https + url.substring(Const._wss.length());
+        if (startsWithIgnoreCase(value, Const._http)) {
+            return Const._http + value.substring(Const._http.length());
         }
 
-        return Const._http + Const.localhost + url;
+        if (startsWithIgnoreCase(value, Const._https)) {
+            return Const._https + value.substring(Const._https.length());
+        }
+
+        if (startsWithIgnoreCase(value, Const._ws)) {
+            return Const._http + value.substring(Const._ws.length());
+        }
+
+        if (startsWithIgnoreCase(value, Const._wss)) {
+            return Const._https + value.substring(Const._wss.length());
+        }
+
+        if (value.startsWith("//")) {
+            return Const._http + value.substring(2);
+        }
+
+        if (value.indexOf("://") > 0) {
+            return value;
+        }
+
+        char first = value.charAt(0);
+        if (first == '/') {
+            return Const._http + Const.localhost + value;
+        }
+
+        if (first == '?' || first == '#') {
+            return Const._http + Const.localhost + "/" + value;
+        }
+
+        if (looksLikeHost(value)) {
+            return Const._http + value;
+        }
+
+        return Const._http + Const.localhost + "/" + value;
+    }
+
+    private static boolean startsWithIgnoreCase(String value, String prefix) {
+        return value.regionMatches(true, 0, prefix, 0, prefix.length());
+    }
+
+    private static boolean looksLikeHost(String value) {
+        if (Const.localhost.equalsIgnoreCase(value)) {
+            return true;
+        }
+
+        for (int i = 0; i < value.length(); i++) {
+            char c = value.charAt(i);
+            if (c == '/' || c == '?' || c == '#') {
+                break;
+            }
+            if (c == '.' || c == ':') {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -81,11 +135,9 @@ public final class HttpClientUtil {
             return "";
         }
 
-        StringBuilder sb = new StringBuilder(cookies.size() * 16); // 预估大小以减少扩容
-
-        cookies.forEach((k, v) -> sb.append(k).append('=').append(v).append("; "));
-
-        return sb.toString();
+        StringJoiner joiner = new StringJoiner("; ");
+        cookies.forEach((k, v) -> joiner.add(k + "=" + v));
+        return joiner.toString();
     }
 
     public static HttpLoggingInterceptor httpLoggingInterceptor(ReqLog logger, HttpLoggingInterceptor.Level level) {

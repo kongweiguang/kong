@@ -2,6 +2,8 @@ package io.github.kongweiguang.http.client.core;
 
 import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.Res;
+import io.github.kongweiguang.http.client.TestHttpServer;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -11,8 +13,7 @@ public class UrlQueryTest {
 
     @Test
     void test1() throws Exception {
-        //http://localhost:8080/get/one/two?q=1&k1=v1&k2=1&k2=2&k3=v3&k4=v4
-        Res res = Req.get("http://localhost:8080/get/one/two?q=1")
+        Res res = Req.get(TestHttpServer.url("/echo") + "?q=1")
                 .query("k1", "v1")
                 .query("k2", Arrays.asList("1", "2"))
                 .query(new HashMap<String, Object>() {{
@@ -21,7 +22,13 @@ public class UrlQueryTest {
                 }})
                 .ok();
 
-        //服务端接受{q=[1], k1=[v1], k2=[1, 2], k3=[v3], k4=[v4]}
+        String query = res.str();
+        Assertions.assertTrue(query.contains("q=1"));
+        Assertions.assertTrue(query.contains("k1=v1"));
+        Assertions.assertTrue(query.contains("k2=1"));
+        Assertions.assertTrue(query.contains("k2=2"));
+        Assertions.assertTrue(query.contains("k3=v3"));
+        Assertions.assertTrue(query.contains("k4=v4"));
     }
 
 }

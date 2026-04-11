@@ -1,9 +1,10 @@
 package io.github.kongweiguang.http.client.core;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.Res;
+import io.github.kongweiguang.http.client.TestHttpServer;
 import okhttp3.Response;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
@@ -14,35 +15,46 @@ public class ResTest {
 
     @Test
     void testRes() {
-        final Res res = Req.get("http://localhost:80/get_string")
-                .query("a", "1")
-                .query("b", "2")
-                .query("c", "3")
-                .ok();
+        Res userRes = Req.get(TestHttpServer.url("/user")).ok();
+        User user = userRes.obj(User.class);
+        Assertions.assertEquals("tom", user.getName());
 
-        //返回值
-        final String str = res.str();
-        final byte[] bytes = res.bytes();
-        final User obj = res.obj(User.class);
-        final List<User> obj1 = res.obj(new TypeReference<List<User>>() {
-        });
-        final List<String> list = res.list(String.class);
-        final Map<String, String> map = res.map(String.class, String.class);
-        final InputStream stream = res.stream();
-        final Integer i = res.i32();
-        final Boolean b = res.bool();
+        Res usersRes = Req.get(TestHttpServer.url("/users")).ok();
+        List<User> users = usersRes.list(User.class);
+        Assertions.assertEquals(1, users.size());
+        Assertions.assertEquals("tom", users.get(0).getName());
 
-        //响应头
-        final String ok = res.header("ok");
-        final Map<String, List<String>> headers = res.headers();
+        Res mapRes = Req.get(TestHttpServer.url("/map")).ok();
+        Map<String, String> map = mapRes.map(String.class, String.class);
+        Assertions.assertEquals("v", map.get("k"));
 
-        //状态
-        final int status = res.code();
+        Res intRes = Req.get(TestHttpServer.url("/int")).ok();
+        Assertions.assertEquals(123, intRes.i32());
 
-        //原始响应
-        final Response response = res.raw();
+        Res boolRes = Req.get(TestHttpServer.url("/bool")).ok();
+        Assertions.assertTrue(boolRes.bool());
 
+        Res stringRes = Req.get(TestHttpServer.url("/get_string")).ok();
+        String str = stringRes.str();
+        Assertions.assertEquals("hello", str);
 
+        Res bytesRes = Req.get(TestHttpServer.url("/get_string")).ok();
+        byte[] bytes = bytesRes.bytes();
+        Assertions.assertEquals("hello", new String(bytes));
+
+        Res streamRes = Req.get(TestHttpServer.url("/get_string")).ok();
+        InputStream stream = streamRes.stream();
+        Assertions.assertNotNull(stream);
+
+        Res headerRes = Req.get(TestHttpServer.url("/get_string")).ok();
+        Map<String, List<String>> headers = headerRes.headers();
+        Assertions.assertTrue(headers.containsKey("Content-type") || headers.containsKey("Content-Type"));
+
+        int status = headerRes.code();
+        Assertions.assertEquals(200, status);
+
+        Response response = headerRes.raw();
+        Assertions.assertNotNull(response);
     }
 
 }

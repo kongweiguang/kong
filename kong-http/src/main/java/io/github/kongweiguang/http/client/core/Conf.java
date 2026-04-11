@@ -1,6 +1,5 @@
 package io.github.kongweiguang.http.client.core;
 
-import io.github.kongweiguang.core.threads.ThreadPools;
 import io.github.kongweiguang.http.common.core.Header;
 import io.github.kongweiguang.http.common.utils.HttpClientUtil;
 import okhttp3.*;
@@ -13,6 +12,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 
 import static io.github.kongweiguang.core.lang.Assert.isTrue;
 import static io.github.kongweiguang.core.lang.Assert.notNull;
@@ -26,8 +27,7 @@ import static java.util.Objects.nonNull;
  */
 public class Conf {
     //全局配置
-    private static final Conf global = new Conf()
-            .exec(ThreadPools.virtualPool);
+    private static final Conf global = new Conf();
 
 
     /**
@@ -46,7 +46,7 @@ public class Conf {
     private Dispatcher dispatcher;
 
     //异步调用的线程池
-    private Executor exec;
+    private Executor exec = Executors.newVirtualThreadPerTaskExecutor();
 
     //连接池配置
     private ConnectionPool connectionPool;
@@ -57,7 +57,7 @@ public class Conf {
     private ProxySelector proxySelector;
 
     //ssl配置
-    private boolean ssl;
+    private boolean ssl = true;
 
     //超时时间
     private Timeout timeout;
@@ -69,10 +69,10 @@ public class Conf {
     private EventListener eventListener;
 
     //重定向
-    private boolean followRedirects;
+    private boolean followRedirects = true;
 
     //ssl重定向
-    private boolean followSslRedirects;
+    private boolean followSslRedirects = true;
 
     //cookieJar
     private CookieJar cookieJar;
@@ -87,6 +87,30 @@ public class Conf {
      */
     public static Conf of() {
         return new Conf();
+    }
+
+    /**
+     * 拷贝当前配置，避免请求之间共享可变状态
+     *
+     * @return 新的配置副本
+     */
+    public Conf copy() {
+        Conf conf = new Conf();
+        conf.interceptors = isNull(this.interceptors) ? null : new ArrayList<>(this.interceptors);
+        conf.dispatcher = this.dispatcher;
+        conf.exec = this.exec;
+        conf.connectionPool = this.connectionPool;
+        conf.proxy = this.proxy;
+        conf.proxyAuthenticator = this.proxyAuthenticator;
+        conf.proxySelector = this.proxySelector;
+        conf.ssl = this.ssl;
+        conf.timeout = this.timeout;
+        conf.httpLoggingInterceptor = this.httpLoggingInterceptor;
+        conf.eventListener = this.eventListener;
+        conf.followRedirects = this.followRedirects;
+        conf.followSslRedirects = this.followSslRedirects;
+        conf.cookieJar = this.cookieJar;
+        return conf;
     }
 
 
