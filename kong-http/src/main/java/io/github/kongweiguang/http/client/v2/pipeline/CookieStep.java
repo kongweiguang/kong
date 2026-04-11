@@ -4,7 +4,7 @@ import io.github.kongweiguang.http.common.core.Header;
 import io.github.kongweiguang.http.common.utils.HttpClientUtil;
 
 /**
- * Writes cookie header only when cookies are present.
+ * 仅在存在 Cookie 时写入 Cookie 请求头。
  */
 public final class CookieStep implements RequestBuildStep {
     @Override
@@ -15,4 +15,5 @@ public final class CookieStep implements RequestBuildStep {
         context.builder().header(Header.COOKIE.v(), HttpClientUtil.cookie2Str(context.spec().cookies()));
     }
 }
+
 

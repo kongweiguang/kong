@@ -9,7 +9,7 @@ import okhttp3.OkHttpClient;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Shared execution template for HTTP/SSE/WS.
+ * HTTP/SSE/WS 共用的执行模板。
  */
 public abstract class AbstractExecutor<R> {
     private final HttpRequestSpec spec;
@@ -44,4 +44,5 @@ public abstract class AbstractExecutor<R> {
 
     protected abstract R executeCore() throws Exception;
 }
+
 

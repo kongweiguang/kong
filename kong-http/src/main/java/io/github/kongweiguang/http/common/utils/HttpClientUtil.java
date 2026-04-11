@@ -12,12 +12,12 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
- * Internal http utility methods.
+ * HTTP 内部工具方法。
  */
 public final class HttpClientUtil {
 
     private HttpClientUtil() {
-        throw new KongHttpRuntimeException("util not be construct");
+        throw new KongHttpRuntimeException("工具类不允许实例化");
     }
 
     public static String fixUrl(String url) {
@@ -92,3 +92,4 @@ public final class HttpClientUtil {
         return loggingInterceptor;
     }
 }
+

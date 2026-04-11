@@ -4,7 +4,7 @@ import io.github.kongweiguang.http.client.HttpRequestSpec;
 import io.github.kongweiguang.http.common.core.ContentType;
 
 /**
- * Chooses the body encoder by content type.
+ * 按 Content-Type 选择请求体编码器。
  */
 public final class BodyEncoderFactory {
     private static final BodyEncoder RAW = new RawBodyEncoder();
@@ -25,4 +25,5 @@ public final class BodyEncoderFactory {
         return RAW;
     }
 }
+
 

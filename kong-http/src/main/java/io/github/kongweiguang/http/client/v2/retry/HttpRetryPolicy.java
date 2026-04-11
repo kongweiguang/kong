@@ -6,7 +6,7 @@ import io.github.kongweiguang.http.common.exception.KongHttpRuntimeException;
 import java.util.concurrent.Callable;
 
 /**
- * Delegates HTTP retry behavior to existing RetryableTask semantics.
+ * 将 HTTP 重试行为委托给现有 RetryableTask 语义。
  */
 public final class HttpRetryPolicy implements RetryPolicy<Res> {
     private final io.github.kongweiguang.core.retry.RetryableTask<Res> retryTask;
@@ -36,3 +36,4 @@ public final class HttpRetryPolicy implements RetryPolicy<Res> {
         return result.value();
     }
 }
+

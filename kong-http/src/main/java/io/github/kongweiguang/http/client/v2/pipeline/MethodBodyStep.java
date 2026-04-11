@@ -7,7 +7,7 @@ import okhttp3.RequestBody;
 import static io.github.kongweiguang.core.lang.Opt.ofNullable;
 
 /**
- * Applies method/body compatibility rules before request assembly.
+ * 在组装请求前应用 method/body 兼容规则。
  */
 public final class MethodBodyStep implements RequestBuildStep {
     @Override
@@ -29,4 +29,5 @@ public final class MethodBodyStep implements RequestBuildStep {
         context.requestBody(body);
     }
 }
+
 

@@ -9,7 +9,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 /**
- * HTTP executor using retry policy and request pipeline.
+ * 使用重试策略与请求流水线的 HTTP 执行器。
  */
 public final class HttpExecutor extends AbstractExecutor<Res> {
     private static final RequestPipeline PIPELINE = new RequestPipeline();
@@ -24,4 +24,5 @@ public final class HttpExecutor extends AbstractExecutor<Res> {
         return Res.of(client().newCall(request).execute());
     }
 }
+
 

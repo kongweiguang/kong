@@ -7,7 +7,7 @@ import okhttp3.RequestBody;
 import static java.util.Objects.isNull;
 
 /**
- * Encodes raw bytes using content type from request spec.
+ * 按请求规格中的 contentType 编码原始字节。
  */
 public final class RawBodyEncoder implements BodyEncoder {
     @Override
@@ -18,3 +18,4 @@ public final class RawBodyEncoder implements BodyEncoder {
         return RequestBody.create(MediaType.parse(spec.contentType()), spec.body());
     }
 }
+

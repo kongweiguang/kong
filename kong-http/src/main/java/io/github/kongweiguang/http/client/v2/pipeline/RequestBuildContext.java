@@ -5,7 +5,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 /**
- * Mutable context shared by request build steps.
+ * 请求构建步骤共享的可变上下文。
  */
 public final class RequestBuildContext {
     private final HttpRequestSpec spec;
@@ -24,4 +24,5 @@ public final class RequestBuildContext {
     public Request request() { return request; }
     public void request(Request request) { this.request = request; }
 }
+
 

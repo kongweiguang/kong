@@ -18,7 +18,7 @@ import static io.github.kongweiguang.http.common.utils.HttpClientUtil.fixUrl;
 import static java.util.Objects.nonNull;
 
 /**
- * Immutable request specification for kong-http v2.
+ * kong-http v2 的不可变请求规格。
  */
 public final class HttpRequestSpec {
     private final ReqType reqType;
@@ -91,7 +91,7 @@ public final class HttpRequestSpec {
     public <T> T attr(Object key) { return (T) attrs.get(key); }
 
     /**
-     * Mutable builder for constructing immutable request specs.
+     * 用于构建不可变请求规格的可变构建器。
      */
     public static final class Builder {
         private ReqType reqType = ReqType.http;
@@ -124,7 +124,7 @@ public final class HttpRequestSpec {
         public Builder reqType(ReqType reqType) { this.reqType = reqType; return this; }
         public Builder method(Method method) { this.method = method; return this; }
         public Builder url(String url) {
-            notNull(url, "url must not be null");
+            notNull(url, "url 不能为空");
             this.url = fixUrl(url.trim());
             return this;
         }
@@ -148,22 +148,22 @@ public final class HttpRequestSpec {
             return this;
         }
         public Builder file(String name, String fileName, byte[] bytes) {
-            notNull(name, "name must not be null");
-            notNull(fileName, "fileName must not be null");
-            notNull(bytes, "bytes must not be null");
+            notNull(name, "name 不能为空");
+            notNull(fileName, "fileName 不能为空");
+            notNull(bytes, "bytes 不能为空");
             files.add(new FilePart(name, fileName, Arrays.copyOf(bytes, bytes.length)));
             return this;
         }
         public Builder attr(Object key, Object value) { attrs.put(key, value); return this; }
         public Builder config(Consumer<Conf> confConsumer) {
-            notNull(confConsumer, "conf consumer must not be null");
+            notNull(confConsumer, "conf consumer 不能为空");
             confConsumer.accept(conf);
             return this;
         }
         public Builder success(Consumer<Res> success) { this.onSuccess = success; return this; }
         public Builder fail(Consumer<Throwable> fail) { this.onFailure = fail; return this; }
         public Builder retry(Consumer<RetryableTask<Res>> retryConsumer) {
-            notNull(retryConsumer, "retry consumer must not be null");
+            notNull(retryConsumer, "retry consumer 不能为空");
             retryConsumer.accept(retry);
             return this;
         }
@@ -189,4 +189,5 @@ public final class HttpRequestSpec {
         public byte[] bytes() { return bytes; }
     }
 }
+
 

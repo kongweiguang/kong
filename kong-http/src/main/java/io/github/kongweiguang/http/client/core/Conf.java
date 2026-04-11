@@ -20,7 +20,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
- * Request config model.
+ * 请求配置模型。
  */
 public class Conf {
     private static final Conf global = new Conf().exec(ThreadPools.virtualPool);
@@ -74,7 +74,7 @@ public class Conf {
     public boolean ssl() { return ssl; }
 
     public Conf exec(Executor executor) {
-        notNull(executor, "executor must not be null");
+        notNull(executor, "executor 不能为空");
         this.exec = executor;
         return this;
     }
@@ -100,9 +100,9 @@ public class Conf {
     public ConnectionPool connectionPool() { return connectionPool; }
 
     public Conf proxy(Proxy.Type type, String host, int port) {
-        notNull(type, "type must not be null");
-        notNull(host, "host must not be null");
-        isTrue(port > 0, "port must > 0");
+        notNull(type, "type 不能为空");
+        notNull(host, "host 不能为空");
+        isTrue(port > 0, "port 必须大于 0");
         this.proxy = new Proxy(type, new InetSocketAddress(host, port));
         return this;
     }
@@ -111,8 +111,8 @@ public class Conf {
     public Proxy proxy() { return proxy; }
 
     public Conf proxyAuthenticator(String username, String password) {
-        notNull(username, "username must not be null");
-        notNull(password, "password must not be null");
+        notNull(username, "username 不能为空");
+        notNull(password, "password 不能为空");
         this.proxyAuthenticator = (route, response) -> response.request().newBuilder()
                 .header(Header.PROXY_AUTHORIZATION.v(), Credentials.basic(username, password, StandardCharsets.UTF_8))
                 .build();
@@ -144,3 +144,4 @@ public class Conf {
     public CookieJar cookieJar() { return cookieJar; }
     public Conf cookieJar(CookieJar cookieJar) { this.cookieJar = cookieJar; return this; }
 }
+

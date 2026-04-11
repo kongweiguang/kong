@@ -10,7 +10,7 @@ import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSources;
 
 /**
- * SSE executor.
+ * SSE 执行器。
  */
 public final class SSEExecutor extends AbstractExecutor<EventSource> {
     private static final RequestPipeline PIPELINE = new RequestPipeline();
@@ -25,4 +25,5 @@ public final class SSEExecutor extends AbstractExecutor<EventSource> {
         return EventSources.createFactory(client()).newEventSource(request, spec().sseListener());
     }
 }
+
 

@@ -1,7 +1,7 @@
 package io.github.kongweiguang.http.client.v2;
 
 /**
- * Handles success and failure events for asynchronous execution.
+ * 处理异步执行的成功与失败回调。
  */
 public interface ResultHandler<R> {
     void onSuccess(R result);
@@ -20,4 +20,5 @@ public interface ResultHandler<R> {
         };
     }
 }
+
 

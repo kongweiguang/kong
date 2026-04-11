@@ -5,7 +5,7 @@ import okhttp3.FormBody;
 import okhttp3.RequestBody;
 
 /**
- * Encodes urlencoded form data.
+ * 编码 form-url-encoded 表单数据。
  */
 public final class FormUrlEncodedEncoder implements BodyEncoder {
     @Override
@@ -15,4 +15,5 @@ public final class FormUrlEncodedEncoder implements BodyEncoder {
         return fb.build();
     }
 }
+
 

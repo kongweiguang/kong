@@ -6,7 +6,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 /**
- * Encodes multipart body, including form fields and file parts.
+ * 编码 multipart 请求体，包含表单字段和文件分片。
  */
 public final class MultipartEncoder implements BodyEncoder {
     @Override
@@ -21,4 +21,5 @@ public final class MultipartEncoder implements BodyEncoder {
         return mb.build();
     }
 }
+
 

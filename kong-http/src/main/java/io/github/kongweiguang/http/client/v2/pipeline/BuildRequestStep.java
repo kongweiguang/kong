@@ -5,14 +5,14 @@ import okhttp3.HttpUrl;
 import static java.util.Objects.isNull;
 
 /**
- * Final step that assembles url, headers and method into Request.
+ * 最终步骤：组装 URL、请求头和 Method 生成 Request。
  */
 public final class BuildRequestStep implements RequestBuildStep {
     @Override
     public void apply(RequestBuildContext context) {
         HttpUrl parsed = HttpUrl.parse(context.spec().url());
         if (isNull(parsed)) {
-            throw new IllegalArgumentException("invalid url: " + context.spec().url());
+            throw new IllegalArgumentException("非法 URL: " + context.spec().url());
         }
         HttpUrl.Builder ub = parsed.newBuilder();
         context.spec().query().forEach((k, v) -> ub.addQueryParameter(k, String.valueOf(v)));
@@ -29,4 +29,5 @@ public final class BuildRequestStep implements RequestBuildStep {
         );
     }
 }
+
 

@@ -17,7 +17,7 @@ import okhttp3.sse.EventSource;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Unified client facade for kong-http v2.
+ * kong-http v2 的统一客户端门面。
  */
 public final class KongHttpClient {
 
@@ -79,4 +79,5 @@ public final class KongHttpClient {
         };
     }
 }
+
 

@@ -6,7 +6,7 @@ import okhttp3.Request;
 import java.util.List;
 
 /**
- * Fixed-order pipeline for deterministic request assembly.
+ * 固定顺序流水线，确保请求组装行为确定。
  */
 public final class RequestPipeline {
     private final List<RequestBuildStep> steps = List.of(
@@ -25,4 +25,5 @@ public final class RequestPipeline {
         return context.request();
     }
 }
+
 

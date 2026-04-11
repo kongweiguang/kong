@@ -3,7 +3,7 @@ package io.github.kongweiguang.http.client.v2.pipeline;
 import io.github.kongweiguang.http.client.HttpRequestSpec;
 
 /**
- * Tags request with the immutable spec so listeners can recover request context.
+ * 将不可变规格写入 tag，便于监听器回取上下文。
  */
 public final class TagStep implements RequestBuildStep {
     @Override
@@ -11,4 +11,5 @@ public final class TagStep implements RequestBuildStep {
         context.builder().tag(HttpRequestSpec.class, context.spec());
     }
 }
+
 
