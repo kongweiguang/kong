@@ -23,36 +23,54 @@ public abstract class WSListener extends WebSocketListener {
     protected WebSocket ws;
 
     @Override
+    /**
+     * 连接建立成功时触发。
+     */
     public void onOpen(WebSocket webSocket, Response response) {
         this.ws = webSocket;
         open(webSocket.request().tag(HttpRequestSpec.class), Res.of(response));
     }
 
     @Override
+    /**
+     * 收到消息时触发。
+     */
     public void onMessage(WebSocket webSocket, String text) {
         this.ws = webSocket;
         msg(webSocket.request().tag(HttpRequestSpec.class), text);
     }
 
     @Override
+    /**
+     * 收到消息时触发。
+     */
     public void onMessage(WebSocket webSocket, ByteString bytes) {
         this.ws = webSocket;
         msg(webSocket.request().tag(HttpRequestSpec.class), bytes.toByteArray());
     }
 
     @Override
+    /**
+     * 处理执行失败后的回调。
+     */
     public void onFailure(WebSocket webSocket, Throwable t, Response response) {
         this.ws = webSocket;
         fail(webSocket.request().tag(HttpRequestSpec.class), Res.of(response), t);
     }
 
     @Override
+    /**
+     * 连接即将关闭时触发。
+     */
     public void onClosing(WebSocket webSocket, int code, String reason) {
         this.ws = webSocket;
         closing(webSocket.request().tag(HttpRequestSpec.class), code, reason);
     }
 
     @Override
+    /**
+     * 连接关闭后触发。
+     */
     public void onClosed(WebSocket webSocket, int code, String reason) {
         this.ws = webSocket;
         closed(webSocket.request().tag(HttpRequestSpec.class), code, reason);

@@ -17,6 +17,9 @@ public final class RequestPipeline {
             new BuildRequestStep()
     );
 
+    /**
+     * 构建并返回最终结果。
+     */
     public Request build(HttpRequestSpec spec) {
         RequestBuildContext context = new RequestBuildContext(spec);
         for (RequestBuildStep step : steps) {

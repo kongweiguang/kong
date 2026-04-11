@@ -338,6 +338,9 @@ public enum Header {
     }
 
     @Override
+    /**
+     * 返回对象的可读字符串表示。
+     */
     public String toString() {
         return v();
     }

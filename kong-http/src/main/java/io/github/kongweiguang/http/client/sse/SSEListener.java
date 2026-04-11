@@ -19,24 +19,36 @@ public abstract class SSEListener extends EventSourceListener {
     public EventSource es;
 
     @Override
+    /**
+     * 连接建立成功时触发。
+     */
     public void onOpen(EventSource eventSource, Response response) {
         this.es = eventSource;
         open(eventSource.request().tag(HttpRequestSpec.class), Res.of(response));
     }
 
     @Override
+    /**
+     * 收到 SSE 事件时触发。
+     */
     public void onEvent(EventSource eventSource, String id, String type, String data) {
         this.es = eventSource;
         event(eventSource.request().tag(HttpRequestSpec.class), SseEvent.of().id(id).type(type).data(data));
     }
 
     @Override
+    /**
+     * 处理执行失败后的回调。
+     */
     public void onFailure(EventSource eventSource, Throwable t, Response response) {
         this.es = eventSource;
         fail(eventSource.request().tag(HttpRequestSpec.class), Res.of(response), t);
     }
 
     @Override
+    /**
+     * 连接关闭后触发。
+     */
     public void onClosed(EventSource eventSource) {
         this.es = eventSource;
         closed(eventSource.request().tag(HttpRequestSpec.class));

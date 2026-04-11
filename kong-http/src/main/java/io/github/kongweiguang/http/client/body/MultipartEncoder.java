@@ -10,6 +10,9 @@ import okhttp3.RequestBody;
  */
 public final class MultipartEncoder implements BodyEncoder {
     @Override
+    /**
+     * 根据请求规格编码请求体。
+     */
     public RequestBody encode(HttpRequestSpec spec) {
         MultipartBody.Builder mb = new MultipartBody.Builder()
                 .setType(MediaType.parse(spec.contentType()));

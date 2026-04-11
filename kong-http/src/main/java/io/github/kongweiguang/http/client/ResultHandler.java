@@ -11,10 +11,16 @@ public interface ResultHandler<R> {
     static <R> ResultHandler<R> noop() {
         return new ResultHandler<>() {
             @Override
+            /**
+             * 处理执行成功后的回调。
+             */
             public void onSuccess(R result) {
             }
 
             @Override
+            /**
+             * 处理执行失败后的回调。
+             */
             public void onFailure(Throwable error) {
             }
         };

@@ -13,6 +13,9 @@ public final class RequestBuildContext {
     private RequestBody requestBody;
     private Request request;
 
+    /**
+     * 创建RequestBuildContext 实例。
+     */
     public RequestBuildContext(HttpRequestSpec spec) {
         this.spec = spec;
     }

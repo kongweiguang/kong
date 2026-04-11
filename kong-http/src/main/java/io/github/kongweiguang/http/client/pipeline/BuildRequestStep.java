@@ -9,6 +9,9 @@ import static java.util.Objects.isNull;
  */
 public final class BuildRequestStep implements RequestBuildStep {
     @Override
+    /**
+     * 对上下文执行当前步骤处理。
+     */
     public void apply(RequestBuildContext context) {
         HttpUrl parsed = HttpUrl.parse(context.spec().url());
         if (isNull(parsed)) {

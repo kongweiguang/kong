@@ -123,6 +123,9 @@ public final class HttpRequestSpec {
 
         public Builder reqType(ReqType reqType) { this.reqType = reqType; return this; }
         public Builder method(Method method) { this.method = method; return this; }
+        /**
+         * 设置url 参数并返回当前对象，便于链式调用。
+         */
         public Builder url(String url) {
             notNull(url, "url 不能为空");
             this.url = fixUrl(url.trim());
@@ -143,10 +146,16 @@ public final class HttpRequestSpec {
         public Builder body(String body) { this.body = body == null ? null : body.getBytes(charset); return this; }
         public Builder body(String body, String contentType) { return body(body).contentType(contentType); }
         public Builder form(String key, Object value) { if (nonNull(key) && nonNull(value)) form.put(key, String.valueOf(value)); return this; }
+        /**
+         * 设置form 参数并返回当前对象，便于链式调用。
+         */
         public Builder form(Map<String, Object> formMap) {
             if (formMap != null) formMap.forEach((k, v) -> form(k, v));
             return this;
         }
+        /**
+         * 设置file 参数并返回当前对象，便于链式调用。
+         */
         public Builder file(String name, String fileName, byte[] bytes) {
             notNull(name, "name 不能为空");
             notNull(fileName, "fileName 不能为空");
@@ -155,6 +164,9 @@ public final class HttpRequestSpec {
             return this;
         }
         public Builder attr(Object key, Object value) { attrs.put(key, value); return this; }
+        /**
+         * 设置config 参数并返回当前对象，便于链式调用。
+         */
         public Builder config(Consumer<Conf> confConsumer) {
             notNull(confConsumer, "conf consumer 不能为空");
             confConsumer.accept(conf);
@@ -162,6 +174,9 @@ public final class HttpRequestSpec {
         }
         public Builder success(Consumer<Res> success) { this.onSuccess = success; return this; }
         public Builder fail(Consumer<Throwable> fail) { this.onFailure = fail; return this; }
+        /**
+         * 设置retry 参数并返回当前对象，便于链式调用。
+         */
         public Builder retry(Consumer<RetryableTask<Res>> retryConsumer) {
             notNull(retryConsumer, "retry consumer 不能为空");
             retryConsumer.accept(retry);
@@ -178,6 +193,9 @@ public final class HttpRequestSpec {
         private final String fileName;
         private final byte[] bytes;
 
+        /**
+         * 创建文件分片对象。
+         */
         public FilePart(String name, String fileName, byte[] bytes) {
             this.name = name;
             this.fileName = fileName;

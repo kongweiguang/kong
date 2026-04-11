@@ -67,10 +67,16 @@ public class Client {
                     .readTimeout(timeout.read()))
     );
 
+    /**
+     * 创建默认实例。
+     */
     public static OkHttpClient of() {
         return of(Conf.global());
     }
 
+    /**
+     * 创建默认实例。
+     */
     public static OkHttpClient of(Conf conf) {
         OkHttpClient.Builder builder = DEFAULT_CLIENT.newBuilder();
         for (ConfApplier applier : APPLIERS) {

@@ -392,11 +392,17 @@ public class Res implements AutoCloseable {
      * 关闭res对象
      */
     @Override
+    /**
+     * 关闭当前资源并释放底层连接。
+     */
     public void close() {
         IoUtil.close(raw());
     }
 
     @Override
+    /**
+     * 返回对象的可读字符串表示。
+     */
     public String toString() {
         return raw().toString();
     }

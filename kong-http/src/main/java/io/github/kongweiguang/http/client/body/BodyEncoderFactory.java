@@ -14,6 +14,9 @@ public final class BodyEncoderFactory {
     private BodyEncoderFactory() {
     }
 
+    /**
+     * 根据请求规格选择合适的编码器。
+     */
     public static BodyEncoder resolve(HttpRequestSpec spec) {
         String ct = spec.contentType();
         if (ct != null && ct.contains(ContentType.MULTIPART.v())) {

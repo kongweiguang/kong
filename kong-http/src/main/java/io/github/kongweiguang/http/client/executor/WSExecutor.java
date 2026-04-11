@@ -14,6 +14,9 @@ import okhttp3.WebSocket;
 public final class WSExecutor extends AbstractExecutor<WebSocket> {
     private static final RequestPipeline PIPELINE = new RequestPipeline();
 
+    /**
+     * 创建WSExecutor 实例。
+     */
     public WSExecutor(HttpRequestSpec spec, OkHttpClient client, RetryPolicy<WebSocket> retryPolicy, ResultHandler<WebSocket> handler) {
         super(spec, client, retryPolicy, handler);
     }

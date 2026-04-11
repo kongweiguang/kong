@@ -11,6 +11,9 @@ import static java.util.Objects.isNull;
  */
 public final class RawBodyEncoder implements BodyEncoder {
     @Override
+    /**
+     * 根据请求规格编码请求体。
+     */
     public RequestBody encode(HttpRequestSpec spec) {
         if (isNull(spec.body())) {
             return null;

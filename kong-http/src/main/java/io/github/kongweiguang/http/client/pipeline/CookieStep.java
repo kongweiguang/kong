@@ -8,6 +8,9 @@ import io.github.kongweiguang.http.common.utils.HttpClientUtil;
  */
 public final class CookieStep implements RequestBuildStep {
     @Override
+    /**
+     * 对上下文执行当前步骤处理。
+     */
     public void apply(RequestBuildContext context) {
         if (context.spec().cookies().isEmpty()) {
             return;

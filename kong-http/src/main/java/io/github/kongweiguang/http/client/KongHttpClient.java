@@ -24,14 +24,23 @@ public final class KongHttpClient {
     private KongHttpClient() {
     }
 
+    /**
+     * 创建 HTTP 请求构建器。
+     */
     public static HttpRequestSpec.Builder request(String url) {
         return new HttpRequestSpec.Builder().url(url).reqType(ReqType.http).method(Method.GET);
     }
 
+    /**
+     * 创建 WebSocket 请求构建器。
+     */
     public static HttpRequestSpec.Builder ws(String url) {
         return new HttpRequestSpec.Builder().url(url).reqType(ReqType.ws).method(Method.GET);
     }
 
+    /**
+     * 创建 SSE 请求构建器。
+     */
     public static HttpRequestSpec.Builder sse(String url) {
         return new HttpRequestSpec.Builder()
                 .url(url)
@@ -40,23 +49,38 @@ public final class KongHttpClient {
                 .contentType(ContentType.EVENT_STREAM.v());
     }
 
+    /**
+     * 执行请求并返回异步结果。
+     */
     public static CompletableFuture<Res> execute(HttpRequestSpec spec) {
         return execute(spec, Client.of(spec.conf()));
     }
 
+    /**
+     * 执行请求并返回异步结果。
+     */
     public static CompletableFuture<Res> execute(HttpRequestSpec spec, OkHttpClient client) {
         ResultHandler<Res> handler = toHandler(spec);
         return new HttpExecutor(spec, client, new HttpRetryPolicy(spec.retry()), handler).executeAsync();
     }
 
+    /**
+     * 以阻塞方式执行并返回结果。
+     */
     public static Res executeBlocking(HttpRequestSpec spec) {
         return execute(spec).join();
     }
 
+    /**
+     * 执行 SSE 请求并返回事件源。
+     */
     public static CompletableFuture<EventSource> executeSse(HttpRequestSpec spec) {
         return new SSEExecutor(spec, Client.of(spec.conf()), new NoRetryPolicy<>(), ResultHandler.noop()).executeAsync();
     }
 
+    /**
+     * 执行 WebSocket 请求并返回连接对象。
+     */
     public static CompletableFuture<WebSocket> executeWs(HttpRequestSpec spec) {
         return new WSExecutor(spec, Client.of(spec.conf()), new NoRetryPolicy<>(), ResultHandler.noop()).executeAsync();
     }
@@ -64,6 +88,9 @@ public final class KongHttpClient {
     private static ResultHandler<Res> toHandler(HttpRequestSpec spec) {
         return new ResultHandler<>() {
             @Override
+            /**
+             * 处理执行成功后的回调。
+             */
             public void onSuccess(Res result) {
                 if (spec.onSuccess() != null) {
                     spec.onSuccess().accept(result);
@@ -71,6 +98,9 @@ public final class KongHttpClient {
             }
 
             @Override
+            /**
+             * 处理执行失败后的回调。
+             */
             public void onFailure(Throwable error) {
                 if (spec.onFailure() != null) {
                     spec.onFailure().accept(error);

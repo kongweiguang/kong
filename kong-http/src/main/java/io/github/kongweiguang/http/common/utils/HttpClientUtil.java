@@ -20,6 +20,9 @@ public final class HttpClientUtil {
         throw new KongHttpRuntimeException("工具类不允许实例化");
     }
 
+    /**
+     * 规范化 URL 并补全缺失协议。
+     */
     public static String fixUrl(String url) {
         if (isNull(url) || url.trim().isEmpty()) {
             return Const._http + Const.localhost;
@@ -61,22 +64,37 @@ public final class HttpClientUtil {
         return Const._http + Const.localhost + "/" + url;
     }
 
+    /**
+     * 判断isHttp 对应条件是否成立。
+     */
     public static boolean isHttp(String url) {
         return nonNull(url) && url.toLowerCase().startsWith(Const._http);
     }
 
+    /**
+     * 判断isHttps 对应条件是否成立。
+     */
     public static boolean isHttps(String url) {
         return nonNull(url) && url.toLowerCase().startsWith(Const._https);
     }
 
+    /**
+     * 判断isWs 对应条件是否成立。
+     */
     public static boolean isWs(String url) {
         return nonNull(url) && url.toLowerCase().startsWith(Const._ws);
     }
 
+    /**
+     * 判断isWss 对应条件是否成立。
+     */
     public static boolean isWss(String url) {
         return nonNull(url) && url.toLowerCase().startsWith(Const._wss);
     }
 
+    /**
+     * 将 Cookie 映射转换为请求头字符串。
+     */
     public static String cookie2Str(Map<String, String> cookies) {
         if (isNull(cookies) || cookies.isEmpty()) {
             return "";
@@ -86,6 +104,9 @@ public final class HttpClientUtil {
         return joiner.toString();
     }
 
+    /**
+     * 创建 HTTP 日志拦截器。
+     */
     public static HttpLoggingInterceptor httpLoggingInterceptor(ReqLog logger, HttpLoggingInterceptor.Level level) {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(logger);
         loggingInterceptor.setLevel(level);

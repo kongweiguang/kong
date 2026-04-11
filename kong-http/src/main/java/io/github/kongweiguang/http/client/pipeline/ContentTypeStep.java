@@ -8,6 +8,9 @@ import io.github.kongweiguang.http.common.core.Header;
  */
 public final class ContentTypeStep implements RequestBuildStep {
     @Override
+    /**
+     * 对上下文执行当前步骤处理。
+     */
     public void apply(RequestBuildContext context) {
         String ct = context.spec().contentType();
         if (ct == null) {

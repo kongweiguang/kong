@@ -7,6 +7,9 @@ import io.github.kongweiguang.http.client.HttpRequestSpec;
  */
 public final class TagStep implements RequestBuildStep {
     @Override
+    /**
+     * 对上下文执行当前步骤处理。
+     */
     public void apply(RequestBuildContext context) {
         context.builder().tag(HttpRequestSpec.class, context.spec());
     }

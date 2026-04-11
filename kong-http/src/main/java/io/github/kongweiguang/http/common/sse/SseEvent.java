@@ -15,6 +15,9 @@ public class SseEvent {
 
     private String data;
 
+    /**
+     * 创建默认实例。
+     */
     public static SseEvent of() {
         return new SseEvent();
     }
@@ -60,27 +63,45 @@ public class SseEvent {
         return this;
     }
 
+    /**
+     * 构建并返回最终结果。
+     */
     public String build() {
         return append("\n").sb.toString();
     }
 
+    /**
+     * 获取id 对应值。
+     */
     public String id() {
         return id;
     }
 
+    /**
+     * 获取type 对应值。
+     */
     public String type() {
         return type;
     }
 
+    /**
+     * 获取retry 对应值。
+     */
     public String retry() {
         return retry;
     }
 
+    /**
+     * 获取data 对应值。
+     */
     public String data() {
         return data;
     }
 
     @Override
+    /**
+     * 返回对象的可读字符串表示。
+     */
     public String toString() {
         return build();
     }

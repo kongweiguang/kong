@@ -25,6 +25,9 @@ public abstract class AbstractExecutor<R> {
         this.handler = handler;
     }
 
+    /**
+     * 以异步方式执行并返回 Future。
+     */
     public final CompletableFuture<R> executeAsync() {
         Executor executor = spec.conf() == null ? null : spec.conf().exec();
         // 当调用方未显式配置线程池时，回退到 CompletableFuture 默认执行器，避免空指针。
@@ -34,6 +37,9 @@ public abstract class AbstractExecutor<R> {
         return CompletableFuture.supplyAsync(this::executeBlocking, executor);
     }
 
+    /**
+     * 以阻塞方式执行并返回结果。
+     */
     public final R executeBlocking() {
         try {
             R result = retryPolicy.execute(this::executeCore);

@@ -11,6 +11,9 @@ import static io.github.kongweiguang.core.lang.Opt.ofNullable;
  */
 public final class MethodBodyStep implements RequestBuildStep {
     @Override
+    /**
+     * 对上下文执行当前步骤处理。
+     */
     public void apply(RequestBuildContext context) {
         RequestBody body = BodyEncoderFactory.resolve(context.spec()).encode(context.spec());
 

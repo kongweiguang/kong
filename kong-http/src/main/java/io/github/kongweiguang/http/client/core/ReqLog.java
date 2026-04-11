@@ -13,6 +13,9 @@ public enum ReqLog implements HttpLoggingInterceptor.Logger {
 
     slf4j() {
         @Override
+        /**
+         * 执行log 操作。
+         */
         public void log(String message) {
             log.info(message);
         }
@@ -21,6 +24,9 @@ public enum ReqLog implements HttpLoggingInterceptor.Logger {
 
     console() {
         @Override
+        /**
+         * 执行log 操作。
+         */
         public void log(String message) {
             System.out.println(message);
         }

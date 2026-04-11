@@ -14,6 +14,9 @@ import okhttp3.Request;
 public final class HttpExecutor extends AbstractExecutor<Res> {
     private static final RequestPipeline PIPELINE = new RequestPipeline();
 
+    /**
+     * 创建HttpExecutor 实例。
+     */
     public HttpExecutor(HttpRequestSpec spec, OkHttpClient client, RetryPolicy<Res> retryPolicy, ResultHandler<Res> handler) {
         super(spec, client, retryPolicy, handler);
     }

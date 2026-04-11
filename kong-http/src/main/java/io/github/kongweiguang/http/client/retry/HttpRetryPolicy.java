@@ -11,6 +11,9 @@ import java.util.concurrent.Callable;
 public final class HttpRetryPolicy implements RetryPolicy<Res> {
     private final io.github.kongweiguang.core.retry.RetryableTask<Res> retryTask;
 
+    /**
+     * 创建HttpRetryPolicy 实例。
+     */
     public HttpRetryPolicy(io.github.kongweiguang.core.retry.RetryableTask<Res> retryTask) {
         this.retryTask = retryTask;
     }

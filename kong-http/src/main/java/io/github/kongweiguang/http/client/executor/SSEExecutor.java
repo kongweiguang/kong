@@ -15,6 +15,9 @@ import okhttp3.sse.EventSources;
 public final class SSEExecutor extends AbstractExecutor<EventSource> {
     private static final RequestPipeline PIPELINE = new RequestPipeline();
 
+    /**
+     * 创建SSEExecutor 实例。
+     */
     public SSEExecutor(HttpRequestSpec spec, OkHttpClient client, RetryPolicy<EventSource> retryPolicy, ResultHandler<EventSource> handler) {
         super(spec, client, retryPolicy, handler);
     }
