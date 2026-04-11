@@ -7,6 +7,7 @@ import okhttp3.OkHttpClient.Builder;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static io.github.kongweiguang.core.lang.Opt.ofNullable;
@@ -14,104 +15,78 @@ import static java.time.Duration.ofMinutes;
 import static javax.net.ssl.SSLContext.getInstance;
 
 /**
- * 请求客户端
- *
- * @author kongweiguang
+ * OkHttp client factory.
  */
 public class Client {
 
-    /**
-     * 默认分发器
-     */
-    private static final Supplier<Dispatcher> disSup = () -> {
+    private static final Supplier<Dispatcher> DISPATCHER_SUPPLIER = () -> {
         Dispatcher dis = new Dispatcher();
         dis.setMaxRequests(1 << 20);
         dis.setMaxRequestsPerHost(1 << 20);
         return dis;
     };
 
-    /**
-     * 默认的客户端
-     */
-    private static final OkHttpClient client = new OkHttpClient.Builder()
-            .dispatcher(disSup.get())
+    private static final OkHttpClient DEFAULT_CLIENT = new OkHttpClient.Builder()
+            .dispatcher(DISPATCHER_SUPPLIER.get())
             .connectTimeout(ofMinutes(1))
             .writeTimeout(ofMinutes(1))
             .readTimeout(ofMinutes(1))
             .build();
 
     /**
-     * 创建OkHttpClient
-     *
-     * @return OkHttpClient {@link OkHttpClient}
+     * Ordered appliers intentionally keep deterministic override behavior.
      */
+    private static final List<ConfApplier> APPLIERS = List.of(
+            (conf, builder) -> ofNullable(conf.httpLoggingInterceptor()).ifPresent(builder::addInterceptor),
+            (conf, builder) -> ofNullable(conf.interceptors()).ifPresent(interceptors -> interceptors.forEach(builder::addInterceptor)),
+            (conf, builder) -> ofNullable(conf.dispatcher()).ifPresent(builder::dispatcher),
+            (conf, builder) -> ofNullable(conf.connectionPool()).ifPresent(builder::connectionPool),
+            (conf, builder) -> ofNullable(conf.proxy()).ifPresent(builder::proxy),
+            (conf, builder) -> ofNullable(conf.proxyAuthenticator()).ifPresent(builder::proxyAuthenticator),
+            (conf, builder) -> ofNullable(conf.proxySelector()).ifPresent(builder::proxySelector),
+            (conf, builder) -> ofNullable(conf.eventListener()).ifPresent(builder::eventListener),
+            (conf, builder) -> ofNullable(conf.cookieJar()).ifPresent(builder::cookieJar),
+            (conf, builder) -> {
+                if (!conf.followRedirects()) {
+                    builder.followRedirects(false);
+                }
+            },
+            (conf, builder) -> {
+                if (!conf.followSslRedirects()) {
+                    builder.followSslRedirects(false);
+                }
+            },
+            (conf, builder) -> {
+                if (!conf.ssl()) {
+                    ssl(builder);
+                }
+            },
+            (conf, builder) -> ofNullable(conf.timeout()).ifPresent(timeout -> builder
+                    .connectTimeout(timeout.connect())
+                    .writeTimeout(timeout.write())
+                    .readTimeout(timeout.read()))
+    );
+
     public static OkHttpClient of() {
         return of(Conf.global());
     }
 
-    /**
-     * 创建OkHttpClient
-     *
-     * @param conf 配置
-     * @return OkHttpClient {@link OkHttpClient}
-     */
     public static OkHttpClient of(Conf conf) {
-        OkHttpClient.Builder builder = client.newBuilder();
-
-        ofNullable(conf.httpLoggingInterceptor()).ifPresent(builder::addInterceptor);
-
-        ofNullable(conf.interceptors()).ifPresent(interceptors -> interceptors.forEach(builder::addInterceptor));
-
-        ofNullable(conf.dispatcher()).ifPresent(builder::dispatcher);
-
-        ofNullable(conf.connectionPool()).ifPresent(builder::connectionPool);
-
-        ofNullable(conf.proxy()).ifPresent(builder::proxy);
-
-        ofNullable(conf.proxyAuthenticator()).ifPresent(builder::proxyAuthenticator);
-
-        ofNullable(conf.proxySelector()).ifPresent(builder::proxySelector);
-
-        ofNullable(conf.eventListener()).ifPresent(builder::eventListener);
-
-        ofNullable(conf.cookieJar()).ifPresent(builder::cookieJar);
-
-        if (!conf.followRedirects()) {
-            builder.followRedirects(false);
+        OkHttpClient.Builder builder = DEFAULT_CLIENT.newBuilder();
+        for (ConfApplier applier : APPLIERS) {
+            applier.apply(conf, builder);
         }
-
-        if (!conf.followSslRedirects()) {
-            builder.followSslRedirects(false);
-        }
-
-        if (!conf.ssl()) {
-            ssl(builder);
-        }
-
-        ofNullable(conf.timeout()).ifPresent(timeout -> builder.connectTimeout(timeout.connect())
-                .writeTimeout(timeout.write())
-                .readTimeout(timeout.read()));
-
         return builder.build();
     }
 
-    /**
-     * 构建ssl请求链接
-     *
-     * @param builder 构建类
-     */
     private static void ssl(Builder builder) {
         try {
             TrustManager[] trustAllCerts = DefaultTrustManager.of.managers();
-
             SSLContext sslContext = getInstance("SSL");
-
             sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-
             builder.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0]);
             builder.hostnameVerifier((hostname, session) -> true);
         } catch (Exception ignored) {
-
         }
     }
 }
