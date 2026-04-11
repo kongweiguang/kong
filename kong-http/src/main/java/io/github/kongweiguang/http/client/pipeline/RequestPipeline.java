@@ -9,6 +9,10 @@ import java.util.List;
  * 固定顺序流水线，确保请求组装行为确定。
  */
 public final class RequestPipeline {
+
+    /**
+     * 保存 steps list 数据
+     */
     private final List<RequestBuildStep> steps = List.of(
             new MethodBodyStep(),
             new ContentTypeStep(),
@@ -17,8 +21,9 @@ public final class RequestPipeline {
             new BuildRequestStep()
     );
 
+
     /**
-     * 构建并返回最终结果。
+     * 构建 RequestPipeline instance
      */
     public Request build(HttpRequestSpec spec) {
         RequestBuildContext context = new RequestBuildContext(spec);
@@ -28,5 +33,4 @@ public final class RequestPipeline {
         return context.request();
     }
 }
-
 

@@ -22,9 +22,6 @@ public interface UserAgent {
         }
 
         @Override
-        /**
-         * 获取v 对应值。
-         */
         public String v() {
             return v;
         }
@@ -44,9 +41,6 @@ public interface UserAgent {
         }
 
         @Override
-        /**
-         * 获取v 对应值。
-         */
         public String v() {
             return v;
         }
@@ -65,9 +59,6 @@ public interface UserAgent {
         }
 
         @Override
-        /**
-         * 获取v 对应值。
-         */
         public String v() {
             return v;
         }
@@ -85,9 +76,6 @@ public interface UserAgent {
         }
 
         @Override
-        /**
-         * 获取v 对应值。
-         */
         public String v() {
             return v;
         }
@@ -105,9 +93,6 @@ public interface UserAgent {
         }
 
         @Override
-        /**
-         * 获取v 对应值。
-         */
         public String v() {
             return v;
         }
@@ -124,9 +109,6 @@ public interface UserAgent {
         }
 
         @Override
-        /**
-         * 获取v 对应值。
-         */
         public String v() {
             return v;
         }

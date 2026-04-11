@@ -46,7 +46,7 @@ implementation("io.github.kongweiguang:kong-socket:0.6")
 
 # 简单介绍
 
-这是一个基于Java NIO的高性能网络服务器工具包，提供了简单易用的API来创建和配置NIO服务器和客户端。
+这是一个基于Java NIO的高性能网络服务器工具包，提供了简单易用的API来创建和配置NIO服务器和客户端
 
 ## 特性
 

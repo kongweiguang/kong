@@ -1,11 +1,9 @@
 package io.github.kongweiguang.http.client;
 
-import io.github.kongweiguang.http.client.HttpRequestSpec;
-import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.pipeline.RequestPipeline;
-import io.github.kongweiguang.http.common.core.ContentType;
-import io.github.kongweiguang.http.common.core.Header;
-import io.github.kongweiguang.http.common.core.Method;
+import io.github.kongweiguang.http.client.consts.ContentType;
+import io.github.kongweiguang.http.client.consts.Header;
+import io.github.kongweiguang.http.client.consts.Method;
 import okhttp3.Request;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

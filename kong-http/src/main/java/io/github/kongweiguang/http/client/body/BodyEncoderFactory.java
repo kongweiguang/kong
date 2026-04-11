@@ -1,21 +1,37 @@
 package io.github.kongweiguang.http.client.body;
 
 import io.github.kongweiguang.http.client.HttpRequestSpec;
-import io.github.kongweiguang.http.common.core.ContentType;
+import io.github.kongweiguang.http.client.consts.ContentType;
 
 /**
  * 按 Content-Type 选择请求体编码器。
  */
 public final class BodyEncoderFactory {
+
+    /**
+     * 保存底层 OkHttp response 对象
+     */
     private static final BodyEncoder RAW = new RawBodyEncoder();
+
+    /**
+     * 保存 form fields
+     */
     private static final BodyEncoder FORM = new FormUrlEncodedEncoder();
+
+    /**
+     * 定义 multipart constant
+     */
     private static final BodyEncoder MULTIPART = new MultipartEncoder();
 
+    /**
+     * 创建 BodyEncoderFactory instance
+     */
     private BodyEncoderFactory() {
     }
 
+
     /**
-     * 根据请求规格选择合适的编码器。
+     * 处理 resolve 数据
      */
     public static BodyEncoder resolve(HttpRequestSpec spec) {
         String ct = spec.contentType();
@@ -28,5 +44,4 @@ public final class BodyEncoderFactory {
         return RAW;
     }
 }
-
 

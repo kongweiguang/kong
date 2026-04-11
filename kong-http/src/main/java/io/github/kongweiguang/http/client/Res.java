@@ -3,8 +3,8 @@ package io.github.kongweiguang.http.client;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.kongweiguang.core.utils.IoUtil;
-import io.github.kongweiguang.http.common.core.Header;
-import io.github.kongweiguang.http.common.exception.KongHttpRuntimeException;
+import io.github.kongweiguang.http.client.consts.Header;
+import io.github.kongweiguang.http.client.exception.KongHttpRuntimeException;
 import io.github.kongweiguang.json.Json;
 import kotlin.Pair;
 import okhttp3.Cookie;
@@ -35,82 +35,78 @@ import static java.nio.file.Files.copy;
  */
 public class Res implements AutoCloseable {
 
-    //原始res对象
+    /**
+     * 保存底层 OkHttp response 对象
+     */
     private final Response raw;
 
+
+    /**
+     * 创建 Res instance
+     */
     private Res(Response resp) {
         this.raw = resp;
     }
 
+
     /**
-     * 工厂方法
-     *
-     * @param resp 原始响应对象
-     * @return Res对象 {@link Res}
+     * 根据给定对象创建 wrapper instance
      */
     public static Res of(Response resp) {
         return new Res(resp);
     }
 
+
     /**
-     * 获得响应的原始对象
-     *
-     * @return 原始对象 {@link Response}
+     * 返回底层 raw object
      */
     public Response raw() {
         return raw;
     }
 
+
     /**
-     * 响应体
-     *
-     * @return 原始响应体 {@link ResponseBody}
+     * 返回或设置 body content
      */
     public ResponseBody body() {
         return ofNullable(raw().body()).orElse(Util.EMPTY_RESPONSE);
     }
 
+
     /**
-     * 响应code
-     *
-     * @return code
+     * 返回 code
      */
     public int code() {
         return raw().code();
     }
 
+
     /**
-     * 请求是否成功
-     *
-     * @return 是否成功
+     * 判断是否为 ok
      */
     public boolean isOk() {
         return raw().isSuccessful();
     }
 
+
     /**
-     * 是否重定向
-     *
-     * @return 是否重定向
+     * 判断是否为 redirect
      */
     public boolean isRedirect() {
         return raw().isRedirect();
     }
 
+
     /**
-     * 根据名称获得响应头
-     *
-     * @param name 响应头名称
-     * @return 响应头值
+     * 根据 name 返回 header value
      */
     public String header(String name) {
         return raw().header(name);
     }
 
+
     /**
-     * 获得响应头
-     *
-     * @return 响应头集合
+     * 返回 headers
      */
     public Map<String, List<String>> headers() {
         Headers headers = raw().headers();
@@ -124,73 +120,65 @@ public class Res implements AutoCloseable {
         return fr;
     }
 
+
     /**
-     * 获得响应的contentType
-     *
-     * @return contentType
+     * 返回 contentType
      */
     public String contentType() {
         return body().contentType().toString();
     }
 
+
     /**
-     * 获得响应的charset
-     *
-     * @return charset
+     * 返回 charset
      */
     public Charset charset() {
         return body().contentType().charset();
     }
 
+
     /**
-     * 获得响应的contentEncoding
-     *
-     * @return contentEncoding
+     * 返回 contentEncoding
      */
     public String contentEncoding() {
         return header(Header.CONTENT_ENCODING.v());
     }
 
+
     /**
-     * 获得响应的contentLength
-     *
-     * @return contentLength
+     * 返回 contentLength
      */
     public long contentLength() {
         return body().contentLength();
     }
 
+
     /**
-     * 获得响应的cookie
-     *
-     * @return cookie
+     * 返回 cookieStr string
      */
     public String cookieStr() {
         return header(Header.COOKIE.v());
     }
 
+
     /**
-     * 获取cookie集合
-     *
-     * @return cookie集合
+     * 返回 cookies
      */
     public List<Cookie> cookies() {
         return Cookie.parseAll(raw().request().url(), raw().headers());
     }
 
+
     /**
-     * 请求使用时间
-     *
-     * @return 使用时间
+     * 返回 request duration（milliseconds）
      */
     public long useMillis() {
         return raw().receivedResponseAtMillis() - raw().sentRequestAtMillis();
     }
 
+
     /**
-     * 获得响应的body，byte
-     *
-     * @return 消息体字节数组
+     * 以 byte[] 形式返回 content
      */
     public byte[] bytes() {
         try {
@@ -200,10 +188,9 @@ public class Res implements AutoCloseable {
         }
     }
 
+
     /**
-     * 获得响应的body，String
-     *
-     * @return 消息体字符串
+     * 以 string 形式返回 content
      */
     public String str() {
         try {
@@ -213,52 +200,41 @@ public class Res implements AutoCloseable {
         }
     }
 
+
     /**
-     * 获得响应的body，String
-     *
-     * @param charset 字符集
-     * @return 消息体字符串
+     * 以 string 形式返回 content
      */
     public String str(Charset charset) {
         return new String(bytes(), charset);
     }
 
+
     /**
-     * 获得响应的body，InputStream
-     *
-     * @return 相应体流
+     * 以 input stream 形式返回 content
      */
     public InputStream stream() {
         return body().byteStream();
     }
 
+
     /**
-     * 获得相应的body，jsonNode
-     *
-     * @return json节点 {@link  JsonNode}
+     * 将 content 解析为 JSON node
      */
     public JsonNode node() {
         return Json.toNode(str());
     }
 
+
     /**
-     * 获得响应对象，根据据类型转换
-     *
-     * @param clazz 目标类型class
-     * @param <R>   目标类型
-     * @return 响应对象
+     * 将 content 解析为 object
      */
     public <R> R obj(Class<R> clazz) {
         return toObj(str(), clazz);
     }
 
+
     /**
-     * 获得响应对象，根据据类型转换
-     *
-     * @param clazz 目标类型class
-     * @param r     默认值
-     * @param <R>   目标类型
-     * @return 响应对象
+     * 将 content 解析为 object，失败时返回 default value
      */
     public <R> R defaultObj(Class<R> clazz, R r) {
         try {
@@ -268,141 +244,114 @@ public class Res implements AutoCloseable {
         }
     }
 
+
     /**
-     * 获得响应对象，根据据类型转换
-     *
-     * @param typeRef 类型
-     * @param <R>     目标类型
-     * @return 响应对象
+     * 将 content 解析为 object
      */
     public <R> R obj(TypeReference<R> typeRef) {
         return toObj(str(), typeRef);
     }
 
+
     /**
-     * 获得响应对象，根据据类型转换
-     *
-     * @param typeRef 类型
-     * @param r       默认值
-     * @param <R>     目标类型
-     * @return 响应对象
+     * 将 content 解析为 object，失败时返回 default value
      */
     public <R> R defaultObj(TypeReference<R> typeRef, R r) {
         try {
             return toObj(str(), typeRef);
+
         } catch (Exception e) {
             return r;
         }
     }
 
+
     /**
-     * 获得int类型结果
-     *
-     * @return 响应对象
+     * 将 content 解析为 integer
      */
     public Integer i32() {
         return obj(Integer.class);
     }
 
+
     /**
-     * 获得long类型结果
-     *
-     * @return 响应对象
+     * 将 content 解析为 long
      */
     public Long i64() {
         return obj(Long.class);
     }
 
+
     /**
-     * 获得bool类型响应对象
-     *
-     * @return 响应对象
+     * 将 content 解析为 boolean
      */
     public Boolean bool() {
         return obj(Boolean.class);
     }
 
+
     /**
-     * 返回list类型结果
-     *
-     * @param <E>   集合中的元素
-     * @param clazz 元素的类型
-     * @return 响应对象
+     * 将 content 解析为 list
      */
     public <E> List<E> list(Class<E> clazz) {
         return toList(str(), clazz);
     }
 
+
     /**
-     * 返回list类型结果
-     *
-     * @param <E> 集合中的元素
-     * @return 响应对象
+     * 将 content 解析为 list
      */
     public <E> List<E> list(TypeReference<List<E>> typeRef) {
         return toList(str(), typeRef);
     }
 
+
     /**
-     * 返回map类型结果
-     *
-     * @param k Map的key
-     * @param v Map的Value
-     * @return 当前对象 {@link Res}
+     * 将 content 解析为 map
      */
     public <K, V> Map<K, V> map(Class<K> k, Class<V> v) {
         return toMap(str(), k, v);
     }
 
+
     /**
-     * 返回map类型结果
-     *
-     * @param <K> Map的key
-     * @param <V> Map的Value
-     * @return 当前对象 {@link Res}
+     * 将 content 解析为 map
      */
     public <K, V> Map<K, V> map(TypeReference<Map<K, V>> typeRef) {
         return toMap(str(), typeRef);
     }
 
+
     /**
-     * 保存文件
-     *
-     * @param path    文件路径
-     * @param options 文件选项
-     * @return 读取或写入的字节数
-     * @throws IOException IOException
+     * 将 content 写入指定 file
      */
     public long file(String path, CopyOption... options) throws IOException {
         return copy(stream(), Paths.get(path), options);
     }
 
+
     /**
-     * 使用链式编程消费
-     *
-     * @param con 操作
-     * @return 当前对象 {@link Res}
+     * 对当前 response 执行附加处理
      */
     public Res then(Consumer<Res> con) {
         ofNullable(con).ifPresent(c -> c.accept(this));
         return this;
     }
 
+
     /**
-     * 关闭res对象
+     * 关闭底层 resource
      */
     @Override
-    /**
-     * 关闭当前资源并释放底层连接。
-     */
     public void close() {
         IoUtil.close(raw());
     }
 
-    @Override
+
     /**
-     * 返回对象的可读字符串表示。
+     * 返回当前对象的 string
      */
+    @Override
     public String toString() {
         return raw().toString();
     }

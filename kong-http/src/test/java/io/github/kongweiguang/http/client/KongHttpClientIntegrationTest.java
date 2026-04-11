@@ -1,17 +1,12 @@
 package io.github.kongweiguang.http.client;
 
-import io.github.kongweiguang.http.client.HttpRequestSpec;
-import io.github.kongweiguang.http.client.KongHttpClient;
-import io.github.kongweiguang.http.client.Req;
-import io.github.kongweiguang.http.client.Res;
-import io.github.kongweiguang.http.common.core.ContentType;
-import io.github.kongweiguang.http.common.core.Method;
+import io.github.kongweiguang.http.client.consts.ContentType;
+import io.github.kongweiguang.http.client.consts.Method;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;

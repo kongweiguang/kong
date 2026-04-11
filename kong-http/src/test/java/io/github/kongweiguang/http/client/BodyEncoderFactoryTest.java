@@ -1,10 +1,8 @@
 package io.github.kongweiguang.http.client;
 
-import io.github.kongweiguang.http.client.HttpRequestSpec;
-import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.body.BodyEncoderFactory;
-import io.github.kongweiguang.http.common.core.ContentType;
-import io.github.kongweiguang.http.common.core.Method;
+import io.github.kongweiguang.http.client.consts.ContentType;
+import io.github.kongweiguang.http.client.consts.Method;
 import okhttp3.FormBody;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;

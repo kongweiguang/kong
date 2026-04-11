@@ -1,4 +1,4 @@
-package io.github.kongweiguang.http.common.core;
+package io.github.kongweiguang.http.client.consts;
 
 /**
  * HTTP请求和响应头部常量枚举
@@ -81,12 +81,12 @@ public enum Header {
 
     //------------------------------------------------------------- 请求头域
     /**
-     * 指定请求资源的Intenet主机和端口号，必须表示请求url的原始服务器或网关的位置。HTTP/1.1请求必须包含主机头域，否则系统会以400状态码返回
+     * 指定请求资源的Intenet主机和端口号，必须表示请求url的原始服务器或网关的位置HTTP/1.1请求必须包含主机头域，否则系统会以400状态码返回
      */
     HOST("Host"),
     /**
-     * 允许客户端指定请求uri的源资源地址，这可以允许服务器生成回退链表，可用来登陆、优化cache等。他也允许废除的或错误的连接由于维护的目的被
-     * 追踪。如果请求的uri没有自己的uri地址，Referer不能被发送。如果指定的是部分uri地址，则此地址应该是一个相对地址
+     * 允许客户端指定请求uri的源资源地址，这可以允许服务器生成回退链表，可用来登陆、优化cache等他也允许废除的或错误的连接由于维护的目的被
+     * 追踪如果请求的uri没有自己的uri地址，Referer不能被发送如果指定的是部分uri地址，则此地址应该是一个相对地址
      */
     REFERER("Referer"),
     /**
@@ -94,7 +94,7 @@ public enum Header {
      */
     ORIGIN("Origin"),
     /**
-     * HTTP客户端运行的浏览器类型的详细信息。通过该头部信息，web服务器可以判断到当前HTTP请求的客户端浏览器类别
+     * HTTP客户端运行的浏览器类型的详细信息通过该头部信息，web服务器可以判断到当前HTTP请求的客户端浏览器类别
      */
     USER_AGENT("User-Agent"),
     /**
@@ -339,7 +339,7 @@ public enum Header {
 
     @Override
     /**
-     * 返回对象的可读字符串表示。
+     * 返回对象的可读字符串表示
      */
     public String toString() {
         return v();

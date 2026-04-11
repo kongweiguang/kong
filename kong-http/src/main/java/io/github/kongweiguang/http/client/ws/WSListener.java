@@ -1,8 +1,7 @@
 package io.github.kongweiguang.http.client.ws;
 
-import io.github.kongweiguang.http.client.Req;
-import io.github.kongweiguang.http.client.Res;
 import io.github.kongweiguang.http.client.HttpRequestSpec;
+import io.github.kongweiguang.http.client.Res;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
@@ -19,148 +18,145 @@ import static io.github.kongweiguang.core.lang.Opt.ofNullable;
  * @author kongweiguang
  */
 public abstract class WSListener extends WebSocketListener {
+    /**
+     * 定义 log constant
+     */
     private static final Logger log = LoggerFactory.getLogger(WSListener.class);
+    /**
+     * 定义 WebSocket scheme name
+     */
     protected WebSocket ws;
 
-    @Override
     /**
-     * 连接建立成功时触发。
+     * 执行 on open 操作
      */
+    @Override
     public void onOpen(WebSocket webSocket, Response response) {
         this.ws = webSocket;
+
         open(webSocket.request().tag(HttpRequestSpec.class), Res.of(response));
     }
 
-    @Override
     /**
-     * 收到消息时触发。
+     * 执行 onMessage 操作
      */
+    @Override
     public void onMessage(WebSocket webSocket, String text) {
         this.ws = webSocket;
+
         msg(webSocket.request().tag(HttpRequestSpec.class), text);
     }
 
-    @Override
     /**
-     * 收到消息时触发。
+     * 执行 onMessage 操作
      */
+    @Override
     public void onMessage(WebSocket webSocket, ByteString bytes) {
         this.ws = webSocket;
+
         msg(webSocket.request().tag(HttpRequestSpec.class), bytes.toByteArray());
     }
 
-    @Override
+
     /**
-     * 处理执行失败后的回调。
+     * 执行 on failure 操作
      */
+    @Override
     public void onFailure(WebSocket webSocket, Throwable t, Response response) {
         this.ws = webSocket;
+
         fail(webSocket.request().tag(HttpRequestSpec.class), Res.of(response), t);
     }
 
-    @Override
+
     /**
-     * 连接即将关闭时触发。
+     * 执行 on closing 操作
      */
+    @Override
     public void onClosing(WebSocket webSocket, int code, String reason) {
         this.ws = webSocket;
+
         closing(webSocket.request().tag(HttpRequestSpec.class), code, reason);
     }
 
-    @Override
+
     /**
-     * 连接关闭后触发。
+     * 执行 on closed 操作
      */
+    @Override
     public void onClosed(WebSocket webSocket, int code, String reason) {
         this.ws = webSocket;
+
         closed(webSocket.request().tag(HttpRequestSpec.class), code, reason);
     }
 
+
     /**
-     * 发送消息
-     *
-     * @param text 字符串类型
-     * @return {@link WSListener}
+     * 设置 send
      */
     public WSListener send(String text) {
         return send(text.getBytes());
     }
 
+
     /**
-     * 发送消息
-     *
-     * @param bytes byte类型
-     * @return {@link WSListener}
+     * 设置 send
      */
     public WSListener send(byte[] bytes) {
+
 
         ofNullable(ws).ifPresent(ws -> ws.send(ByteString.of(bytes)));
 
         return this;
     }
 
+
     /**
-     * 关闭连接
+     * 执行 close con 操作
      */
     public void closeCon() {
+
         ofNullable(ws).ifPresent(WebSocket::cancel);
     }
 
 
     /**
-     * 打开连接触发事件
-     *
-     * @param req {@link Req}
-     * @param res {@link Res}
+     * 执行 open 操作
      */
     public void open(HttpRequestSpec req, Res res) {
     }
 
+
     /**
-     * 收到消息触发事件
-     *
-     * @param req  请求信息 {@link Req}
-     * @param text string类型响应数据 {@link String}
+     * 执行 msg 操作
      */
     public void msg(HttpRequestSpec req, String text) {
     }
 
 
     /**
-     * 收到消息触发事件
-     *
-     * @param req   请求信息 {@link Req}
-     * @param bytes byte类型响应数据 {@link Byte}
+     * 执行 msg 操作
      */
     public void msg(HttpRequestSpec req, byte[] bytes) {
     }
 
+
     /**
-     * 失败触发事件
-     *
-     * @param req 请求信息 {@link Req}
-     * @param res 响应信息 {@link Res}
-     * @param t   异常信息 {@link Throwable}
+     * 设置 failure callback
      */
     public void fail(HttpRequestSpec req, Res res, Throwable t) {
     }
 
+
     /**
-     * 关闭触发事件
-     *
-     * @param req    请求信息 {@link Req}
-     * @param code   状态码
-     * @param reason 原因
+     * 执行 closing 操作
      */
     public void closing(HttpRequestSpec req, int code, String reason) {
     }
 
+
     /**
-     * 关闭触发事件
-     *
-     * @param req    请求信息 {@link Req}
-     * @param code   状态码
-     * @param reason 原因
+     * 执行 closed 操作
      */
     public void closed(HttpRequestSpec req, int code, String reason) {
     }

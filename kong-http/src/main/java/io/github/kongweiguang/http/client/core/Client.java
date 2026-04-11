@@ -19,6 +19,10 @@ import static javax.net.ssl.SSLContext.getInstance;
  */
 public class Client {
 
+
+    /**
+     * 定义 dispatcher supplier constant
+     */
     private static final Supplier<Dispatcher> DISPATCHER_SUPPLIER = () -> {
         Dispatcher dis = new Dispatcher();
         dis.setMaxRequests(1 << 20);
@@ -26,6 +30,10 @@ public class Client {
         return dis;
     };
 
+
+    /**
+     * 定义 default client constant
+     */
     private static final OkHttpClient DEFAULT_CLIENT = new OkHttpClient.Builder()
             .dispatcher(DISPATCHER_SUPPLIER.get())
             .connectTimeout(ofMinutes(1))
@@ -33,8 +41,9 @@ public class Client {
             .readTimeout(ofMinutes(1))
             .build();
 
+
     /**
-     * Ordered appliers intentionally keep deterministic override behavior.
+     * 定义 appliers constant
      */
     private static final List<ConfApplier> APPLIERS = List.of(
             (conf, builder) -> ofNullable(conf.httpLoggingInterceptor()).ifPresent(builder::addInterceptor),
@@ -67,15 +76,17 @@ public class Client {
                     .readTimeout(timeout.read()))
     );
 
+
     /**
-     * 创建默认实例。
+     * 根据给定对象创建 wrapper instance
      */
     public static OkHttpClient of() {
         return of(Conf.global());
     }
 
+
     /**
-     * 创建默认实例。
+     * 根据给定对象创建 wrapper instance
      */
     public static OkHttpClient of(Conf conf) {
         OkHttpClient.Builder builder = DEFAULT_CLIENT.newBuilder();
@@ -85,6 +96,10 @@ public class Client {
         return builder.build();
     }
 
+
+    /**
+     * 执行 ssl 操作
+     */
     private static void ssl(Builder builder) {
         try {
             TrustManager[] trustAllCerts = DefaultTrustManager.of.managers();

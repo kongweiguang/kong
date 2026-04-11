@@ -12,6 +12,9 @@
     <artifactId>kong-http</artifactId>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <okhttp.version>4.12.0</okhttp.version>
     </properties>
 

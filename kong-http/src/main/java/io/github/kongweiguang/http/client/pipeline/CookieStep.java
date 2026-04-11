@@ -1,22 +1,21 @@
 package io.github.kongweiguang.http.client.pipeline;
 
-import io.github.kongweiguang.http.common.core.Header;
-import io.github.kongweiguang.http.common.utils.HttpClientUtil;
+import io.github.kongweiguang.http.client.consts.Header;
+import io.github.kongweiguang.http.client.utils.HttpClientUtil;
 
-/**
- * 仅在存在 Cookie 时写入 Cookie 请求头。
- */
 public final class CookieStep implements RequestBuildStep {
-    @Override
+
+
     /**
-     * 对上下文执行当前步骤处理。
+     * 执行 apply 操作
      */
+    @Override
     public void apply(RequestBuildContext context) {
         if (context.spec().cookies().isEmpty()) {
             return;
         }
+
         context.builder().header(Header.COOKIE.v(), HttpClientUtil.cookie2Str(context.spec().cookies()));
     }
 }
-
 

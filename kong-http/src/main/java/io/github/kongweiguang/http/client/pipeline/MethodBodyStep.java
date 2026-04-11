@@ -1,7 +1,7 @@
 package io.github.kongweiguang.http.client.pipeline;
 
 import io.github.kongweiguang.http.client.body.BodyEncoderFactory;
-import io.github.kongweiguang.http.common.core.Method;
+import io.github.kongweiguang.http.client.consts.Method;
 import okhttp3.RequestBody;
 
 import static io.github.kongweiguang.core.lang.Opt.ofNullable;
@@ -10,10 +10,8 @@ import static io.github.kongweiguang.core.lang.Opt.ofNullable;
  * 在组装请求前应用 method/body 兼容规则。
  */
 public final class MethodBodyStep implements RequestBuildStep {
+
     @Override
-    /**
-     * 对上下文执行当前步骤处理。
-     */
     public void apply(RequestBuildContext context) {
         RequestBody body = BodyEncoderFactory.resolve(context.spec()).encode(context.spec());
 
@@ -23,8 +21,8 @@ public final class MethodBodyStep implements RequestBuildStep {
         }
 
         if (context.spec().method() == Method.POST
-                || context.spec().method() == Method.PUT
-                || context.spec().method() == Method.PATCH) {
+            || context.spec().method() == Method.PUT
+            || context.spec().method() == Method.PATCH) {
             context.requestBody(ofNullable(body).orElse(RequestBody.create(new byte[0])));
             return;
         }
@@ -32,5 +30,4 @@ public final class MethodBodyStep implements RequestBuildStep {
         context.requestBody(body);
     }
 }
-
 

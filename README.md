@@ -29,13 +29,13 @@
 - `kong-socket`: 基于 Java NIO 的网络工具
 - `kong-ai`: 大模型工具封装
 
-其他模块的详细说明建议查看各自模块下的 `README.md`。
+其他模块的详细说明建议查看各自模块下的 `README.md`
 
 # http
 
-`kong-http` 是一个基于 OkHttp 的轻量封装，统一了请求构建、同步/异步调用、重试、SSE、WebSocket 和响应解析。
+`kong-http` 是一个基于 OkHttp 的轻量封装，统一了请求构建、同步/异步调用、重试、SSE、WebSocket 和响应解析
 
-如果后续需要让 AI 继续修改 `kong-http` 代码，先看 [docs/kong-http/README.md](docs/kong-http/README.md)。
+如果后续需要让 AI 继续修改 `kong-http` 代码，先看 [docs/kong-http/README.md](docs/kong-http/README.md)
 
 ## 快速上手
 
@@ -106,7 +106,7 @@ Res res = Req.get("https://httpbin.org/get")
         .ok();
 ```
 
-如果参数已经编码好，可以使用 `encodedQuery(...)`。
+如果参数已经编码好，可以使用 `encodedQuery(...)`
 
 ### JSON 请求体
 
@@ -150,7 +150,7 @@ Res res = Req.multipart("https://example.com/upload")
 
 ### 异步请求
 
-`okAsync()` 返回 `CompletableFuture`。如果设置了 `success(...)` 或 `fail(...)` 回调，异步失败会走回调；如果不设置回调，异常会在 `join()` / `get()` 时抛出。
+`okAsync()` 返回 `CompletableFuture`如果设置了 `success(...)` 或 `fail(...)` 回调，异步失败会走回调；如果不设置回调，异常会在 `join()` / `get()` 时抛出
 
 ```java
 CompletableFuture<Res> future = Req.get("https://httpbin.org/get")

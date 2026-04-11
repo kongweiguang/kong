@@ -1,5 +1,6 @@
 package io.github.kongweiguang.http.common.utils;
 
+import io.github.kongweiguang.http.client.utils.HttpClientUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

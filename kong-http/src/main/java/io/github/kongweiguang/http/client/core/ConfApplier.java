@@ -10,4 +10,3 @@ public interface ConfApplier {
     void apply(Conf conf, OkHttpClient.Builder builder);
 }
 
-

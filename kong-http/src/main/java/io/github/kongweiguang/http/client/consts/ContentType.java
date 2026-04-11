@@ -1,4 +1,4 @@
-package io.github.kongweiguang.http.common.core;
+package io.github.kongweiguang.http.client.consts;
 
 /**
  * HTTP Content-Type 常量枚举
@@ -140,7 +140,7 @@ public enum ContentType {
 
     @Override
     /**
-     * 返回对象的可读字符串表示。
+     * 返回对象的可读字符串表示
      */
     public String toString() {
         return value;

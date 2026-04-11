@@ -1,4 +1,4 @@
-package io.github.kongweiguang.http.common.core;
+package io.github.kongweiguang.http.client.consts;
 
 /**
  * http中Method涉及到的常量
@@ -17,6 +17,5 @@ public enum Method {
     CONNECT,
 
     ;
-
 
 }
