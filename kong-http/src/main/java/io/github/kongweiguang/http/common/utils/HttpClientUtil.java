@@ -26,20 +26,39 @@ public final class HttpClientUtil {
         }
 
         url = url.trim();
+        String lower = url.toLowerCase();
 
-        if (url.startsWith(Const._http) || url.startsWith(Const._https)) {
-            return url;
+        if (lower.startsWith(Const._http) || lower.startsWith(Const._https)) {
+            int idx = url.indexOf("://");
+            return lower.substring(0, idx + 3) + url.substring(idx + 3);
         }
 
-        if (url.startsWith(Const._ws)) {
+        if (lower.startsWith(Const._ws)) {
             return Const._http + url.substring(Const._ws.length());
         }
 
-        if (url.startsWith(Const._wss)) {
+        if (lower.startsWith(Const._wss)) {
             return Const._https + url.substring(Const._wss.length());
         }
 
-        return Const._http + Const.localhost + url;
+        if (url.startsWith("//")) {
+            return Const._http + url.substring(2);
+        }
+
+        if (url.startsWith("/")) {
+            return Const._http + Const.localhost + url;
+        }
+
+        if (url.startsWith("?") || url.startsWith("#")) {
+            return Const._http + Const.localhost + "/" + url;
+        }
+
+        boolean likelyHost = url.contains(".") || url.startsWith("localhost") || url.matches("^\\d+\\.\\d+\\.\\d+\\.\\d+(:\\d+)?(/.*)?$");
+        if (likelyHost) {
+            return Const._http + url;
+        }
+
+        return Const._http + Const.localhost + "/" + url;
     }
 
     public static boolean isHttp(String url) {
