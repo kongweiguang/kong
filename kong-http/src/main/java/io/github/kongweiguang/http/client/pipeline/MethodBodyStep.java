@@ -1,6 +1,6 @@
-package io.github.kongweiguang.http.client.v2.pipeline;
+package io.github.kongweiguang.http.client.pipeline;
 
-import io.github.kongweiguang.http.client.v2.body.BodyEncoderFactory;
+import io.github.kongweiguang.http.client.body.BodyEncoderFactory;
 import io.github.kongweiguang.http.common.core.Method;
 import okhttp3.RequestBody;
 

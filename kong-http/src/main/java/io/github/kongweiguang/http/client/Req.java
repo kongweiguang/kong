@@ -4,7 +4,7 @@ import io.github.kongweiguang.http.common.core.ContentType;
 import io.github.kongweiguang.http.common.core.Method;
 
 /**
- * v2 请求入口。
+ * 请求入口。
  */
 public final class Req {
 

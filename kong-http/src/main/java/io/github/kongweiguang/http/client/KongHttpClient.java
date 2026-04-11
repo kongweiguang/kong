@@ -2,12 +2,12 @@ package io.github.kongweiguang.http.client;
 
 import io.github.kongweiguang.http.client.core.Client;
 import io.github.kongweiguang.http.client.core.ReqType;
-import io.github.kongweiguang.http.client.v2.ResultHandler;
-import io.github.kongweiguang.http.client.v2.executor.HttpExecutor;
-import io.github.kongweiguang.http.client.v2.executor.SSEExecutor;
-import io.github.kongweiguang.http.client.v2.executor.WSExecutor;
-import io.github.kongweiguang.http.client.v2.retry.HttpRetryPolicy;
-import io.github.kongweiguang.http.client.v2.retry.NoRetryPolicy;
+import io.github.kongweiguang.http.client.ResultHandler;
+import io.github.kongweiguang.http.client.executor.HttpExecutor;
+import io.github.kongweiguang.http.client.executor.SSEExecutor;
+import io.github.kongweiguang.http.client.executor.WSExecutor;
+import io.github.kongweiguang.http.client.retry.HttpRetryPolicy;
+import io.github.kongweiguang.http.client.retry.NoRetryPolicy;
 import io.github.kongweiguang.http.common.core.ContentType;
 import io.github.kongweiguang.http.common.core.Method;
 import okhttp3.OkHttpClient;
@@ -17,7 +17,7 @@ import okhttp3.sse.EventSource;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * kong-http v2 的统一客户端门面。
+ * kong-http 的统一客户端门面。
  */
 public final class KongHttpClient {
 

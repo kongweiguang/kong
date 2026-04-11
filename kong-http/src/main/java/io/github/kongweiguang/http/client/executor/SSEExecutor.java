@@ -1,9 +1,9 @@
-package io.github.kongweiguang.http.client.v2.executor;
+package io.github.kongweiguang.http.client.executor;
 
 import io.github.kongweiguang.http.client.HttpRequestSpec;
-import io.github.kongweiguang.http.client.v2.ResultHandler;
-import io.github.kongweiguang.http.client.v2.retry.RetryPolicy;
-import io.github.kongweiguang.http.client.v2.pipeline.RequestPipeline;
+import io.github.kongweiguang.http.client.ResultHandler;
+import io.github.kongweiguang.http.client.retry.RetryPolicy;
+import io.github.kongweiguang.http.client.pipeline.RequestPipeline;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.sse.EventSource;

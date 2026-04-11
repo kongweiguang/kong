@@ -1,4 +1,4 @@
-package io.github.kongweiguang.http.client.v2;
+package io.github.kongweiguang.http.client;
 
 /**
  * 处理异步执行的成功与失败回调。

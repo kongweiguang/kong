@@ -1,8 +1,8 @@
-package io.github.kongweiguang.http.client.v2;
+package io.github.kongweiguang.http.client;
 
 import io.github.kongweiguang.http.client.HttpRequestSpec;
 import io.github.kongweiguang.http.client.Req;
-import io.github.kongweiguang.http.client.v2.pipeline.RequestPipeline;
+import io.github.kongweiguang.http.client.pipeline.RequestPipeline;
 import io.github.kongweiguang.http.common.core.ContentType;
 import io.github.kongweiguang.http.common.core.Header;
 import io.github.kongweiguang.http.common.core.Method;

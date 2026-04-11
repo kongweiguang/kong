@@ -18,7 +18,7 @@ import static io.github.kongweiguang.http.common.utils.HttpClientUtil.fixUrl;
 import static java.util.Objects.nonNull;
 
 /**
- * kong-http v2 的不可变请求规格。
+ * kong-http 的不可变请求规格。
  */
 public final class HttpRequestSpec {
     private final ReqType reqType;

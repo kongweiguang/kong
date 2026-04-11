@@ -1,4 +1,4 @@
-package io.github.kongweiguang.http.client.v2;
+package io.github.kongweiguang.http.client;
 
 import io.github.kongweiguang.http.client.HttpRequestSpec;
 import io.github.kongweiguang.http.client.KongHttpClient;

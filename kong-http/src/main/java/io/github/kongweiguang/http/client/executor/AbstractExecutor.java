@@ -1,12 +1,13 @@
-package io.github.kongweiguang.http.client.v2.executor;
+package io.github.kongweiguang.http.client.executor;
 
 import io.github.kongweiguang.http.client.HttpRequestSpec;
-import io.github.kongweiguang.http.client.v2.ResultHandler;
-import io.github.kongweiguang.http.client.v2.retry.RetryPolicy;
+import io.github.kongweiguang.http.client.ResultHandler;
+import io.github.kongweiguang.http.client.retry.RetryPolicy;
 import io.github.kongweiguang.http.common.exception.KongHttpRuntimeException;
 import okhttp3.OkHttpClient;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 /**
  * HTTP/SSE/WS 共用的执行模板。
@@ -25,7 +26,12 @@ public abstract class AbstractExecutor<R> {
     }
 
     public final CompletableFuture<R> executeAsync() {
-        return CompletableFuture.supplyAsync(this::executeBlocking, spec.conf().exec());
+        Executor executor = spec.conf() == null ? null : spec.conf().exec();
+        // 当调用方未显式配置线程池时，回退到 CompletableFuture 默认执行器，避免空指针。
+        if (executor == null) {
+            return CompletableFuture.supplyAsync(this::executeBlocking);
+        }
+        return CompletableFuture.supplyAsync(this::executeBlocking, executor);
     }
 
     public final R executeBlocking() {

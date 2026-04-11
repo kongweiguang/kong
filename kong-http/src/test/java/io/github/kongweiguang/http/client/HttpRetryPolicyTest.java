@@ -1,9 +1,9 @@
-package io.github.kongweiguang.http.client.v2;
+package io.github.kongweiguang.http.client;
 
 import io.github.kongweiguang.core.lang.Pair;
 import io.github.kongweiguang.core.retry.RetryableTask;
 import io.github.kongweiguang.http.client.Res;
-import io.github.kongweiguang.http.client.v2.retry.HttpRetryPolicy;
+import io.github.kongweiguang.http.client.retry.HttpRetryPolicy;
 import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;

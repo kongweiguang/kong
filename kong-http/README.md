@@ -1,6 +1,6 @@
-# kong-http v2
+# kong-http
 
-`kong-http` v2 uses an immutable request spec and a unified client entry.
+`kong-http` uses an immutable request spec and a unified client entry.
 
 ## Quick Start
 

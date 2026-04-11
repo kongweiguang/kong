@@ -1,4 +1,4 @@
-package io.github.kongweiguang.http.client.v2.pipeline;
+package io.github.kongweiguang.http.client.pipeline;
 
 import okhttp3.HttpUrl;
 

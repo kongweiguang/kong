@@ -1,4 +1,4 @@
-package io.github.kongweiguang.http.client.v2.retry;
+package io.github.kongweiguang.http.client.retry;
 
 import java.util.concurrent.Callable;
 

@@ -1,4 +1,4 @@
-package io.github.kongweiguang.http.client.v2.body;
+package io.github.kongweiguang.http.client.body;
 
 import io.github.kongweiguang.http.client.HttpRequestSpec;
 import okhttp3.FormBody;

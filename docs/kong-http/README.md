@@ -1,15 +1,15 @@
-# kong-http v2 Ç¨ÒÆËµÃ÷
+# kong-http è¿ç§»è¯´æ˜
 
-## ºËĞÄ±ä»¯
+## å…³é”®å˜åŒ–
 
-- ¾ÉÈë¿Ú `ReqBuilder/*OK` ÒÑÒÆ³ı¡£
-- ĞÂÈë¿Ú£º`Req` + `HttpRequestSpec` + `KongHttpClient`¡£
-- ÇëÇó¹¹½¨¸ÄÎª Pipeline£º
-  `MethodBodyStep -> ContentTypeStep -> CookieStep -> TagStep -> BuildRequestStep`¡£
-- Body ¹¹½¨¸ÄÎª²ßÂÔ·Ö·¢£º`RawBodyEncoder`¡¢`FormUrlEncodedEncoder`¡¢`MultipartEncoder`¡£
-- `Client.of(conf)` ¸ÄÎª `ConfApplier` ×¢²áÁ´¡£
+- ç§»é™¤æ—§çš„ `ReqBuilder/*OK` æ‰§è¡Œé“¾è·¯ã€‚
+- ç»Ÿä¸€å…¥å£ä¸º `Req` + `HttpRequestSpec` + `KongHttpClient`ã€‚
+- è¯·æ±‚æ„å»ºæ”¹ä¸ºå›ºå®šæ­¥éª¤ Pipelineï¼š
+  `MethodBodyStep -> ContentTypeStep -> CookieStep -> TagStep -> BuildRequestStep`ã€‚
+- Body ç¼–ç æ”¹ä¸ºç­–ç•¥åˆ†å‘ï¼š`RawBodyEncoder`ã€`FormUrlEncodedEncoder`ã€`MultipartEncoder`ã€‚
+- `Client.of(conf)` æ”¹ä¸º `ConfApplier` æ³¨å†Œé“¾ï¼Œé…ç½®èŒè´£æ›´æ¸…æ™°ã€‚
 
-## µäĞÍĞ´·¨
+## æ–°ç‰ˆå†™æ³•
 
 ```java
 HttpRequestSpec spec = Req.post("http://localhost:8080/post")
@@ -20,12 +20,12 @@ HttpRequestSpec spec = Req.post("http://localhost:8080/post")
 Res res = KongHttpClient.executeBlocking(spec);
 ```
 
-## Ê§°ÜÓïÒå
+## å¤±è´¥è¯­ä¹‰
 
-- Ê§°Ü×ÜÊÇ¿É¹Û²â£º»áÅ×Òì³££¬²¢ÇÒÈôÅäÖÃÁË `fail(...)` Ò²»á»Øµ÷¡£
-- ²»ÔÙÍ¨¹ı `null` ·µ»ØÖµ±í´ïÊ§°Ü¡£
+- å¤±è´¥å¿…é¡»å¯è§‚æµ‹ï¼šä¼šæŠ›å‡ºå¼‚å¸¸ï¼ŒåŒæ—¶è§¦å‘ `fail(...)` å›è°ƒã€‚
+- ä¸å†é€šè¿‡ `null` è¿”å›å€¼è¡¨è¾¾å¤±è´¥ã€‚
 
-## ¼àÌıÆ÷ÉÏÏÂÎÄ±ä»¯
+## SSE / WS å·®å¼‚
 
-- `SSEListener` / `WSListener` µÄ»Øµ÷²ÎÊı´Ó¾É Builder ¸ÄÎª `HttpRequestSpec`¡£
-- ÉÏÏÂÎÄÍ¨¹ı `Request.tag(HttpRequestSpec.class)` ´«µİ¡£
+- `SSEListener` / `WSListener` é€šè¿‡ Builder ç»‘å®šåˆ° `HttpRequestSpec`ã€‚
+- è¿è¡Œæ—¶å¯é€šè¿‡ `Request.tag(HttpRequestSpec.class)` å–å›åŸå§‹è¯·æ±‚è§„æ ¼ã€‚

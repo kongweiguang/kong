@@ -1,6 +1,5 @@
 package io.github.kongweiguang.http.client.core;
 
-import io.github.kongweiguang.core.threads.ThreadPools;
 import io.github.kongweiguang.http.common.core.Header;
 import io.github.kongweiguang.http.common.utils.HttpClientUtil;
 import okhttp3.*;
@@ -23,7 +22,7 @@ import static java.util.Objects.nonNull;
  * 请求配置模型。
  */
 public class Conf {
-    private static final Conf global = new Conf().exec(ThreadPools.virtualPool);
+    private static final Conf global = new Conf();
 
     public static Conf global() {
         return global;
@@ -70,8 +69,14 @@ public class Conf {
         return conf;
     }
 
-    public Conf ssl(boolean ssl) { this.ssl = ssl; return this; }
-    public boolean ssl() { return ssl; }
+    public Conf ssl(boolean ssl) {
+        this.ssl = ssl;
+        return this;
+    }
+
+    public boolean ssl() {
+        return ssl;
+    }
 
     public Conf exec(Executor executor) {
         notNull(executor, "executor 不能为空");
@@ -79,7 +84,9 @@ public class Conf {
         return this;
     }
 
-    public Executor exec() { return exec; }
+    public Executor exec() {
+        return exec;
+    }
 
     public Conf addInterceptor(Interceptor interceptor) {
         if (nonNull(interceptor)) {
@@ -91,13 +98,27 @@ public class Conf {
         return this;
     }
 
-    public List<Interceptor> interceptors() { return interceptors; }
+    public List<Interceptor> interceptors() {
+        return interceptors;
+    }
 
-    public Conf dispatcher(Dispatcher dispatcher) { this.dispatcher = dispatcher; return this; }
-    public Dispatcher dispatcher() { return dispatcher; }
+    public Conf dispatcher(Dispatcher dispatcher) {
+        this.dispatcher = dispatcher;
+        return this;
+    }
 
-    public Conf connectionPool(ConnectionPool pool) { this.connectionPool = pool; return this; }
-    public ConnectionPool connectionPool() { return connectionPool; }
+    public Dispatcher dispatcher() {
+        return dispatcher;
+    }
+
+    public Conf connectionPool(ConnectionPool pool) {
+        this.connectionPool = pool;
+        return this;
+    }
+
+    public ConnectionPool connectionPool() {
+        return connectionPool;
+    }
 
     public Conf proxy(Proxy.Type type, String host, int port) {
         notNull(type, "type 不能为空");
@@ -107,8 +128,13 @@ public class Conf {
         return this;
     }
 
-    public Conf proxy(String host, int port) { return proxy(Proxy.Type.HTTP, host, port); }
-    public Proxy proxy() { return proxy; }
+    public Conf proxy(String host, int port) {
+        return proxy(Proxy.Type.HTTP, host, port);
+    }
+
+    public Proxy proxy() {
+        return proxy;
+    }
 
     public Conf proxyAuthenticator(String username, String password) {
         notNull(username, "username 不能为空");
@@ -119,29 +145,71 @@ public class Conf {
         return this;
     }
 
-    public Authenticator proxyAuthenticator() { return proxyAuthenticator; }
-    public ProxySelector proxySelector() { return proxySelector; }
-    public Conf proxySelector(ProxySelector proxySelector) { this.proxySelector = proxySelector; return this; }
+    public Authenticator proxyAuthenticator() {
+        return proxyAuthenticator;
+    }
 
-    public Conf timeout(Timeout timeout) { this.timeout = timeout; return this; }
-    public Timeout timeout() { return timeout; }
+    public ProxySelector proxySelector() {
+        return proxySelector;
+    }
+
+    public Conf proxySelector(ProxySelector proxySelector) {
+        this.proxySelector = proxySelector;
+        return this;
+    }
+
+    public Conf timeout(Timeout timeout) {
+        this.timeout = timeout;
+        return this;
+    }
+
+    public Timeout timeout() {
+        return timeout;
+    }
 
     public Conf log(ReqLog logger, HttpLoggingInterceptor.Level level) {
         this.httpLoggingInterceptor = HttpClientUtil.httpLoggingInterceptor(logger, level);
         return this;
     }
 
-    public HttpLoggingInterceptor httpLoggingInterceptor() { return httpLoggingInterceptor; }
-    public EventListener eventListener() { return eventListener; }
-    public Conf eventListener(EventListener eventListener) { this.eventListener = eventListener; return this; }
+    public HttpLoggingInterceptor httpLoggingInterceptor() {
+        return httpLoggingInterceptor;
+    }
 
-    public boolean followRedirects() { return followRedirects; }
-    public Conf followRedirects(boolean followRedirects) { this.followRedirects = followRedirects; return this; }
+    public EventListener eventListener() {
+        return eventListener;
+    }
 
-    public boolean followSslRedirects() { return followSslRedirects; }
-    public Conf followSslRedirects(boolean followSslRedirects) { this.followSslRedirects = followSslRedirects; return this; }
+    public Conf eventListener(EventListener eventListener) {
+        this.eventListener = eventListener;
+        return this;
+    }
 
-    public CookieJar cookieJar() { return cookieJar; }
-    public Conf cookieJar(CookieJar cookieJar) { this.cookieJar = cookieJar; return this; }
+    public boolean followRedirects() {
+        return followRedirects;
+    }
+
+    public Conf followRedirects(boolean followRedirects) {
+        this.followRedirects = followRedirects;
+        return this;
+    }
+
+    public boolean followSslRedirects() {
+        return followSslRedirects;
+    }
+
+    public Conf followSslRedirects(boolean followSslRedirects) {
+        this.followSslRedirects = followSslRedirects;
+        return this;
+    }
+
+    public CookieJar cookieJar() {
+        return cookieJar;
+    }
+
+    public Conf cookieJar(CookieJar cookieJar) {
+        this.cookieJar = cookieJar;
+        return this;
+    }
 }
 
