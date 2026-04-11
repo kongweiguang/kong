@@ -10,156 +10,152 @@ import java.util.function.Consumer;
 import static io.github.kongweiguang.core.lang.Opt.ofNullable;
 
 /**
- * json对象
+ * 链式构建json object。
  *
  * @author kongweiguang
  */
 public class JsonObj {
-    private ObjectNode node = Json.mapper().createObjectNode();
+    private final ObjectNode node;
 
     private JsonObj() {
+        this(Json.mapper().createObjectNode());
     }
 
     private JsonObj(ObjectNode node) {
         Assert.notNull(node, "node must not be null");
-
         this.node = node;
     }
 
     /**
-     * 工厂方法，创建JsonObj
+     * 创建一个空json object。
      *
-     * @return {@link  JsonObj}
+     * @return json object builder
      */
     public static JsonObj of() {
         return new JsonObj();
     }
 
     /**
-     * 工厂方法，创建sonObj
+     * 基于已有{@link ObjectNode}包装json object。
      *
-     * @param node {@link  ObjectNode}
-     * @return {@link  JsonObj}
+     * @param node object node
+     * @return json object builder
      */
     public static JsonObj of(ObjectNode node) {
         return new JsonObj(node);
     }
 
-
     /**
-     * 添加基本类型和字符串数据到json对象中，如果传入对象会转成字符串存储
+     * 写入一个普通json值，按真实json类型保留数值、布尔、null和嵌套结构。
      *
-     * @param k 键
-     * @param v 值
-     * @return {@link  JsonObj}
+     * @param key field name
+     * @param value field value
+     * @return current builder
      */
-    public JsonObj put(String k, Object v) {
-        Assert.notNull(k, "k must not be null");
-
-        node.put(k, Json.toStr(v));
-
+    public JsonObj put(String key, Object value) {
+        Assert.notNull(key, "key must not be null");
+        JsonValueHelper.putValue(node, key, value);
         return this;
     }
 
     /**
-     * 添加对象数据到json对象中
+     * 显式按字符串写入值。
      *
-     * @param k 键
-     * @param v 值
-     * @return {@link  JsonObj}
+     * @param key field name
+     * @param value field value
+     * @return current builder
      */
-    public JsonObj putObj(String k, Object v) {
-        Assert.notNull(k, "k must not be null");
-        if (v instanceof String) {
-            put(k, v);
-        } else {
-            node.set(k, Json.toNode(v));
-        }
-
+    public JsonObj putString(String key, Object value) {
+        Assert.notNull(key, "key must not be null");
+        JsonValueHelper.putString(node, key, value);
         return this;
     }
 
     /**
-     * 在json对象中添加一个{@link JsonObj}
+     * 写入一个对象值。
      *
-     * @param k   键的名字
-     * @param con {@link  JsonObj} 的构建器
-     * @return {@link  JsonObj}
+     * @param key field name
+     * @param value object value
+     * @return current builder
      */
-    public JsonObj putObj(String k, Consumer<JsonObj> con) {
-        Assert.notNull(k, "k must not be null");
-        Assert.notNull(con, "consumer must not be null");
+    public JsonObj putObj(String key, Object value) {
+        return put(key, value);
+    }
 
-        con.accept(JsonObj.of(node.putObject(k)));
-
+    /**
+     * 写入一个嵌套json object。
+     *
+     * @param key field name
+     * @param consumer nested object builder
+     * @return current builder
+     */
+    public JsonObj putObj(String key, Consumer<JsonObj> consumer) {
+        Assert.notNull(key, "key must not be null");
+        Assert.notNull(consumer, "consumer must not be null");
+        consumer.accept(JsonObj.of(node.putObject(key)));
         return this;
     }
 
     /**
-     * 在json对象中添加一个{@link JsonAry}
+     * 写入一个嵌套json array。
      *
-     * @param k   键的名字
-     * @param con {@link  JsonAry} 的构建器
-     * @return {@link  JsonObj}
+     * @param key field name
+     * @param consumer nested array builder
+     * @return current builder
      */
-    public JsonObj putAry(String k, Consumer<JsonAry> con) {
-        Assert.notNull(k, "k must not be null");
-        Assert.notNull(con, "consumer must not be null");
-
-        con.accept(JsonAry.of(node.putArray(k)));
-
+    public JsonObj putAry(String key, Consumer<JsonAry> consumer) {
+        Assert.notNull(key, "key must not be null");
+        Assert.notNull(consumer, "consumer must not be null");
+        consumer.accept(JsonAry.of(node.putArray(key)));
         return this;
     }
 
     /**
-     * 将map添加到json对象中
+     * 批量写入map中的值。
      *
-     * @param map 数据
-     * @return {@link  JsonObj}
+     * @param map value map
+     * @return current builder
      */
     public JsonObj putMap(Map<String, Object> map) {
-
-        ofNullable(map).ifPresent(m -> m.forEach(this::putObj));
-
+        ofNullable(map).ifPresent(values -> values.forEach(this::put));
         return this;
     }
 
     /**
-     * 构建成json对象
+     * 转换为json字符串。
      *
-     * @return json对象
+     * @return compact json string
      */
     public String toJson() {
         return node.toString();
     }
 
     /**
-     * 构建成json对象，格式化
+     * 转换为格式化后的json字符串。
      *
-     * @return json对象
+     * @return pretty json string
      */
     public String toPrettyJson() {
         return node.toPrettyString();
     }
 
     /**
-     * 将json对象转成map
+     * 转换为map。
      *
-     * @param k 键的类型
-     * @param v 值的类型
-     * @return map
+     * @param keyClass key type
+     * @param valueClass value type
+     * @return converted map
      */
-    public <K, V> Map<K, V> toMap(Class<K> k, Class<V> v) {
-        return Json.toMap(node, k, v);
+    public <K, V> Map<K, V> toMap(Class<K> keyClass, Class<V> valueClass) {
+        return Json.toMap(node, keyClass, valueClass);
     }
 
-
     /**
-     * 返回{@link JsonNode}
+     * 返回底层{@link JsonNode}。
      *
-     * @return {@link JsonNode}
+     * @return current node
      */
-    public JsonNode toNode() {
+    public ObjectNode toNode() {
         return node;
     }
 }

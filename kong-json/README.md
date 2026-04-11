@@ -2,16 +2,16 @@
   kong-json
 </h1>
 <p align="center">
-	<strong>基于jackson封装的json工具</strong>
+    <strong>基于 jackson 封装的链式 JSON 工具</strong>
 </p>
 
 <p align="center">
     <a target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0.txt">
-		<img src="https://img.shields.io/:license-Apache2-blue.svg" alt="Apache 2" />
-	</a>
+        <img src="https://img.shields.io/:license-Apache2-blue.svg" alt="Apache 2" />
+    </a>
     <a target="_blank" href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">
-				<img src="https://img.shields.io/badge/JDK-21-green.svg" alt="jdk-21" />
-	</a>
+        <img src="https://img.shields.io/badge/JDK-21-green.svg" alt="jdk-21" />
+    </a>
     <br />
 </p>
 
@@ -24,7 +24,6 @@
 Maven
 
 ```xml
-
 <dependency>
     <groupId>io.github.kongweiguang</groupId>
     <artifactId>kong-json</artifactId>
@@ -34,207 +33,101 @@ Maven
 
 Gradle
 
-```
+```groovy
 implementation 'io.github.kongweiguang:kong-json:0.6'
 ```
 
-Gradle-Kotlin
+Gradle Kotlin
 
-```
+```kotlin
 implementation("io.github.kongweiguang:kong-json:0.6")
 ```
 
-# 简单介绍
+# 特性
 
-## 构建json object 和json array
+- `Json.obj()` / `Json.ary()` 支持链式构建
+- 默认按真实 JSON 类型写入：数字是数字，布尔是布尔，`null` 是 `null`
+- `putString` / `addString` 用于显式写入字符串
+- 保留 `toObj`、`toList`、`toMap`、`toNode` 等 jackson 封装能力
+
+# 推荐写法
+
+## 构建 JSON Object
 
 ```java
+User user = new User()
+        .setAge(1)
+        .setName("kong")
+        .setHobby(new String[]{"j", "n"});
 
-public class JsonBuilderTest {
+String json = Json.obj()
+        .put("name", "kong")
+        .put("age", 1)
+        .put("active", true)
+        .put("nullable", null)
+        .putObj("profile", user)
+        .putAry("tags", ary -> ary.add("java").add(8))
+        .putString("literalNumber", 1)
+        .toPrettyJson();
+```
 
-    User u = new User().setAge(1).setName("kong").setHobby(new String[]{"j", "n"});
+输出：
 
-    /**
-     * {
-     *   "a" : "b",
-     *   "c" : [ "d1", "d2" ],
-     *   "e" : "f",
-     *   "g" : [ "1", "2", "3", "4", "4" ],
-     *   "u1" : "{\"name\":\"kong\",\"age\":1,\"hobby\":[\"j\",\"n\"]}",
-     *   "u2" : {
-     *     "name" : "kong",
-     *     "age" : 1,
-     *     "hobby" : [ "j", "n" ]
-     *   },
-     *   "i" : "1"
-     * }
-     * 4
-     *
-     * @throws Exception
-     */
-    @Test
-    void testJsonObj() throws Exception {
-
-        String str = JsonObj.of()
-                .put("a", "b")
-                .putAry("c", o -> o.add("d1").add("d2"))
-                .put("e", "f")
-                .putAry("g", c -> c.addColl(Arrays.asList(1, 2, 3, 4, 4)))
-                .put("u1", u)
-                .putObj("u2", u)
-                .put("i", 1)
-                .toPrettyJson();
-
-        System.out.println(str);
-
-        System.out.println(Json.toNode(str).get("g").get(3).asInt());
-    }
-
-    /**
-     * ["1","2","3",{"name":"kong","age":1,"hobby":["j","n"]},{"a":"a","b":"b"},["6","7"],"0","0"]
-     * [1, 2, 3, {name=kong, age=1, hobby=[j, n]}, {a=a, b=b}, [6, 7], 0, 0]
-     *
-     * @throws Exception
-     */
-    @Test
-    void testJsonAry() throws Exception {
-
-        String ary = JsonAry.of()
-                .add(1)
-                .add(2)
-                .add(3)
-                .addObj(u)
-                .addObj(c -> c.put("a", "a").put("b", "b"))
-                .addAry(c -> c.add(6).add(7))
-                .addColl(Arrays.asList(0, 0))
-                .toJson();
-
-        System.out.println(ary);
-
-        List<Object> list = Json.toList(ary, Object.class);
-
-        System.out.println(list);
-    }
-
-    /**
-     * {1=true}
-     * {"1":"true"}
-     *
-     * @throws Exception
-     */
-    @Test
-    void test1() throws Exception {
-        JsonObj jsonObj = Json.obj().put("1", "true");
-        System.out.println(jsonObj.toMap());
-        System.out.println(jsonObj.toJson());
-    }
-
-    /**
-     * ["1","2",["66","888"],{"name":"kong","age":1,"hobby":["j","n"]}]
-     *
-     * @throws Exception
-     */
-    @Test
-    void test2() throws Exception {
-        String json = Json.ary().add(1).add(new BigDecimal(2)).addAry(e -> e.add(66).add(888)).addObj(u).toJson();
-        System.out.println(json);
-    }
-
-    /**
-     *  {
-     *   "1" : null
-     *  }
-     *
-     * @throws Exception
-     */
-    @Test
-    void test3() throws Exception {
-        System.out.println(Json.obj().put("1", null).toPrettyJson());
-    }
+```json
+{
+  "name" : "kong",
+  "age" : 1,
+  "active" : true,
+  "nullable" : null,
+  "profile" : {
+    "name" : "kong",
+    "age" : 1,
+    "hobby" : [ "j", "n" ]
+  },
+  "tags" : [ "java", 8 ],
+  "literalNumber" : "1"
 }
 ```
 
-## 对jackson的操作封装
+## 构建 JSON Array
 
 ```java
+String json = Json.ary()
+        .add(1)
+        .add(true)
+        .add(null)
+        .addObj(user)
+        .addAry(ary -> ary.add("nested").add(false))
+        .addString(66)
+        .toJson();
+```
 
-@Test
-public void test4() throws Exception {
-    String json = "[{\"name\":\"kong\",\"age\":1,\"hobby\":[\"j\",\"n\"]}]";
-    List<User> users = Json.mapper().readValue(json, new TypeReference<List<User>>() {
-    });
-    System.out.println(users);
-}
+输出：
 
-@Test
-public void test5() throws Exception {
-    String json = "{\"name\":[\"j\",\"n\"],\"age\":[\"j\",\"n\"],\"hobby\":[\"j\",\"n\"]}";
-    Map<String, List<String>> map = Json.toMap(json, new TypeReference<Map<String, List<String>>>() {
-    });
-    System.out.println("map = " + map);
-}
+```json
+[1,true,null,{"name":"kong","age":1,"hobby":["j","n"]},["nested",false],"66"]
+```
 
-@Test
-public void test6() throws Exception {
-    String json = "{\"name\":[\"j\",\"n\"],\"age\":[\"j\",\"n\"],\"hobby\":[\"j\",\"n\"]}";
-    JsonNode node = Json.toNode(json);
-    Map<String, List<String>> map = Json.toMap(node, new TypeReference<Map<String, List<String>>>() {
-    });
-    System.out.println("map = " + map);
-}
+## 对 jackson 的常用封装
 
-@Test
-public void test7() throws Exception {
-    String json = "{\"name\":\"kong\",\"age\":1,\"hobby\":[\"j\",\"n\"]}";
-    User node = Json.toObj(json, User.class);
-    System.out.println("node = " + node);
-    Person obj = Json.toObj(node, Person.class);
-    System.out.println("obj = " + obj);
-}
+```java
+String userJson = "{\"name\":\"kong\",\"age\":1,\"hobby\":[\"j\",\"n\"]}";
 
-@Test
-public void test8() throws Exception {
-    String json = "name";
-    String obj = Json.toObj(json, String.class);
-    System.out.println("obj = " + obj);
-}
+User user = Json.toObj(userJson, User.class);
+JsonNode node = Json.toNode(user);
+List<User> users = Json.toList("[{\"name\":\"kong\",\"age\":1}]", User.class);
+Map<String, Object> map = Json.toMap(user, String.class, Object.class);
+```
 
-@Test
-public void test9() throws Exception {
-    String json = "{\"name\":\"kong\",\"age\":1,\"hobby\":[\"j\",\"n\"]}";
-    User node = Json.toObj(json, User.class);
-    JsonNode node1 = Json.toNode(node);
-    System.out.println("node1 = " + node1);
+## 自定义 Mapper
 
-    JsonNode node2 = Json.toNode(json);
-    System.out.println("node2 = " + node2);
-}
+```java
+JsonMapper customMapper = JsonMapper.builder().build();
+Json.setMapper(customMapper);
+```
 
-@Test
-public void test10() throws Exception {
-    String json = "[{\"name\":\"kong\",\"age\":1,\"hobby\":[\"j\",\"n\"]}]";
-    List<Object> list = Json.toList(json, Object.class);
-    System.out.println("list = " + list);
-    List<User> list1 = Json.toList(json, User.class);
+兼容旧用法：
 
-    System.out.println("list1 = " + list1);
-
-    List<Person> list2 = Json.toList(json, new TypeReference<List<Person>>() {
-    });
-
-    System.out.println("list2 = " + list2);
-
-    List<Person> list3 = Json.toList(list1, Person.class);
-    System.out.println("list3 = " + list3);
-
-
-}
-
-@Test
-public void test11() throws Exception {
-    String json = "{\"name\":\"kong\",\"age\":1,\"hobby\":[\"j\",\"n\"]}";
-    Map<Object, Object> map = Json.toMap(json, Object.class, Object.class);
-
-}
-
+```java
+Json.mapper(customMapper);
 ```

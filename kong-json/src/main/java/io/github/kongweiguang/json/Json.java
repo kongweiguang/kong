@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.github.kongweiguang.core.exception.KongException;
+import io.github.kongweiguang.core.lang.Assert;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -18,7 +19,10 @@ import java.util.List;
 import java.util.Map;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import static com.fasterxml.jackson.core.json.JsonReadFeature.*;
+import static com.fasterxml.jackson.core.json.JsonReadFeature.ALLOW_LEADING_ZEROS_FOR_NUMBERS;
+import static com.fasterxml.jackson.core.json.JsonReadFeature.ALLOW_SINGLE_QUOTES;
+import static com.fasterxml.jackson.core.json.JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS;
+import static com.fasterxml.jackson.core.json.JsonReadFeature.ALLOW_UNQUOTED_FIELD_NAMES;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static com.fasterxml.jackson.databind.MapperFeature.USE_STD_BEAN_NAMING;
 import static com.fasterxml.jackson.databind.PropertyNamingStrategies.LOWER_CAMEL_CASE;
@@ -26,371 +30,353 @@ import static com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_
 import static java.util.Objects.isNull;
 import static java.util.TimeZone.getTimeZone;
 
-
 /**
- * jackson序列化、反序列化工具
+ * jackson序列化、反序列化工具。
  *
  * @author kongweiguang
  */
 public class Json {
 
-    private static JsonMapper mapper = JsonMapper.builder()
-            //忽略在json字符串中存在，但是在java对象中不存在对应属性的情况
+    private static final JsonMapper DEFAULT_MAPPER = JsonMapper.builder()
             .configure(FAIL_ON_UNKNOWN_PROPERTIES, false)
-            //忽略空Bean转json的错误
             .configure(FAIL_ON_EMPTY_BEANS, false)
-            //允许不带引号的字段名称
             .configure(ALLOW_UNQUOTED_FIELD_NAMES.mappedFeature(), true)
-            //允许单引号
             .configure(ALLOW_SINGLE_QUOTES.mappedFeature(), true)
-            //allow int startWith 0
             .configure(ALLOW_LEADING_ZEROS_FOR_NUMBERS.mappedFeature(), true)
-            //允许字符串存在转义字符：\r \n \t
             .configure(ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature(), true)
-            //排除空值字段
             .serializationInclusion(NON_NULL)
-            //使用驼峰式
             .propertyNamingStrategy(LOWER_CAMEL_CASE)
-            //使用bean名称
             .enable(USE_STD_BEAN_NAMING)
-            //所有日期格式都统一为固定格式
             .defaultDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
             .defaultTimeZone(getTimeZone("GMT+8"))
-            //适配Java8中的时间
             .addModule(new JavaTimeModule())
             .build();
 
+    private static volatile JsonMapper mapper = DEFAULT_MAPPER;
+
+    private Json() {
+    }
+
     /**
-     * 自定义json转换mapper
+     * 自定义全局json mapper。
      *
-     * @param jsonMapper jsonMapper
+     * @param jsonMapper mapper
      */
     public static void mapper(JsonMapper jsonMapper) {
-        Json.mapper = jsonMapper;
+        setMapper(jsonMapper);
     }
 
     /**
-     * 获取jsonMapper
+     * 自定义全局json mapper。
      *
-     * @return jsonMapper
+     * @param jsonMapper mapper
+     */
+    public static void setMapper(JsonMapper jsonMapper) {
+        Assert.notNull(jsonMapper, "jsonMapper must not be null");
+        mapper = jsonMapper;
+    }
+
+    /**
+     * 获取当前使用的mapper。
+     *
+     * @return current mapper
      */
     public static JsonMapper mapper() {
-        return Json.mapper;
+        return mapper;
     }
 
     /**
-     * 对象转换为json字符串
+     * 获取默认mapper。
      *
-     * @param obj 要转换的对象
-     * @return json字符串
+     * @return default mapper
+     */
+    public static JsonMapper defaultMapper() {
+        return DEFAULT_MAPPER;
+    }
+
+    /**
+     * 对象转换为json字符串。
+     *
+     * @param obj source object
+     * @return json string
      */
     public static <T> String toStr(T obj) {
         return toStr(obj, false);
     }
 
     /**
-     * 对象转换为json字符串
+     * 对象转换为json字符串。
      *
-     * @param obj    要转换的对象
-     * @param format 是否格式化json
-     * @return json字符串
+     * @param obj source object
+     * @param format whether pretty print
+     * @return json string
      */
     public static <T> String toStr(T obj, boolean format) {
+        if (isNull(obj)) {
+            return null;
+        }
+
+        // Keep raw strings untouched so callers can distinguish "already text/json"
+        // from "serialize this object with Jackson".
+        if (obj instanceof String str) {
+            return str;
+        }
+
         try {
-            if (isNull(obj)) {
-                return null;
-            }
-
-            if (obj instanceof Number) {
-                return obj.toString();
-            }
-
-            if (obj instanceof String) {
-                return (String) obj;
-            }
-
             if (format) {
                 return mapper().writerWithDefaultPrettyPrinter().writeValueAsString(obj);
             }
 
             return mapper().writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw wrap("Failed to convert object to json string", e);
         }
     }
 
     /**
-     * 字符串转换为指定对象
+     * 转换为指定对象类型。
      *
-     * @param json  json字符串
-     * @param clazz 目标对象
-     * @return 对象
+     * @param json source value
+     * @param clazz target class
+     * @return target object
      */
-    @SuppressWarnings("all")
+    @SuppressWarnings("unchecked")
     public static <T> T toObj(Object json, Class<T> clazz) {
-        if (isNull(clazz)) {
+        if (json == null || clazz == null) {
             return null;
         }
 
+        if (clazz.equals(String.class) && json instanceof String str) {
+            return (T) str;
+        }
+
         try {
-            if (clazz.equals(String.class)) {
-                return (T) json;
-            }
-
-            if (json instanceof String) {
-                return mapper().readValue((String) json, clazz);
-            }
-
-            if (json instanceof JsonNode) {
-                return mapper().treeToValue((JsonNode) json, clazz);
+            if (json instanceof String str) {
+                return mapper().readValue(str, clazz);
             }
 
             return mapper().convertValue(json, clazz);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (IOException | IllegalArgumentException e) {
+            throw wrap("Failed to convert value to " + clazz.getName(), e);
         }
     }
 
-
     /**
-     * 字符串转换为指定对象
+     * 转换为指定泛型对象类型。
      *
-     * @param json          json字符串
-     * @param typeReference 目标对象类型
+     * @param json source value
+     * @param typeReference target type
+     * @return target object
      */
     public static <T> T toObj(Object json, TypeReference<T> typeReference) {
-        if (isNull(typeReference)) {
+        if (json == null || typeReference == null) {
             return null;
         }
 
         try {
-            if (json instanceof String) {
-
-                return mapper().readValue((String) json, typeReference);
-            }
-
-            if (json instanceof JsonNode) {
-                return mapper().treeToValue((JsonNode) json, typeReference);
+            if (json instanceof String str) {
+                return mapper().readValue(str, typeReference);
             }
 
             return mapper().convertValue(json, typeReference);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (IOException | IllegalArgumentException e) {
+            throw wrap("Failed to convert value by type reference", e);
         }
     }
 
     /**
-     * 字符串转换为指定对象
+     * 转换为指定javaType。
      *
-     * @param json     字符串
-     * @param javaType 目标对象类型
-     * @return 对象
+     * @param json source value
+     * @param javaType target type
+     * @return target object
      */
     public static <T> T toObj(Object json, JavaType javaType) {
-        if (isNull(javaType)) {
+        if (json == null || javaType == null) {
             return null;
         }
-        try {
-            if (json instanceof String) {
-                return mapper().readValue((String) json, javaType);
-            }
 
-            if (json instanceof JsonNode) {
-                return mapper().treeToValue((JsonNode) json, javaType);
+        try {
+            if (json instanceof String str) {
+                return mapper().readValue(str, javaType);
             }
 
             return mapper().convertValue(json, javaType);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+        } catch (IOException | IllegalArgumentException e) {
+            throw wrap("Failed to convert value by java type", e);
         }
     }
 
     /**
-     * 对象转换为JsonNode对象
+     * 对象转换为{@link JsonNode}。
      *
-     * @param obj 对象
-     * @return jsonNode
+     * @param obj source object
+     * @return json node
      */
     public static JsonNode toNode(Object obj) {
-        if (isNull(obj)) {
+        if (obj == null) {
             return null;
         }
 
-        try {
-            if (obj instanceof String) {
-                return mapper().readTree((String) obj);
-            }
+        if (obj instanceof JsonNode jsonNode) {
+            return jsonNode;
+        }
 
-            if (obj instanceof JsonNode) {
-                return (JsonNode) obj;
+        try {
+            if (obj instanceof String str) {
+                return mapper().readTree(str);
             }
 
             return mapper().valueToTree(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (JsonProcessingException | IllegalArgumentException e) {
+            throw wrap("Failed to convert value to JsonNode", e);
         }
     }
 
     /**
-     * 获取javaType
+     * 获取泛型javaType。
      *
-     * @param parametrized     泛型
-     * @param parameterClasses 泛型参数
-     * @return javaType
+     * @param parametrized raw type
+     * @param parameterClasses parameter types
+     * @return java type
      */
     public static JavaType javaType(Class<?> parametrized, Class<?>... parameterClasses) {
         return mapper().getTypeFactory().constructParametricType(parametrized, parameterClasses);
     }
 
     /**
-     * 对象转换为map对象
+     * 转换为map。
      *
-     * @param obj 对象
-     * @param <K> 健的类型
-     * @param <V> 值的类型
-     * @return map
+     * @param obj source object
+     * @param keyClass key type
+     * @param valueClass value type
+     * @return converted map
      */
-    public static <K, V> Map<K, V> toMap(Object obj, Class<K> k, Class<V> v) {
-        if (isNull(obj)) {
+    public static <K, V> Map<K, V> toMap(Object obj, Class<K> keyClass, Class<V> valueClass) {
+        if (obj == null) {
             return null;
         }
 
-        if (obj instanceof String) {
-            return toObj(obj, javaType(Map.class, k, v));
-        }
-
-        return mapper().convertValue(obj, javaType(Map.class, k, v));
+        return toObj(obj, javaType(Map.class, keyClass, valueClass));
     }
 
     /**
-     * 对象转换为map对象
+     * 转换为map。
      *
-     * @param obj           对象
-     * @param typeReference 目标对象类型
-     * @param <K>           健的类型
-     * @param <V>           值的类型
-     * @return 对象
+     * @param obj source object
+     * @param typeReference target type
+     * @return converted map
      */
     public static <K, V> Map<K, V> toMap(Object obj, TypeReference<Map<K, V>> typeReference) {
-        if (isNull(obj)) {
-            return null;
-        }
-
-        if (obj instanceof String) {
-            return toObj(obj, typeReference);
-        }
-
-        return mapper().convertValue(obj, typeReference);
+        return toObj(obj, typeReference);
     }
 
-
     /**
-     * 对象转换为list对象，并指定元素类型
+     * 转换为list。
      *
-     * @param obj   对象
-     * @param clazz 元素类型
-     * @param <T>   元素类型
-     * @return 对象
+     * @param obj source object
+     * @param clazz element type
+     * @return converted list
      */
     public static <T> List<T> toList(Object obj, Class<T> clazz) {
-        if (isNull(obj)) {
+        if (obj == null) {
             return null;
         }
 
-        if (obj instanceof String) {
-            return toObj(obj, javaType(List.class, clazz));
-        }
-
-        return mapper().convertValue(obj, javaType(List.class, clazz));
+        return toObj(obj, javaType(List.class, clazz));
     }
 
     /**
-     * 对象转换为list对象，并指定元素类型
+     * 转换为list。
      *
-     * @param obj     对象
-     * @param typeRef 目标对象类型
-     * @param <T>     元素类型
-     * @return 对象
+     * @param obj source object
+     * @param typeRef target type
+     * @return converted list
      */
     public static <T> List<T> toList(Object obj, TypeReference<List<T>> typeRef) {
-        if (isNull(obj)) {
-            return null;
-        }
-
-        if (obj instanceof String) {
-            return toObj(obj, typeRef);
-        }
-
-        return mapper().convertValue(obj, typeRef);
+        return toObj(obj, typeRef);
     }
 
     /**
-     * 创建json对象
+     * 创建json object builder。
      *
-     * @return json对象 {@link JsonObj}
+     * @return json object builder
      */
     public static JsonObj obj() {
         return JsonObj.of();
     }
 
     /**
-     * 创建json数组
+     * 创建json array builder。
      *
-     * @return json数组 {@link JsonAry}
+     * @return json array builder
      */
     public static JsonAry ary() {
         return JsonAry.of();
     }
 
     /**
-     * 读取json文件
+     * 读取json文件。
      *
-     * @param path 文件路径
-     * @return jsonNode
+     * @param path file path
+     * @param charset charset
+     * @return parsed node
      */
     public static JsonNode read(Path path, Charset charset) {
+        Assert.notNull(path, "path must not be null");
+        Assert.notNull(charset, "charset must not be null");
+
         try {
-            String json = Files.readString(path, charset);
-            return toNode(json);
+            return toNode(Files.readString(path, charset));
         } catch (IOException e) {
-            throw new KongException(e);
+            throw wrap("Failed to read json file: " + path, e);
         }
     }
 
     /**
-     * 读取json文件
+     * 使用utf-8读取json文件。
      *
-     * @param path 文件路径
-     * @return jsonNode
+     * @param path file path
+     * @return parsed node
      */
     public static JsonNode read(Path path) {
         return read(path, StandardCharsets.UTF_8);
     }
 
     /**
-     * 读取jsonl文件
+     * 读取jsonl文件。
      *
-     * @param path 文件路径
-     * @return jsonNode
+     * @param path file path
+     * @param charset charset
+     * @return parsed node list
      */
     public static List<JsonNode> readJsonl(Path path, Charset charset) {
+        Assert.notNull(path, "path must not be null");
+        Assert.notNull(charset, "charset must not be null");
+
         try {
-            List<String> jsonl = Files.readAllLines(path, charset);
-            return jsonl.stream().map(Json::toNode).toList();
+            return Files.readAllLines(path, charset)
+                    .stream()
+                    // Tolerate trailing blank lines in jsonl files.
+                    .filter(line -> !line.isBlank())
+                    .map(Json::toNode)
+                    .toList();
         } catch (IOException e) {
-            throw new KongException(e);
+            throw wrap("Failed to read jsonl file: " + path, e);
         }
     }
 
     /**
-     * 读取jsonl文件
+     * 使用utf-8读取jsonl文件。
      *
-     * @param path 文件路径
-     * @return jsonNode
+     * @param path file path
+     * @return parsed node list
      */
     public static List<JsonNode> readJsonl(Path path) {
         return readJsonl(path, StandardCharsets.UTF_8);
     }
 
+    private static KongException wrap(String message, Exception e) {
+        return new KongException(message, e);
+    }
 }
-
