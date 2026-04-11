@@ -1,0 +1,53 @@
+package io.github.kongweiguang.http.client.v2;
+
+import io.github.kongweiguang.http.client.HttpRequestSpec;
+import io.github.kongweiguang.http.client.Req;
+import io.github.kongweiguang.http.client.v2.body.BodyEncoderFactory;
+import io.github.kongweiguang.http.common.core.ContentType;
+import io.github.kongweiguang.http.common.core.Method;
+import okhttp3.FormBody;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+class BodyEncoderFactoryTest {
+
+    @Test
+    void shouldBuildFormBody() {
+        HttpRequestSpec spec = Req.post("http://localhost/form")
+                .contentType(ContentType.FORM_URLENCODED.v())
+                .form("k", "v")
+                .build();
+
+        RequestBody body = BodyEncoderFactory.resolve(spec).encode(spec);
+
+        Assertions.assertInstanceOf(FormBody.class, body);
+    }
+
+    @Test
+    void shouldBuildMultipartBody() {
+        HttpRequestSpec spec = Req.post("http://localhost/multipart")
+                .contentType(ContentType.MULTIPART.v())
+                .form("name", "kong")
+                .file("f", "a.txt", "abc".getBytes())
+                .build();
+
+        RequestBody body = BodyEncoderFactory.resolve(spec).encode(spec);
+
+        Assertions.assertInstanceOf(MultipartBody.class, body);
+    }
+
+    @Test
+    void shouldBuildRawBody() {
+        HttpRequestSpec spec = Req.of("http://localhost/raw")
+                .method(Method.POST)
+                .contentType(ContentType.JSON.v())
+                .body("{\"a\":1}")
+                .build();
+
+        RequestBody body = BodyEncoderFactory.resolve(spec).encode(spec);
+
+        Assertions.assertNotNull(body);
+    }
+}

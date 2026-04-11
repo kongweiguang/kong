@@ -6,14 +6,13 @@ import io.github.kongweiguang.http.common.exception.KongHttpRuntimeException;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 import java.util.Map;
+import java.util.StringJoiner;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
- * http内部使用工具
- *
- * @author kongweiguang
+ * Internal http utility methods.
  */
 public final class HttpClientUtil {
 
@@ -21,9 +20,6 @@ public final class HttpClientUtil {
         throw new KongHttpRuntimeException("util not be construct");
     }
 
-    /**
-     * 修复URL，确保其以URL可以被请求
-     */
     public static String fixUrl(String url) {
         if (isNull(url) || url.trim().isEmpty()) {
             return Const._http + Const.localhost;
@@ -46,46 +42,29 @@ public final class HttpClientUtil {
         return Const._http + Const.localhost + url;
     }
 
-    /**
-     * 检查URL是否使用HTTP协议
-     */
     public static boolean isHttp(String url) {
         return nonNull(url) && url.toLowerCase().startsWith(Const._http);
     }
 
-    /**
-     * 检查URL是否使用HTTPS协议
-     */
     public static boolean isHttps(String url) {
         return nonNull(url) && url.toLowerCase().startsWith(Const._https);
     }
 
-    /**
-     * 检查URL是否使用WS协议
-     */
     public static boolean isWs(String url) {
         return nonNull(url) && url.toLowerCase().startsWith(Const._ws);
     }
 
-    /**
-     * 检查URL是否使用WSS协议
-     */
     public static boolean isWss(String url) {
         return nonNull(url) && url.toLowerCase().startsWith(Const._wss);
     }
 
-
-    //cookie转字符串
     public static String cookie2Str(Map<String, String> cookies) {
         if (isNull(cookies) || cookies.isEmpty()) {
             return "";
         }
-
-        StringBuilder sb = new StringBuilder(cookies.size() * 16); // 预估大小以减少扩容
-
-        cookies.forEach((k, v) -> sb.append(k).append('=').append(v).append("; "));
-
-        return sb.toString();
+        StringJoiner joiner = new StringJoiner("; ");
+        cookies.forEach((k, v) -> joiner.add(k + "=" + v));
+        return joiner.toString();
     }
 
     public static HttpLoggingInterceptor httpLoggingInterceptor(ReqLog logger, HttpLoggingInterceptor.Level level) {
@@ -93,5 +72,4 @@ public final class HttpClientUtil {
         loggingInterceptor.setLevel(level);
         return loggingInterceptor;
     }
-
 }

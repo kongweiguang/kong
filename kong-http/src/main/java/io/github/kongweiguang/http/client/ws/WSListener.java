@@ -2,7 +2,7 @@ package io.github.kongweiguang.http.client.ws;
 
 import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.Res;
-import io.github.kongweiguang.http.client.builder.WSReqBuilder;
+import io.github.kongweiguang.http.client.HttpRequestSpec;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
@@ -25,37 +25,37 @@ public abstract class WSListener extends WebSocketListener {
     @Override
     public void onOpen(WebSocket webSocket, Response response) {
         this.ws = webSocket;
-        open(webSocket.request().tag(WSReqBuilder.class), Res.of(response));
+        open(webSocket.request().tag(HttpRequestSpec.class), Res.of(response));
     }
 
     @Override
     public void onMessage(WebSocket webSocket, String text) {
         this.ws = webSocket;
-        msg(webSocket.request().tag(WSReqBuilder.class), text);
+        msg(webSocket.request().tag(HttpRequestSpec.class), text);
     }
 
     @Override
     public void onMessage(WebSocket webSocket, ByteString bytes) {
         this.ws = webSocket;
-        msg(webSocket.request().tag(WSReqBuilder.class), bytes.toByteArray());
+        msg(webSocket.request().tag(HttpRequestSpec.class), bytes.toByteArray());
     }
 
     @Override
     public void onFailure(WebSocket webSocket, Throwable t, Response response) {
         this.ws = webSocket;
-        fail(webSocket.request().tag(WSReqBuilder.class), Res.of(response), t);
+        fail(webSocket.request().tag(HttpRequestSpec.class), Res.of(response), t);
     }
 
     @Override
     public void onClosing(WebSocket webSocket, int code, String reason) {
         this.ws = webSocket;
-        closing(webSocket.request().tag(WSReqBuilder.class), code, reason);
+        closing(webSocket.request().tag(HttpRequestSpec.class), code, reason);
     }
 
     @Override
     public void onClosed(WebSocket webSocket, int code, String reason) {
         this.ws = webSocket;
-        closed(webSocket.request().tag(WSReqBuilder.class), code, reason);
+        closed(webSocket.request().tag(HttpRequestSpec.class), code, reason);
     }
 
     /**
@@ -95,7 +95,7 @@ public abstract class WSListener extends WebSocketListener {
      * @param req {@link Req}
      * @param res {@link Res}
      */
-    public void open(WSReqBuilder req, Res res) {
+    public void open(HttpRequestSpec req, Res res) {
     }
 
     /**
@@ -104,7 +104,7 @@ public abstract class WSListener extends WebSocketListener {
      * @param req  请求信息 {@link Req}
      * @param text string类型响应数据 {@link String}
      */
-    public void msg(WSReqBuilder req, String text) {
+    public void msg(HttpRequestSpec req, String text) {
     }
 
 
@@ -114,7 +114,7 @@ public abstract class WSListener extends WebSocketListener {
      * @param req   请求信息 {@link Req}
      * @param bytes byte类型响应数据 {@link Byte}
      */
-    public void msg(WSReqBuilder req, byte[] bytes) {
+    public void msg(HttpRequestSpec req, byte[] bytes) {
     }
 
     /**
@@ -124,7 +124,7 @@ public abstract class WSListener extends WebSocketListener {
      * @param res 响应信息 {@link Res}
      * @param t   异常信息 {@link Throwable}
      */
-    public void fail(WSReqBuilder req, Res res, Throwable t) {
+    public void fail(HttpRequestSpec req, Res res, Throwable t) {
     }
 
     /**
@@ -134,7 +134,7 @@ public abstract class WSListener extends WebSocketListener {
      * @param code   状态码
      * @param reason 原因
      */
-    public void closing(WSReqBuilder req, int code, String reason) {
+    public void closing(HttpRequestSpec req, int code, String reason) {
     }
 
     /**
@@ -144,7 +144,7 @@ public abstract class WSListener extends WebSocketListener {
      * @param code   状态码
      * @param reason 原因
      */
-    public void closed(WSReqBuilder req, int code, String reason) {
+    public void closed(HttpRequestSpec req, int code, String reason) {
     }
 
 }
