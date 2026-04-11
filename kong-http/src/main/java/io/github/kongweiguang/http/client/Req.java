@@ -6,6 +6,8 @@ import io.github.kongweiguang.http.client.core.ReqType;
 
 /**
  * 请求入口
+ *
+ * @author kongweiguang
  */
 public final class Req {
 
@@ -20,8 +22,8 @@ public final class Req {
      *
      * @return 请求构建器
      */
-    public static HttpRequestSpec.Builder of() {
-        return new HttpRequestSpec.Builder();
+    public static HttpRequestSpec of() {
+        return new HttpRequestSpec();
     }
 
     /**
@@ -30,7 +32,7 @@ public final class Req {
      * @param url 请求地址
      * @return 请求构建器
      */
-    public static HttpRequestSpec.Builder of(String url) {
+    public static HttpRequestSpec of(String url) {
         return of().url(url);
     }
 
@@ -40,7 +42,7 @@ public final class Req {
      * @param url 请求地址
      * @return 请求构建器
      */
-    public static HttpRequestSpec.Builder get(String url) {
+    public static HttpRequestSpec get(String url) {
         return method(Method.GET, url);
     }
 
@@ -50,7 +52,7 @@ public final class Req {
      * @param url 请求地址
      * @return 请求构建器
      */
-    public static HttpRequestSpec.Builder post(String url) {
+    public static HttpRequestSpec post(String url) {
         return method(Method.POST, url);
     }
 
@@ -60,7 +62,7 @@ public final class Req {
      * @param url 请求地址
      * @return 请求构建器
      */
-    public static HttpRequestSpec.Builder delete(String url) {
+    public static HttpRequestSpec delete(String url) {
         return method(Method.DELETE, url);
     }
 
@@ -70,7 +72,7 @@ public final class Req {
      * @param url 请求地址
      * @return 请求构建器
      */
-    public static HttpRequestSpec.Builder put(String url) {
+    public static HttpRequestSpec put(String url) {
         return method(Method.PUT, url);
     }
 
@@ -80,7 +82,7 @@ public final class Req {
      * @param url 请求地址
      * @return 请求构建器
      */
-    public static HttpRequestSpec.Builder patch(String url) {
+    public static HttpRequestSpec patch(String url) {
         return method(Method.PATCH, url);
     }
 
@@ -90,7 +92,7 @@ public final class Req {
      * @param url 请求地址
      * @return 请求构建器
      */
-    public static HttpRequestSpec.Builder head(String url) {
+    public static HttpRequestSpec head(String url) {
         return method(Method.HEAD, url);
     }
 
@@ -100,7 +102,7 @@ public final class Req {
      * @param url 请求地址
      * @return 请求构建器
      */
-    public static HttpRequestSpec.Builder options(String url) {
+    public static HttpRequestSpec options(String url) {
         return method(Method.OPTIONS, url);
     }
 
@@ -110,7 +112,7 @@ public final class Req {
      * @param url 请求地址
      * @return 请求构建器
      */
-    public static HttpRequestSpec.Builder trace(String url) {
+    public static HttpRequestSpec trace(String url) {
         return method(Method.TRACE, url);
     }
 
@@ -120,7 +122,7 @@ public final class Req {
      * @param url 请求地址
      * @return 请求构建器
      */
-    public static HttpRequestSpec.Builder connect(String url) {
+    public static HttpRequestSpec connect(String url) {
         return method(Method.CONNECT, url);
     }
 
@@ -130,7 +132,7 @@ public final class Req {
      * @param url 请求地址
      * @return 请求构建器
      */
-    public static HttpRequestSpec.Builder formUrlencoded(String url) {
+    public static HttpRequestSpec formUrlencoded(String url) {
         return post(url).contentType(ContentType.FORM_URLENCODED.v());
     }
 
@@ -140,7 +142,7 @@ public final class Req {
      * @param url 请求地址
      * @return 请求构建器
      */
-    public static HttpRequestSpec.Builder multipart(String url) {
+    public static HttpRequestSpec multipart(String url) {
         return post(url).contentType(ContentType.MULTIPART.v());
     }
 
@@ -150,7 +152,7 @@ public final class Req {
      * @param url 请求地址
      * @return 请求构建器
      */
-    public static HttpRequestSpec.Builder ws(String url) {
+    public static HttpRequestSpec ws(String url) {
         return get(url)
                 .reqType(ReqType.ws)
                 .method(Method.GET);
@@ -162,15 +164,21 @@ public final class Req {
      * @param url 请求地址
      * @return 请求构建器
      */
-    public static HttpRequestSpec.Builder sse(String url) {
+    public static HttpRequestSpec sse(String url) {
         return get(url)
                 .reqType(ReqType.sse)
                 .method(Method.GET)
                 .contentType(ContentType.EVENT_STREAM.v());
     }
 
-    private static HttpRequestSpec.Builder method(Method method, String url) {
+    /**
+     * 以指定 method 创建请求构建器。
+     *
+     * @param method HTTP method
+     * @param url    请求地址
+     * @return 请求构建器
+     */
+    private static HttpRequestSpec method(Method method, String url) {
         return of(url).method(method);
     }
 }
-

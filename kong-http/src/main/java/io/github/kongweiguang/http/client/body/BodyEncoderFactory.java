@@ -5,6 +5,8 @@ import io.github.kongweiguang.http.client.consts.ContentType;
 
 /**
  * 按 Content-Type 选择请求体编码器。
+ *
+ * @author kongweiguang
  */
 public final class BodyEncoderFactory {
 

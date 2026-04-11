@@ -4,6 +4,8 @@ import java.util.concurrent.Callable;
 
 /**
  * 只执行一次，不进行重试。
+ *
+ * @author kongweiguang
  */
 public final class NoRetryPolicy<R> implements RetryPolicy<R> {
 

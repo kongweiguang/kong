@@ -8,6 +8,8 @@ import java.util.concurrent.Callable;
 
 /**
  * 将 HTTP 重试行为委托给现有 RetryableTask 语义。
+ *
+ * @author kongweiguang
  */
 public final class HttpRetryPolicy implements RetryPolicy<Res> {
 

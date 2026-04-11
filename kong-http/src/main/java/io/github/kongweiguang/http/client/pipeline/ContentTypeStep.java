@@ -3,6 +3,11 @@ package io.github.kongweiguang.http.client.pipeline;
 import io.github.kongweiguang.http.client.consts.ContentType;
 import io.github.kongweiguang.http.client.consts.Header;
 
+/**
+ * 请求头 Content-Type 处理步骤。
+ *
+ * @author kongweiguang
+ */
 public final class ContentTypeStep implements RequestBuildStep {
 
     /**

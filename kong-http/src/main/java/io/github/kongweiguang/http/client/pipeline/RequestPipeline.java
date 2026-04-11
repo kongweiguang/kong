@@ -7,6 +7,8 @@ import java.util.List;
 
 /**
  * 固定顺序流水线，确保请求组装行为确定。
+ *
+ * @author kongweiguang
  */
 public final class RequestPipeline {
 

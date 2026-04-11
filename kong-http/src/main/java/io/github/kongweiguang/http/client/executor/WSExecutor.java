@@ -8,6 +8,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.WebSocket;
 
+/**
+ * WebSocket 请求执行器。
+ *
+ * @author kongweiguang
+ */
 public final class WSExecutor extends AbstractExecutor<WebSocket> {
 
 
@@ -21,16 +26,14 @@ public final class WSExecutor extends AbstractExecutor<WebSocket> {
      * 创建 WSExecutor instance
      */
     public WSExecutor(HttpRequestSpec spec, OkHttpClient client, RetryPolicy<WebSocket> retryPolicy, ResultHandler<WebSocket> handler) {
-
         super(spec, client, retryPolicy, handler);
     }
 
-
     /**
-     * 返回 execute core
+     * 执行 WebSocket 建连逻辑。
      */
     @Override
-    protected WebSocket executeCore() {
+    protected WebSocket execute0() {
         Request request = PIPELINE.build(spec());
         return client().newWebSocket(request, spec().wsListener());
     }

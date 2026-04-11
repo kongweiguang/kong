@@ -1,12 +1,15 @@
-package io.github.kongweigUserAgentng.http.client.consts;
+package io.github.kongweiguang.http.client.consts;
 
 /**
  * User-Agent
  *
- * @author kongweigUserAgentng
+ * @author kongweiguang
  */
 public interface UserAgent {
 
+    /**
+     * 返回 User-Agent 文本值。
+     */
     String v();
 
     enum Win implements UserAgent {

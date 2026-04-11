@@ -11,6 +11,8 @@ import java.util.concurrent.Executor;
 
 /**
  * HTTP/SSE/WS 共用的执行模板。
+ *
+ * @author kongweiguang
  */
 public abstract class AbstractExecutor<R> {
 
@@ -62,7 +64,7 @@ public abstract class AbstractExecutor<R> {
      */
     public final R executeBlocking() {
         try {
-            R result = retryPolicy.execute(this::executeCore);
+            R result = retryPolicy.execute(this::execute0);
             handler.onSuccess(result);
             return result;
         } catch (Throwable error) {
@@ -91,6 +93,6 @@ public abstract class AbstractExecutor<R> {
     /**
      * 返回 execute core
      */
-    protected abstract R executeCore() throws Exception;
+    protected abstract R execute0() throws Exception;
 }
 

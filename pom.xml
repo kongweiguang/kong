@@ -42,6 +42,7 @@
         <module>kong-all</module>
         <module>kong-core</module>
         <module>kong-http</module>
+        <module>kong-http-test</module>
         <module>kong-json</module>
         <module>kong-ai</module>
         <module>kong-socket</module>

@@ -11,15 +11,12 @@ import okhttp3.sse.EventSources;
 
 /**
  * SSE 执行器。
+ *
+ * @author kongweiguang
  */
 public final class SSEExecutor extends AbstractExecutor<EventSource> {
 
-
-    /**
-     * 定义 pipeline constant
-     */
     private static final RequestPipeline PIPELINE = new RequestPipeline();
-
 
     /**
      * 创建 SSEExecutor instance
@@ -29,10 +26,10 @@ public final class SSEExecutor extends AbstractExecutor<EventSource> {
     }
 
     /**
-     * 返回 execute core
+     * 执行 SSE 建连逻辑。
      */
     @Override
-    protected EventSource executeCore() {
+    protected EventSource execute0() {
         Request request = PIPELINE.build(spec());
         return EventSources.createFactory(client()).newEventSource(request, spec().sseListener());
     }

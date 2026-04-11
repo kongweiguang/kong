@@ -6,9 +6,14 @@ import okhttp3.RequestBody;
 
 /**
  * 编码 form-url-encoded 表单数据。
+ *
+ * @author kongweiguang
  */
 public final class FormUrlEncodedEncoder implements BodyEncoder {
 
+    /**
+     * 将表单字段编码为 `application/x-www-form-urlencoded` 请求体。
+     */
     @Override
     public RequestBody encode(HttpRequestSpec spec) {
         FormBody.Builder fb = new FormBody.Builder(spec.charset());

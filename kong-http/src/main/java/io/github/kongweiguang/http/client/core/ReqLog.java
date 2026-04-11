@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory;
 public enum ReqLog implements HttpLoggingInterceptor.Logger {
 
 
+    /**
+     * 输出日志到 slf4j。
+     */
     slf4j() {
         @Override
         public void log(String message) {
@@ -19,6 +22,9 @@ public enum ReqLog implements HttpLoggingInterceptor.Logger {
         }
     },
 
+    /**
+     * 输出日志到控制台。
+     */
     console() {
         @Override
         public void log(String message) {

@@ -13,6 +13,8 @@ import static java.util.Objects.nonNull;
 
 /**
  * HTTP 内部工具方法
+ *
+ * @author kongweiguang
  */
 public final class HttpClientUtil {
 
@@ -20,7 +22,6 @@ public final class HttpClientUtil {
      * 创建 HttpClientUtil instance
      */
     private HttpClientUtil() {
-
         throw new KongHttpRuntimeException("HttpClientUtil cannot be instantiated.");
     }
 

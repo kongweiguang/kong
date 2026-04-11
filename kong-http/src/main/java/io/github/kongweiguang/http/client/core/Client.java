@@ -16,6 +16,8 @@ import static javax.net.ssl.SSLContext.getInstance;
 
 /**
  * OkHttp client factory.
+ *
+ * @author kongweiguang
  */
 public class Client {
 

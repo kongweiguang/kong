@@ -20,6 +20,8 @@ import static java.util.Objects.nonNull;
 
 /**
  * 请求配置模型。
+ *
+ * @author kongweiguang
  */
 public class Conf {
 

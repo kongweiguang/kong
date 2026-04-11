@@ -4,26 +4,27 @@ import io.github.kongweiguang.http.client.HttpRequestSpec;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
+/**
+ * 请求构建阶段上下文对象。
+ *
+ * @author kongweiguang
+ */
 public final class RequestBuildContext {
-
 
     /**
      * 保存 spec
      */
     private final HttpRequestSpec spec;
 
-
     /**
      * 保存 builder
      */
     private final Request.Builder builder = new Request.Builder();
 
-
     /**
      * 保存 request body
      */
     private RequestBody requestBody;
-
 
     /**
      * 保存 request
@@ -46,6 +47,9 @@ public final class RequestBuildContext {
         return spec;
     }
 
+    /**
+     * 返回 request builder。
+     */
     public Request.Builder builder() {
         return builder;
     }

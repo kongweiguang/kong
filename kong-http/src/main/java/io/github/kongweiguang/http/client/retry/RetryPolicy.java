@@ -2,6 +2,11 @@ package io.github.kongweiguang.http.client.retry;
 
 import java.util.concurrent.Callable;
 
+/**
+ * HTTP 请求重试策略接口。
+ *
+ * @author kongweiguang
+ */
 public interface RetryPolicy<R> {
 
 

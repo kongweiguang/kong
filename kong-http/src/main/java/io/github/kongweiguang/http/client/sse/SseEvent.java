@@ -1,13 +1,16 @@
 package io.github.kongweiguang.http.client.sse;
 
+/**
+ * SSE 事件构建器。
+ *
+ * @author kongweiguang
+ */
 public class SseEvent {
-
 
     /**
      * 保存 sb
      */
     private final StringBuilder sb = new StringBuilder();
-
 
     /**
      * 保存 id
