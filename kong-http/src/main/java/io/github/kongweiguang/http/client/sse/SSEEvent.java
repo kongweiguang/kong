@@ -17,24 +17,20 @@ public class SseEvent {
      */
     private String id;
 
-
     /**
      * 保存 type
      */
     private String type;
-
 
     /**
      * 保存 retry config
      */
     private String retry;
 
-
     /**
      * 保存 data
      */
     private String data;
-
 
     /**
      * 根据给定对象创建 wrapper instance
@@ -43,60 +39,49 @@ public class SseEvent {
         return new SseEvent();
     }
 
-
     /**
      * 设置 id
      */
     public SseEvent id(String id) {
         this.id = id;
-
         append("id:").append(this.id).append("\n");
         return this;
     }
-
 
     /**
      * 设置 type
      */
     public SseEvent type(String type) {
         this.type = type;
-
         append("event:").append(this.type).append("\n");
         return this;
     }
-
 
     /**
      * 设置 reconnect time
      */
     public SseEvent reconnectTime(long reconnectTimeMillis) {
         this.retry = String.valueOf(reconnectTimeMillis);
-
         append("retry:").append(this.retry).append("\n");
         return this;
     }
-
 
     /**
      * 设置 data
      */
     public SseEvent data(String data) {
         this.data = data;
-
         append("data:").append(this.data).append("\n");
         return this;
     }
-
 
     /**
      * 设置 append
      */
     private SseEvent append(String text) {
-
         this.sb.append(text);
         return this;
     }
-
 
     /**
      * 构建 SseEvent instance
@@ -105,14 +90,12 @@ public class SseEvent {
         return append("\n").sb.toString();
     }
 
-
     /**
      * 返回 id
      */
     public String id() {
         return id;
     }
-
 
     /**
      * 返回 type
@@ -121,14 +104,12 @@ public class SseEvent {
         return type;
     }
 
-
     /**
      * 配置 retry behavior
      */
     public String retry() {
         return retry;
     }
-
 
     /**
      * 返回 data
@@ -137,10 +118,6 @@ public class SseEvent {
         return data;
     }
 
-
-    /**
-     * 返回当前对象的 string 表示
-     */
     @Override
     public String toString() {
         return build();

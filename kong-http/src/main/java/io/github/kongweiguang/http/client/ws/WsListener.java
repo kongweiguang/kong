@@ -1,13 +1,11 @@
 package io.github.kongweiguang.http.client.ws;
 
-import io.github.kongweiguang.http.client.HttpRequestSpec;
 import io.github.kongweiguang.http.client.Res;
+import io.github.kongweiguang.http.client.spec.WsReqSpec;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static io.github.kongweiguang.core.lang.Opt.ofNullable;
 
@@ -17,11 +15,8 @@ import static io.github.kongweiguang.core.lang.Opt.ofNullable;
  *
  * @author kongweiguang
  */
-public abstract class WSListener extends WebSocketListener {
-    /**
-     * 定义 log constant
-     */
-    private static final Logger log = LoggerFactory.getLogger(WSListener.class);
+public abstract class WsListener extends WebSocketListener {
+
     /**
      * 定义 WebSocket scheme name
      */
@@ -34,7 +29,7 @@ public abstract class WSListener extends WebSocketListener {
     public void onOpen(WebSocket webSocket, Response response) {
         this.ws = webSocket;
 
-        open(webSocket.request().tag(HttpRequestSpec.class), Res.of(response));
+        open(webSocket.request().tag(WsReqSpec.class), Res.of(response));
     }
 
     /**
@@ -44,7 +39,7 @@ public abstract class WSListener extends WebSocketListener {
     public void onMessage(WebSocket webSocket, String text) {
         this.ws = webSocket;
 
-        msg(webSocket.request().tag(HttpRequestSpec.class), text);
+        msg(webSocket.request().tag(WsReqSpec.class), text);
     }
 
     /**
@@ -54,7 +49,7 @@ public abstract class WSListener extends WebSocketListener {
     public void onMessage(WebSocket webSocket, ByteString bytes) {
         this.ws = webSocket;
 
-        msg(webSocket.request().tag(HttpRequestSpec.class), bytes.toByteArray());
+        msg(webSocket.request().tag(WsReqSpec.class), bytes.toByteArray());
     }
 
 
@@ -65,7 +60,7 @@ public abstract class WSListener extends WebSocketListener {
     public void onFailure(WebSocket webSocket, Throwable t, Response response) {
         this.ws = webSocket;
 
-        fail(webSocket.request().tag(HttpRequestSpec.class), Res.of(response), t);
+        fail(webSocket.request().tag(WsReqSpec.class), Res.of(response), t);
     }
 
 
@@ -76,7 +71,7 @@ public abstract class WSListener extends WebSocketListener {
     public void onClosing(WebSocket webSocket, int code, String reason) {
         this.ws = webSocket;
 
-        closing(webSocket.request().tag(HttpRequestSpec.class), code, reason);
+        closing(webSocket.request().tag(WsReqSpec.class), code, reason);
     }
 
 
@@ -87,14 +82,14 @@ public abstract class WSListener extends WebSocketListener {
     public void onClosed(WebSocket webSocket, int code, String reason) {
         this.ws = webSocket;
 
-        closed(webSocket.request().tag(HttpRequestSpec.class), code, reason);
+        closed(webSocket.request().tag(WsReqSpec.class), code, reason);
     }
 
 
     /**
      * 设置 send
      */
-    public WSListener send(String text) {
+    public WsListener send(String text) {
         return send(text.getBytes());
     }
 
@@ -102,7 +97,7 @@ public abstract class WSListener extends WebSocketListener {
     /**
      * 设置 send
      */
-    public WSListener send(byte[] bytes) {
+    public WsListener send(byte[] bytes) {
 
 
         ofNullable(ws).ifPresent(ws -> ws.send(ByteString.of(bytes)));
@@ -123,42 +118,42 @@ public abstract class WSListener extends WebSocketListener {
     /**
      * 执行 open 操作
      */
-    public void open(HttpRequestSpec req, Res res) {
+    public void open(WsReqSpec req, Res res) {
     }
 
 
     /**
      * 执行 msg 操作
      */
-    public void msg(HttpRequestSpec req, String text) {
+    public void msg(WsReqSpec req, String text) {
     }
 
 
     /**
      * 执行 msg 操作
      */
-    public void msg(HttpRequestSpec req, byte[] bytes) {
+    public void msg(WsReqSpec req, byte[] bytes) {
     }
 
 
     /**
      * 设置 failure callback
      */
-    public void fail(HttpRequestSpec req, Res res, Throwable t) {
+    public void fail(WsReqSpec req, Res res, Throwable t) {
     }
 
 
     /**
      * 执行 closing 操作
      */
-    public void closing(HttpRequestSpec req, int code, String reason) {
+    public void closing(WsReqSpec req, int code, String reason) {
     }
 
 
     /**
      * 执行 closed 操作
      */
-    public void closed(HttpRequestSpec req, int code, String reason) {
+    public void closed(WsReqSpec req, int code, String reason) {
     }
 
 }

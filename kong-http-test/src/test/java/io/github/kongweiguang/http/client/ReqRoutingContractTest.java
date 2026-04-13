@@ -3,9 +3,12 @@ package io.github.kongweiguang.http.client;
 import io.github.kongweiguang.http.client.consts.Method;
 import io.github.kongweiguang.http.client.core.ReqType;
 import io.github.kongweiguang.http.client.exception.KongHttpRuntimeException;
-import io.github.kongweiguang.http.client.sse.SSEListener;
+import io.github.kongweiguang.http.client.spec.ReqSpec;
+import io.github.kongweiguang.http.client.spec.SseReqSpec;
+import io.github.kongweiguang.http.client.spec.WsReqSpec;
 import io.github.kongweiguang.http.client.sse.SseEvent;
-import io.github.kongweiguang.http.client.ws.WSListener;
+import io.github.kongweiguang.http.client.sse.SseListener;
+import io.github.kongweiguang.http.client.ws.WsListener;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -17,8 +20,8 @@ class ReqRoutingContractTest {
 
     @Test
     void shouldInitializeReqTypeForWsAndSse() {
-        HttpRequestSpec ws = Req.ws("ws://127.0.0.1:1/ws");
-        HttpRequestSpec sse = Req.sse("http://127.0.0.1:1/sse");
+        WsReqSpec ws = Req.ws("ws://127.0.0.1:1/ws");
+        SseReqSpec sse = Req.sse("http://127.0.0.1:1/sse");
 
         Assertions.assertEquals(ReqType.ws, ws.reqType());
         Assertions.assertEquals(ReqType.sse, sse.reqType());
@@ -26,10 +29,10 @@ class ReqRoutingContractTest {
 
     @Test
     void shouldNotExposePublicReqTypeSetter() {
-        boolean hasPublicReqTypeSetter = Arrays.stream(HttpRequestSpec.class.getMethods())
+        boolean hasPublicReqTypeSetter = Arrays.stream(ReqSpec.class.getMethods())
                 .anyMatch(m -> m.getName().equals("reqType")
-                        && m.getParameterCount() == 1
-                        && m.getParameterTypes()[0] == ReqType.class);
+                               && m.getParameterCount() == 1
+                               && m.getParameterTypes()[0] == ReqType.class);
 
         Assertions.assertFalse(hasPublicReqTypeSetter);
     }
@@ -38,7 +41,7 @@ class ReqRoutingContractTest {
     void shouldRouteByReqTypeEvenWhenMethodChanged() throws Exception {
         ExecutionException wsError = Assertions.assertThrows(ExecutionException.class, () -> Req.ws("ws://127.0.0.1:1/ws")
                 .method(Method.POST)
-                .wsListener(new WSListener() {
+                .wsListener(new WsListener() {
                 })
                 .<Object>okAsync()
                 .get(2, TimeUnit.SECONDS));
@@ -48,9 +51,9 @@ class ReqRoutingContractTest {
         try {
             Object value = Req.sse("http://127.0.0.1:1/sse")
                     .method(Method.POST)
-                    .sseListener(new SSEListener() {
+                    .sseListener(new SseListener() {
                         @Override
-                        public void event(HttpRequestSpec req, SseEvent msg) {
+                        public void event(SseReqSpec req, SseEvent msg) {
                         }
                     })
                     .<Object>okAsync()

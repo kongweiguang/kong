@@ -1,10 +1,9 @@
 package io.github.kongweiguang.http.client.executor;
 
-import io.github.kongweiguang.http.client.HttpRequestSpec;
 import io.github.kongweiguang.http.client.Res;
-import io.github.kongweiguang.http.client.ResultHandler;
 import io.github.kongweiguang.http.client.pipeline.RequestPipeline;
-import io.github.kongweiguang.http.client.retry.RetryPolicy;
+import io.github.kongweiguang.http.client.retry.RequestRetryExecutor;
+import io.github.kongweiguang.http.client.spec.HttpReqSpec;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
@@ -13,15 +12,15 @@ import okhttp3.Request;
  *
  * @author kongweiguang
  */
-public final class HttpExecutor extends AbstractExecutor<Res> {
+public final class HttpExecutor extends AbstractExecutor<HttpReqSpec, Res> {
 
-    private static final RequestPipeline PIPELINE = new RequestPipeline();
+    private static final RequestPipeline<HttpReqSpec> PIPELINE = RequestPipeline.http();
 
     /**
      * 创建 HttpExecutor instance
      */
-    public HttpExecutor(HttpRequestSpec spec, OkHttpClient client, RetryPolicy<Res> retryPolicy, ResultHandler<Res> handler) {
-        super(spec, client, retryPolicy, handler);
+    public HttpExecutor(HttpReqSpec spec, OkHttpClient client, RequestRetryExecutor<Res> retryExecutor) {
+        super(spec, client, retryExecutor);
     }
 
     /**
@@ -33,4 +32,3 @@ public final class HttpExecutor extends AbstractExecutor<Res> {
         return Res.of(client().newCall(request).execute());
     }
 }
-

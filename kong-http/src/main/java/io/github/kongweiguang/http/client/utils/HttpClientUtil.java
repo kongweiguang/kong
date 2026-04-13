@@ -3,6 +3,7 @@ package io.github.kongweiguang.http.client.utils;
 import io.github.kongweiguang.http.client.consts.Const;
 import io.github.kongweiguang.http.client.core.ReqLog;
 import io.github.kongweiguang.http.client.exception.KongHttpRuntimeException;
+import okhttp3.HttpUrl;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 import java.util.Map;
@@ -30,45 +31,45 @@ public final class HttpClientUtil {
      */
     public static String fixUrl(String url) {
         if (isNull(url) || url.trim().isEmpty()) {
-            return Const._http + Const.localhost;
+            return Const.HTTP_PREFIX + Const.LOCALHOST;
         }
 
         url = url.trim();
         String lower = url.toLowerCase();
 
-        if (lower.startsWith(Const._http) || lower.startsWith(Const._https)) {
+        if (lower.startsWith(Const.HTTP_PREFIX) || lower.startsWith(Const.HTTPS_PREFIX)) {
             int idx = url.indexOf("://");
             return lower.substring(0, idx + 3) + url.substring(idx + 3);
         }
 
-        if (lower.startsWith(Const._ws)) {
-            return Const._http + url.substring(Const._ws.length());
+        if (lower.startsWith(Const.WS_PREFIX)) {
+            return Const.HTTP_PREFIX + url.substring(Const.WS_PREFIX.length());
         }
 
-        if (lower.startsWith(Const._wss)) {
-            return Const._https + url.substring(Const._wss.length());
+        if (lower.startsWith(Const.WSS_PREFIX)) {
+            return Const.HTTPS_PREFIX + url.substring(Const.WSS_PREFIX.length());
         }
 
         if (url.startsWith("//")) {
-            return Const._http + url.substring(2);
+            return Const.HTTP_PREFIX + url.substring(2);
         }
 
         if (url.startsWith("/")) {
-            return Const._http + Const.localhost + url;
+            return Const.HTTP_PREFIX + Const.LOCALHOST + url;
         }
 
         if (url.startsWith("?") || url.startsWith("#")) {
-            return Const._http + Const.localhost + "/" + url;
+            return Const.HTTP_PREFIX + Const.LOCALHOST + "/" + url;
         }
 
         boolean likelyHost = url.contains(".")
                              || url.startsWith("localhost")
                              || url.matches("^\\d+\\.\\d+\\.\\d+\\.\\d+(:\\d+)?(/.*)?$");
         if (likelyHost) {
-            return Const._http + url;
+            return Const.HTTP_PREFIX + url;
         }
 
-        return Const._http + Const.localhost + "/" + url;
+        return Const.HTTP_PREFIX + Const.LOCALHOST + "/" + url;
     }
 
 
@@ -76,7 +77,7 @@ public final class HttpClientUtil {
      * 判断 URL 是否使用 HTTP scheme
      */
     public static boolean isHttp(String url) {
-        return nonNull(url) && url.toLowerCase().startsWith(Const._http);
+        return nonNull(url) && url.toLowerCase().startsWith(Const.HTTP_PREFIX);
     }
 
 
@@ -84,7 +85,7 @@ public final class HttpClientUtil {
      * 判断 URL 是否使用 HTTPS scheme
      */
     public static boolean isHttps(String url) {
-        return nonNull(url) && url.toLowerCase().startsWith(Const._https);
+        return nonNull(url) && url.toLowerCase().startsWith(Const.HTTPS_PREFIX);
     }
 
 
@@ -92,7 +93,7 @@ public final class HttpClientUtil {
      * 判断 URL 是否使用 WebSocket scheme
      */
     public static boolean isWs(String url) {
-        return nonNull(url) && url.toLowerCase().startsWith(Const._ws);
+        return nonNull(url) && url.toLowerCase().startsWith(Const.WS_PREFIX);
     }
 
 
@@ -100,9 +101,23 @@ public final class HttpClientUtil {
      * 判断 URL 是否使用 secure WebSocket scheme
      */
     public static boolean isWss(String url) {
-        return nonNull(url) && url.toLowerCase().startsWith(Const._wss);
+        return nonNull(url) && url.toLowerCase().startsWith(Const.WSS_PREFIX);
     }
 
+    /**
+     * 解析url为builder
+     *
+     * @param url
+     * @return
+     */
+    public static HttpUrl.Builder parseUrlBuilder(String url) {
+        String fixed = fixUrl(url == null ? null : url.trim());
+        HttpUrl parsed = HttpUrl.parse(fixed);
+        if (parsed == null) {
+            throw new KongHttpRuntimeException("invalid url: " + url);
+        }
+        return parsed.newBuilder();
+    }
 
     /**
      * 将 Cookie map 转换为 header string

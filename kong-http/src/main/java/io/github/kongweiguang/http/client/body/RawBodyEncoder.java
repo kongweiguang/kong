@@ -1,6 +1,6 @@
 package io.github.kongweiguang.http.client.body;
 
-import io.github.kongweiguang.http.client.HttpRequestSpec;
+import io.github.kongweiguang.http.client.spec.HttpReqSpec;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
@@ -17,7 +17,7 @@ public final class RawBodyEncoder implements BodyEncoder {
      * 按请求内容类型编码原始字节请求体。
      */
     @Override
-    public RequestBody encode(HttpRequestSpec spec) {
+    public RequestBody encode(HttpReqSpec spec) {
         if (isNull(spec.body())) {
             return null;
         }

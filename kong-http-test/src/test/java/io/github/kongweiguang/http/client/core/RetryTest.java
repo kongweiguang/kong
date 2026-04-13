@@ -1,6 +1,5 @@
 package io.github.kongweiguang.http.client.core;
 
-import io.github.kongweiguang.core.lang.Pair;
 import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.Res;
 import org.junit.jupiter.api.Test;
@@ -25,14 +24,7 @@ public class RetryTest {
         Res res = Req.get("http://localhost:8080/error")
                 .query("a", "1")
                 .retry(retry -> retry.maxAttempts(3)
-                        .delay(Duration.ofSeconds(2))
-                        .predicate((r, t) -> {
-                            String str = r.str();
-                            if (str.length() > 10) {
-                                return Pair.of(false, r);
-                            }
-                            return Pair.of(true, r);
-                        }))
+                        .delay(Duration.ofSeconds(2)))
                 .ok();
         System.out.println("res.str() = " + res.str());
     }

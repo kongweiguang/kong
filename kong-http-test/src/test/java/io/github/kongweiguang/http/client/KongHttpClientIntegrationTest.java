@@ -25,8 +25,8 @@ class KongHttpClientIntegrationTest {
 
             Res res = Req.of(server.url("/hello").toString())
                     .method(Method.POST)
-                    .contentType(ContentType.JSON.v())
-                    .body("{}")
+                    .contentType(ContentType.JSON.value())
+                    .json("{}")
                     .success(successRes -> {
                         status.set(successRes.code());
                         done.countDown();

@@ -1,22 +1,24 @@
 package io.github.kongweiguang.http.client.consts;
 
 /**
- * http请求中涉及到的常量
+ * HTTP 相关的公共字符串常量。
  *
  * @author kongweiguang
  */
-public interface Const {
+public final class Const {
 
-    String http = "http";
-    String https = "https";
-    String _http = "http://";
-    String _https = "https://";
+    public static final String HTTP = "http";
+    public static final String HTTPS = "https";
+    public static final String HTTP_PREFIX = "http://";
+    public static final String HTTPS_PREFIX = "https://";
 
-    String ws = "ws";
-    String wss = "wss";
-    String _ws = "ws://";
-    String _wss = "wss://";
+    public static final String WS = "ws";
+    public static final String WSS = "wss";
+    public static final String WS_PREFIX = "ws://";
+    public static final String WSS_PREFIX = "wss://";
 
-    String localhost = "localhost";
+    public static final String LOCALHOST = "localhost";
 
+    private Const() {
+    }
 }

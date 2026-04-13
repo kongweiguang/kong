@@ -1,6 +1,6 @@
 package io.github.kongweiguang.http.client.pipeline;
 
-import io.github.kongweiguang.http.client.HttpRequestSpec;
+import io.github.kongweiguang.http.client.spec.ReqSpec;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
@@ -9,17 +9,17 @@ import okhttp3.RequestBody;
  *
  * @author kongweiguang
  */
-public final class RequestBuildContext {
+public final class RequestBuildContext<S extends ReqSpec<?, ?>> {
 
     /**
      * 保存 spec
      */
-    private final HttpRequestSpec spec;
+    private final S spec;
 
     /**
      * 保存 builder
      */
-    private final Request.Builder builder = new Request.Builder();
+    private final Request.Builder builder;
 
     /**
      * 保存 request body
@@ -35,15 +35,16 @@ public final class RequestBuildContext {
     /**
      * 创建 RequestBuildContext instance
      */
-    public RequestBuildContext(HttpRequestSpec spec) {
+    public RequestBuildContext(S spec) {
         this.spec = spec;
+        this.builder = spec.builder();
     }
 
 
     /**
      * 返回 spec
      */
-    public HttpRequestSpec spec() {
+    public S spec() {
         return spec;
     }
 

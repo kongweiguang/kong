@@ -20,7 +20,7 @@ public class BodyTest {
     @Test
     public void test1() throws Exception {
         Res res = Req.post("http://localhost:8080/post_body")
-                //自动会将对象转成json字符串，使用jackson
+                // 自动将对象转成 JSON 字符串
                 .json(user)
                 .ok();
 
@@ -30,8 +30,8 @@ public class BodyTest {
     @Test
     public void test2() throws Exception {
         Res res = Req.post("http://localhost:8080/post_body")
-                //自动会将对象转成json字符串，使用jackson
-                .body("text", ContentType.TEXT_PLAIN.v())
+                // 直接发送纯文本内容
+                .body("text", ContentType.TEXT_PLAIN.value())
                 .ok();
         System.out.println("res.str() = " + res.str());
     }

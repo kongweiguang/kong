@@ -1,9 +1,8 @@
 package io.github.kongweiguang.http.client.executor;
 
-import io.github.kongweiguang.http.client.HttpRequestSpec;
-import io.github.kongweiguang.http.client.ResultHandler;
 import io.github.kongweiguang.http.client.pipeline.RequestPipeline;
-import io.github.kongweiguang.http.client.retry.RetryPolicy;
+import io.github.kongweiguang.http.client.retry.RequestRetryExecutor;
+import io.github.kongweiguang.http.client.spec.WsReqSpec;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.WebSocket;
@@ -13,20 +12,18 @@ import okhttp3.WebSocket;
  *
  * @author kongweiguang
  */
-public final class WSExecutor extends AbstractExecutor<WebSocket> {
-
+public final class WsExecutor extends AbstractExecutor<WsReqSpec, WebSocket> {
 
     /**
      * 定义 pipeline constant
      */
-    private static final RequestPipeline PIPELINE = new RequestPipeline();
-
+    private static final RequestPipeline<WsReqSpec> PIPELINE = RequestPipeline.ws();
 
     /**
      * 创建 WSExecutor instance
      */
-    public WSExecutor(HttpRequestSpec spec, OkHttpClient client, RetryPolicy<WebSocket> retryPolicy, ResultHandler<WebSocket> handler) {
-        super(spec, client, retryPolicy, handler);
+    public WsExecutor(WsReqSpec spec, OkHttpClient client, RequestRetryExecutor<WebSocket> retryExecutor) {
+        super(spec, client, retryExecutor);
     }
 
     /**
@@ -38,4 +35,3 @@ public final class WSExecutor extends AbstractExecutor<WebSocket> {
         return client().newWebSocket(request, spec().wsListener());
     }
 }
-

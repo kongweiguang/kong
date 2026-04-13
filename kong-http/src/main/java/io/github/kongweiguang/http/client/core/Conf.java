@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import static io.github.kongweiguang.core.lang.Assert.isTrue;
 import static io.github.kongweiguang.core.lang.Assert.notNull;
@@ -24,6 +25,8 @@ import static java.util.Objects.nonNull;
  * @author kongweiguang
  */
 public class Conf {
+
+    private static final Executor def = Executors.newVirtualThreadPerTaskExecutor();
 
     /**
      * 定义 global constant
@@ -54,8 +57,7 @@ public class Conf {
     /**
      * 保存 exec
      */
-    private Executor exec;
-
+    private Executor exec = def;
 
     /**
      * 保存 connection pool
@@ -292,7 +294,7 @@ public class Conf {
 
         notNull(password, "password must not be null");
         this.proxyAuthenticator = (route, response) -> response.request().newBuilder()
-                .header(Header.PROXY_AUTHORIZATION.v(), Credentials.basic(username, password, StandardCharsets.UTF_8))
+                .header(Header.PROXY_AUTHORIZATION.value(), Credentials.basic(username, password, StandardCharsets.UTF_8))
 
                 .build();
         return this;

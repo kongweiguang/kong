@@ -1,25 +1,23 @@
 package io.github.kongweiguang.http.client.executor;
 
-import io.github.kongweiguang.http.client.HttpRequestSpec;
-import io.github.kongweiguang.http.client.ResultHandler;
 import io.github.kongweiguang.http.client.exception.KongHttpRuntimeException;
-import io.github.kongweiguang.http.client.retry.RetryPolicy;
+import io.github.kongweiguang.http.client.retry.RequestRetryExecutor;
+import io.github.kongweiguang.http.client.spec.ReqSpec;
 import okhttp3.OkHttpClient;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 /**
  * HTTP/SSE/WS 共用的执行模板。
  *
  * @author kongweiguang
  */
-public abstract class AbstractExecutor<R> {
+public abstract class AbstractExecutor<S extends ReqSpec<?, ?>, R> {
 
     /**
      * 保存 spec
      */
-    private final HttpRequestSpec spec;
+    private final S spec;
 
     /**
      * 保存 client
@@ -27,57 +25,42 @@ public abstract class AbstractExecutor<R> {
     private final OkHttpClient client;
 
     /**
-     * 保存 retry policy
+     * 保存 retry executor
      */
-    private final RetryPolicy<R> retryPolicy;
-
-    /**
-     * 保存 handler
-     */
-    private final ResultHandler<R> handler;
+    private final RequestRetryExecutor<R> retryExecutor;
 
 
     /**
      * 创建 AbstractExecutor instance
      */
-    protected AbstractExecutor(HttpRequestSpec spec, OkHttpClient client, RetryPolicy<R> retryPolicy, ResultHandler<R> handler) {
-        this.spec = spec;
+    protected AbstractExecutor(S builder, OkHttpClient client, RequestRetryExecutor<R> retryExecutor) {
+        this.spec = builder;
         this.client = client;
-        this.retryPolicy = retryPolicy;
-        this.handler = handler;
+        this.retryExecutor = retryExecutor;
     }
-
-    /**
-     * 返回 execute async
-     */
-    public final CompletableFuture<R> executeAsync() {
-        Executor executor = spec.conf() == null ? null : spec.conf().exec();
-        if (executor == null) {
-            return CompletableFuture.supplyAsync(this::executeBlocking);
-        }
-        return CompletableFuture.supplyAsync(this::executeBlocking, executor);
-    }
-
 
     /**
      * 返回 execute blocking
      */
     public final R executeBlocking() {
         try {
-            R result = retryPolicy.execute(this::execute0);
-            handler.onSuccess(result);
-            return result;
+            return retryExecutor.execute(this::execute0);
         } catch (Throwable error) {
-            handler.onFailure(error);
             throw new KongHttpRuntimeException(error);
         }
     }
 
+    /**
+     * 返回 execute async
+     */
+    public final CompletableFuture<R> executeAsync() {
+        return CompletableFuture.supplyAsync(this::executeBlocking, spec.conf().exec());
+    }
 
     /**
      * 返回 spec
      */
-    protected HttpRequestSpec spec() {
+    protected S spec() {
         return spec;
     }
 
@@ -94,5 +77,5 @@ public abstract class AbstractExecutor<R> {
      * 返回 execute core
      */
     protected abstract R execute0() throws Exception;
-}
 
+}

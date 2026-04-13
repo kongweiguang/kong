@@ -124,7 +124,7 @@ Res res = Req.post("https://httpbin.org/post")
 
 ```java
 Res res = Req.post("https://httpbin.org/post")
-        .body("plain text body", ContentType.TEXT_PLAIN.v())
+        .body("plain text body", ContentType.TEXT_PLAIN.value())
         .ok();
 ```
 

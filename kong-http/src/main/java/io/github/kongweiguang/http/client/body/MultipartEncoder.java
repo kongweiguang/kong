@@ -1,7 +1,7 @@
 package io.github.kongweiguang.http.client.body;
 
-import io.github.kongweiguang.http.client.HttpRequestSpec;
 import io.github.kongweiguang.http.client.entity.FilePart;
+import io.github.kongweiguang.http.client.spec.HttpReqSpec;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -17,7 +17,7 @@ public final class MultipartEncoder implements BodyEncoder {
      * 将表单字段与文件分片编码为 multipart 请求体。
      */
     @Override
-    public RequestBody encode(HttpRequestSpec spec) {
+    public RequestBody encode(HttpReqSpec spec) {
         MultipartBody.Builder mb = new MultipartBody.Builder()
                 .setType(MediaType.parse(spec.contentType()));
 

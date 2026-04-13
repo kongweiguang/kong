@@ -1,7 +1,6 @@
 package io.github.kongweiguang.socket.nio.client;
 
 import io.github.kongweiguang.core.utils.IoUtil;
-import io.github.kongweiguang.core.threads.ThreadPools;
 import io.github.kongweiguang.socket.nio.common.SocketHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,7 +143,7 @@ public class NioClient implements AutoCloseable {
      * 启动事件循环
      */
     private void startEventLoop() {
-        ThreadPools.virtualPool.execute(() -> {
+        Thread.ofVirtual().start(() -> {
             try {
                 while (running && selector.isOpen() && selector.select() != 0) {
                     Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();

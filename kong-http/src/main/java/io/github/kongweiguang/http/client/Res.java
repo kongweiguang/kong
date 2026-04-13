@@ -141,7 +141,7 @@ public class Res implements AutoCloseable {
      * 返回 contentEncoding
      */
     public String contentEncoding() {
-        return header(Header.CONTENT_ENCODING.v());
+        return header(Header.CONTENT_ENCODING.value());
     }
 
 
@@ -157,7 +157,7 @@ public class Res implements AutoCloseable {
      * 返回 cookieStr string
      */
     public String cookieStr() {
-        return header(Header.COOKIE.v());
+        return header(Header.COOKIE.value());
     }
 
 

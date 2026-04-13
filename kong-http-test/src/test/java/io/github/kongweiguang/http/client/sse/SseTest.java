@@ -1,9 +1,10 @@
 package io.github.kongweiguang.http.client.sse;
 
 import io.github.kongweiguang.core.threads.Threads;
-import io.github.kongweiguang.http.client.HttpRequestSpec;
 import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.Res;
+import io.github.kongweiguang.http.client.spec.ReqSpec;
+import io.github.kongweiguang.http.client.spec.SseReqSpec;
 import okhttp3.Request;
 import okhttp3.sse.EventSource;
 import org.junit.jupiter.api.Test;
@@ -15,9 +16,9 @@ public class SseTest {
 
     @Test
     void test() throws InterruptedException {
-        SSEListener listener = new SSEListener() {
+        SseListener listener = new SseListener() {
             @Override
-            public void event(HttpRequestSpec req, SseEvent msg) {
+            public void event(SseReqSpec req, SseEvent msg) {
                 System.out.println("sse -> " + msg.id());
                 System.out.println("sse -> " + msg.type());
                 System.out.println("sse -> " + msg.data());
@@ -27,18 +28,18 @@ public class SseTest {
             }
 
             @Override
-            public void open(HttpRequestSpec req, Res res) {
+            public void open(SseReqSpec req, Res res) {
                 System.out.println(req);
                 System.out.println(res);
             }
 
             @Override
-            public void fail(HttpRequestSpec req, Res res, Throwable t) {
+            public void fail(SseReqSpec req, Res res, Throwable t) {
                 System.out.println("fail" + t);
             }
 
             @Override
-            public void closed(HttpRequestSpec req) {
+            public void closed(SseReqSpec req) {
                 System.out.println("close");
             }
         };

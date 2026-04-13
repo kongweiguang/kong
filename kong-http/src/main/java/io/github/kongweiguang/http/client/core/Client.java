@@ -25,7 +25,7 @@ public class Client {
     /**
      * 定义 dispatcher supplier constant
      */
-    private static final Supplier<Dispatcher> DISPATCHER_SUPPLIER = () -> {
+    public static final Supplier<Dispatcher> DISPATCHER_SUPPLIER = () -> {
         Dispatcher dis = new Dispatcher();
         dis.setMaxRequests(1 << 20);
         dis.setMaxRequestsPerHost(1 << 20);
@@ -36,7 +36,7 @@ public class Client {
     /**
      * 定义 default client constant
      */
-    private static final OkHttpClient DEFAULT_CLIENT = new OkHttpClient.Builder()
+    public static final OkHttpClient DEFAULT_CLIENT = new OkHttpClient.Builder()
             .dispatcher(DISPATCHER_SUPPLIER.get())
             .connectTimeout(ofMinutes(1))
             .writeTimeout(ofMinutes(1))
@@ -77,14 +77,6 @@ public class Client {
                     .writeTimeout(timeout.write())
                     .readTimeout(timeout.read()))
     );
-
-
-    /**
-     * 根据给定对象创建 wrapper instance
-     */
-    public static OkHttpClient of() {
-        return of(Conf.global());
-    }
 
 
     /**

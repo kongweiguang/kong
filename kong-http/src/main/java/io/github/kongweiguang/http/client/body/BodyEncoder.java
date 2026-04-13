@@ -1,6 +1,6 @@
 package io.github.kongweiguang.http.client.body;
 
-import io.github.kongweiguang.http.client.HttpRequestSpec;
+import io.github.kongweiguang.http.client.spec.HttpReqSpec;
 import okhttp3.RequestBody;
 
 /**
@@ -9,6 +9,6 @@ import okhttp3.RequestBody;
  * @author kongweiguang
  */
 public interface BodyEncoder {
-    RequestBody encode(HttpRequestSpec spec);
+    RequestBody encode(HttpReqSpec spec);
 }
 

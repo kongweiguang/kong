@@ -7,10 +7,10 @@ import java.util.concurrent.Callable;
  *
  * @author kongweiguang
  */
-public final class NoRetryPolicy<R> implements RetryPolicy<R> {
+public final class NoRetryExecutor<R> implements RequestRetryExecutor<R> {
 
     /**
-     * 处理 execute 数据
+     * 直接执行任务，不引入额外重试逻辑。
      */
     @Override
     public R execute(Callable<R> task) throws Exception {

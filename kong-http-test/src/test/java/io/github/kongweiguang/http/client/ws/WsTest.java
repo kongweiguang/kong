@@ -1,9 +1,9 @@
 package io.github.kongweiguang.http.client.ws;
 
 import io.github.kongweiguang.core.threads.Threads;
-import io.github.kongweiguang.http.client.HttpRequestSpec;
 import io.github.kongweiguang.http.client.Req;
 import io.github.kongweiguang.http.client.Res;
+import io.github.kongweiguang.http.client.spec.WsReqSpec;
 import okhttp3.WebSocket;
 import org.junit.jupiter.api.Test;
 
@@ -11,19 +11,19 @@ public class WsTest {
 
     @Test
     public void test() {
-        WSListener listener = new WSListener() {
+        WsListener listener = new WsListener() {
             @Override
-            public void open(HttpRequestSpec req, Res res) {
+            public void open(WsReqSpec req, Res res) {
                 this.ws.send("123");
             }
 
             @Override
-            public void msg(HttpRequestSpec req, String text) {
+            public void msg(WsReqSpec req, String text) {
                 System.out.println(text);
             }
 
             @Override
-            public void closed(HttpRequestSpec req, int code, String reason) {
+            public void closed(WsReqSpec req, int code, String reason) {
                 System.out.println(reason);
             }
         };

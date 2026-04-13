@@ -1,9 +1,8 @@
 package io.github.kongweiguang.http.client.executor;
 
-import io.github.kongweiguang.http.client.HttpRequestSpec;
-import io.github.kongweiguang.http.client.ResultHandler;
+import io.github.kongweiguang.http.client.spec.SseReqSpec;
 import io.github.kongweiguang.http.client.pipeline.RequestPipeline;
-import io.github.kongweiguang.http.client.retry.RetryPolicy;
+import io.github.kongweiguang.http.client.retry.RequestRetryExecutor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.sse.EventSource;
@@ -14,15 +13,15 @@ import okhttp3.sse.EventSources;
  *
  * @author kongweiguang
  */
-public final class SSEExecutor extends AbstractExecutor<EventSource> {
+public final class SseExecutor extends AbstractExecutor<SseReqSpec, EventSource> {
 
-    private static final RequestPipeline PIPELINE = new RequestPipeline();
+    private static final RequestPipeline<SseReqSpec> PIPELINE = RequestPipeline.sse();
 
     /**
      * 创建 SSEExecutor instance
      */
-    public SSEExecutor(HttpRequestSpec spec, OkHttpClient client, RetryPolicy<EventSource> retryPolicy, ResultHandler<EventSource> handler) {
-        super(spec, client, retryPolicy, handler);
+    public SseExecutor(SseReqSpec spec, OkHttpClient client, RequestRetryExecutor<EventSource> retryExecutor) {
+        super(spec, client, retryExecutor);
     }
 
     /**
@@ -34,4 +33,3 @@ public final class SSEExecutor extends AbstractExecutor<EventSource> {
         return EventSources.createFactory(client()).newEventSource(request, spec().sseListener());
     }
 }
-

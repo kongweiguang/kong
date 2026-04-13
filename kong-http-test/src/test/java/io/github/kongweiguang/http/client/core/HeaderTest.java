@@ -16,11 +16,11 @@ public class HeaderTest {
     void test1() throws Exception {
         final Res res = Req.get("http://localhost:8080/header")
                 //contentype
-                .contentType(ContentType.JSON.v())
+                .contentType(ContentType.JSON.value())
                 //charset
                 .charset(StandardCharsets.UTF_8)
                 //user-agent
-                .userAgent(UserAgent.Mac.chrome.v())
+                .userAgent(UserAgent.MacOS.CHROME.value())
                 //authorization
                 .auth("auth qwe")
                 //authorization bearer

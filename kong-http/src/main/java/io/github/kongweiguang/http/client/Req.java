@@ -1,184 +1,187 @@
 package io.github.kongweiguang.http.client;
 
+
 import io.github.kongweiguang.http.client.consts.ContentType;
 import io.github.kongweiguang.http.client.consts.Method;
 import io.github.kongweiguang.http.client.core.ReqType;
+import io.github.kongweiguang.http.client.spec.HttpReqSpec;
+import io.github.kongweiguang.http.client.spec.SseReqSpec;
+import io.github.kongweiguang.http.client.spec.WsReqSpec;
 
 /**
- * 请求入口
+ * 基于okhttp封装的http请求工具
  *
  * @author kongweiguang
  */
 public final class Req {
 
-    /**
-     * 创建 Req instance
-     */
     private Req() {
     }
 
     /**
-     * 创建一个空的 HTTP 请求构建器
+     * 创建 HTTP 请求构建器。
      *
-     * @return 请求构建器
+     * @return HTTP 请求构建器
      */
-    public static HttpRequestSpec of() {
-        return new HttpRequestSpec();
+    public static HttpReqSpec of() {
+        return new HttpReqSpec();
     }
 
     /**
-     * 创建一个带目标地址的 HTTP 请求构建器
+     * 创建 HTTP 请求构建器。
      *
      * @param url 请求地址
-     * @return 请求构建器
+     * @return HTTP 请求构建器
      */
-    public static HttpRequestSpec of(String url) {
+    public static HttpReqSpec of(String url) {
         return of().url(url);
     }
 
     /**
-     * 创建 GET 请求构建器
+     * 创建 GET 请求。
      *
      * @param url 请求地址
-     * @return 请求构建器
+     * @return HTTP 请求构建器
      */
-    public static HttpRequestSpec get(String url) {
+    public static HttpReqSpec get(String url) {
         return method(Method.GET, url);
     }
 
     /**
-     * 创建 POST 请求构建器
+     * 创建 POST 请求。
      *
      * @param url 请求地址
-     * @return 请求构建器
+     * @return HTTP 请求构建器
      */
-    public static HttpRequestSpec post(String url) {
+    public static HttpReqSpec post(String url) {
         return method(Method.POST, url);
     }
 
     /**
-     * 创建 DELETE 请求构建器
+     * 创建 DELETE 请求。
      *
      * @param url 请求地址
-     * @return 请求构建器
+     * @return HTTP 请求构建器
      */
-    public static HttpRequestSpec delete(String url) {
+    public static HttpReqSpec delete(String url) {
         return method(Method.DELETE, url);
     }
 
     /**
-     * 创建 PUT 请求构建器
+     * 创建 PUT 请求。
      *
      * @param url 请求地址
-     * @return 请求构建器
+     * @return HTTP 请求构建器
      */
-    public static HttpRequestSpec put(String url) {
+    public static HttpReqSpec put(String url) {
         return method(Method.PUT, url);
     }
 
     /**
-     * 创建 PATCH 请求构建器
+     * 创建 PATCH 请求。
      *
      * @param url 请求地址
-     * @return 请求构建器
+     * @return HTTP 请求构建器
      */
-    public static HttpRequestSpec patch(String url) {
+    public static HttpReqSpec patch(String url) {
         return method(Method.PATCH, url);
     }
 
     /**
-     * 创建 HEAD 请求构建器
+     * 创建 HEAD 请求。
      *
      * @param url 请求地址
-     * @return 请求构建器
+     * @return HTTP 请求构建器
      */
-    public static HttpRequestSpec head(String url) {
+    public static HttpReqSpec head(String url) {
         return method(Method.HEAD, url);
     }
 
     /**
-     * 创建 OPTIONS 请求构建器
+     * 创建 OPTIONS 请求。
      *
      * @param url 请求地址
-     * @return 请求构建器
+     * @return HTTP 请求构建器
      */
-    public static HttpRequestSpec options(String url) {
+    public static HttpReqSpec options(String url) {
         return method(Method.OPTIONS, url);
     }
 
     /**
-     * 创建 TRACE 请求构建器
+     * 创建 TRACE 请求。
      *
      * @param url 请求地址
-     * @return 请求构建器
+     * @return HTTP 请求构建器
      */
-    public static HttpRequestSpec trace(String url) {
+    public static HttpReqSpec trace(String url) {
         return method(Method.TRACE, url);
     }
 
     /**
-     * 创建 CONNECT 请求构建器
+     * 创建 CONNECT 请求。
      *
      * @param url 请求地址
-     * @return 请求构建器
+     * @return HTTP 请求构建器
      */
-    public static HttpRequestSpec connect(String url) {
+    public static HttpReqSpec connect(String url) {
         return method(Method.CONNECT, url);
     }
 
     /**
-     * 创建一个以 {@code application/x-www-form-urlencoded} 作为内容类型的 POST 请求构建器
+     * 创建 application/x-www-form-urlencoded 表单请求。
      *
      * @param url 请求地址
-     * @return 请求构建器
+     * @return HTTP 请求构建器
      */
-    public static HttpRequestSpec formUrlencoded(String url) {
-        return post(url).contentType(ContentType.FORM_URLENCODED.v());
+    public static HttpReqSpec formUrlencoded(String url) {
+        return post(url).contentType(ContentType.FORM_URLENCODED.value());
     }
 
     /**
-     * 创建一个以 {@code multipart/form-data} 作为内容类型的 POST 请求构建器
+     * 创建 multipart/form-data 表单请求。
      *
      * @param url 请求地址
-     * @return 请求构建器
+     * @return HTTP 请求构建器
      */
-    public static HttpRequestSpec multipart(String url) {
-        return post(url).contentType(ContentType.MULTIPART.v());
+    public static HttpReqSpec multipart(String url) {
+        return post(url).contentType(ContentType.MULTIPART.value());
     }
 
     /**
-     * 创建 WebSocket 请求构建器
+     * 按指定请求方法创建 HTTP 请求。
      *
-     * @param url 请求地址
-     * @return 请求构建器
-     */
-    public static HttpRequestSpec ws(String url) {
-        return get(url)
-                .reqType(ReqType.ws)
-                .method(Method.GET);
-    }
-
-    /**
-     * 创建 SSE 请求构建器
-     *
-     * @param url 请求地址
-     * @return 请求构建器
-     */
-    public static HttpRequestSpec sse(String url) {
-        return get(url)
-                .reqType(ReqType.sse)
-                .method(Method.GET)
-                .contentType(ContentType.EVENT_STREAM.v());
-    }
-
-    /**
-     * 以指定 method 创建请求构建器。
-     *
-     * @param method HTTP method
+     * @param method 请求方法
      * @param url    请求地址
-     * @return 请求构建器
+     * @return HTTP 请求构建器
      */
-    private static HttpRequestSpec method(Method method, String url) {
+    private static HttpReqSpec method(Method method, String url) {
         return of(url).method(method);
     }
+
+    /**
+     * 创建 WebSocket 请求。
+     *
+     * @param url 请求地址
+     * @return WebSocket 请求构建器
+     */
+    public static WsReqSpec ws(String url) {
+        return new WsReqSpec()
+                .url(url)
+                .reqType(ReqType.ws);
+    }
+
+    /**
+     * 创建 SSE 请求。
+     *
+     * @param url 请求地址
+     * @return SSE 请求构建器
+     */
+    public static SseReqSpec sse(String url) {
+        return new SseReqSpec()
+                .url(url)
+                .reqType(ReqType.sse)
+                .contentType(ContentType.EVENT_STREAM.value());
+    }
+
+
 }

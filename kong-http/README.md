@@ -85,7 +85,7 @@ Res res = Req.post("http://localhost:8080/post_json")
 import io.github.kongweiguang.http.client.consts.ContentType;
 
 Res res = Req.post("http://localhost:8080/post_body")
-        .body("plain text body", ContentType.TEXT_PLAIN.v())
+        .body("plain text body", ContentType.TEXT_PLAIN.value())
         .ok();
 ```
 
@@ -117,8 +117,8 @@ import io.github.kongweiguang.http.client.consts.ContentType;
 import io.github.kongweiguang.http.client.consts.UserAgent;
 
 Res res = Req.get("http://localhost:8080/header")
-        .contentType(ContentType.JSON.v())
-        .userAgent(UserAgent.Mac.chrome.v())
+        .contentType(ContentType.JSON.value())
+        .userAgent(UserAgent.MacOS.CHROME.value())
         .bearer("token-value")
         .header("X-Trace-Id", "trace-001")
         .cookie("sid", "abc123")
@@ -156,7 +156,9 @@ java.util.Map<String, java.util.List<String>> headers = res.headers();
 
 ## 异步请求
 
-`okAsync()` 返回 `CompletableFuture<Res>`。
+`ok()` 同步执行时会直接返回结果或直接抛出异常，不会触发 `success(...)` / `fail(...)` 回调。
+
+`okAsync()` 返回 `CompletableFuture<Res>`，只有异步执行时才会触发 `success(...)` / `fail(...)` 回调。
 
 ```java
 import java.util.concurrent.CompletableFuture;
