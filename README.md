@@ -35,7 +35,6 @@
 
 `kong-http` 是一个基于 OkHttp 的轻量封装，统一了请求构建、同步/异步调用、重试、SSE、WebSocket 和响应解析
 
-如果后续需要让 AI 继续修改 `kong-http` 代码，先看 [docs/kong-http/README.md](docs/kong-http/README.md)
 
 ## 快速上手
 
