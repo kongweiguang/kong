@@ -38,10 +38,6 @@
     </licenses>
 
     <modules>
-        <module>kong-core</module>
-        <module>kong-http</module>
-        <module>kong-http-test</module>
-        <module>kong-json</module>
     </modules>
 
     <properties>
