@@ -54,20 +54,20 @@
 <dependency>
     <groupId>io.github.kongweiguang</groupId>
     <artifactId>kong-http</artifactId>
-    <version>0.6</version>
+    <version>1.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-implementation "io.github.kongweiguang:kong-http:0.6"
+implementation "io.github.kongweiguang:kong-http:1.0"
 ```
 
 ### Gradle Kotlin DSL
 
 ```kotlin
-implementation("io.github.kongweiguang:kong-http:0.6")
+implementation("io.github.kongweiguang:kong-http:1.0")
 ```
 
 其他模块只需要替换 `artifactId`：
